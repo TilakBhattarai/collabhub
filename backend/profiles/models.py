@@ -17,8 +17,10 @@ class Profile(models.Model):
         related_name="profile",
     )
     bio = models.TextField(blank=True)
+    role = models.CharField(max_length=100)
     profile_picture = models.ImageField(
-        upload_to="profile_picture/", blank=True, null=True
+        upload_to="profile_picture/",
+        blank=True,
     )
     location = models.CharField(max_length=100, blank=True)
     experience = models.CharField(max_length=255, blank=True)
