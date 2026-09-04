@@ -32,3 +32,12 @@ class ProfileView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DiscoverView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        users = Profile.objects.exclude(user=request.user)
+        serializer = ProfileSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -65,7 +65,7 @@ const RegisterForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 ">
 
             <div>
                 <label className="block mb-1 text-sm font-medium">

@@ -8,6 +8,9 @@ import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import ProtectedRoute from "./components/ProtectedRoute"
 import GuestRoute from "./components/GuestRoute"
+import Profile from "./pages/Profile"
+import EditProfile from "./pages/EditProfile"
+import Discover from "./pages/Discover"
 
 function App() {
 
@@ -37,6 +40,35 @@ function App() {
             <Dashboard />
           </ProtectedRoute>
         } />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/edit"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+
+        />
+
+        <Route
+          path="/discover"
+          element={
+            <ProtectedRoute>
+              <Discover />
+            </ProtectedRoute>
+          }
+
+        />
       </Routes>
     </>
   )

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Home() {
   return (
     <div>
-      <section className="max-w-6xl mx-auto px-4 py-20 text-center">
+      <section className="max-w-6xl mx-auto pt-24 pb-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
           Build together. Find the right people. Create something meaningful.
         </h1>

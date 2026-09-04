@@ -2,10 +2,14 @@ import { useAuth } from "../context/AuthContext"
 import { Navigate } from "react-router-dom";
 
 const GuestRoute = ({ children }) => {
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn, loading } = useAuth();
+
+    if (loading) {
+        return null;
+    }
 
     if (isLoggedIn) {
-        return <Navigate to="/dashboard" />
+        return <Navigate to="/dashboard" replace />
     }
     return children;
 }

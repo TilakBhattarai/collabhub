@@ -20,6 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "user",
             "bio",
             "role",
+            "skills",
             "profile_picture",
             "experience",
             "location",

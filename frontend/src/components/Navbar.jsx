@@ -1,21 +1,24 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
+    const { showToast } = useToast();
     const { isLoggedIn, logout } = useAuth();
 
     const navigate = useNavigate()
 
     const handleLogout = () => {
         logout();
+        showToast("Logged out successfully");
         navigate("/login");
     }
 
     return (
-        <nav className="border-b bg-white ">
-            <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-white">
+            <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between ">
                 <Link to="/" className="text-lg font-bold text-gray-900">CollabHub</Link>
 
                 {/* <div className="hidden md:flex gap-6">
@@ -26,6 +29,13 @@ function Navbar() {
                     {isLoggedIn ? (
                         <div className="flex gap-4">
                             <Link to="/dashboard" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
+                            <Link
+                                to="/discover"
+                                className="text-sm text-gray-600 hover:text-gray-900"
+                            >
+                                Discover
+                            </Link>
+                            <Link to="/profile" className="text-sm text-gray-600 hover:text-gray-900">Profile</Link>
                             <button onClick={handleLogout} className="text-sm text-gray-600 hover:text-gray-900">Logout</button>
 
                         </div>
@@ -42,20 +52,62 @@ function Navbar() {
             </div>
 
             {open && (
-                <div className="md:hidden flex flex-col gap-3 px-4 pb-4">
+                <div className="md:hidden flex flex-col border-t bg-white">
                     {isLoggedIn ? (
-                        <div>
-                            <Link to="/dashboard" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
-                            <button onClick={handleLogout} className="text-sm text-gray-600 hover:text-gray-900">Logout</button>
-                        </div>
+                        <>
+                            <Link
+                                to="/dashboard"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                Dashboard
+                            </Link>
+                            <Link
+                                to="/discover"
+                                onClick={() => setOpen(false)}
+                                className="text-sm px-4 py-3 text-gray-600 hover:text-gray-900"
+                            >
+                                Discover
+                            </Link>
+                            <Link
+                                to="/profile"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                Profile
+                            </Link>
+                            <button
+                                onClick={() => { setOpen(false); handleLogout(); }}
+                                className="px-4 py-3 text-left text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                Logout
+                            </button>
+                        </>
                     ) : (
-                        <div>
-                            <Link to="/" className="text-sm text-gray-600">Home</Link>
-                            <Link to="/login" className="text-sm text-gray-600">Login</Link>
-                            <Link to="/register" className="text-sm text-gray-600">Register</Link>
-                        </div>
+                        <>
+                            <Link
+                                to="/"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                Home
+                            </Link>
+                            <Link
+                                to="/login"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                to="/register"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm font-medium text-blue-600 hover:bg-gray-50"
+                            >
+                                Register
+                            </Link>
+                        </>
                     )}
-
                 </div>
             )}
         </nav>

@@ -1,6 +1,6 @@
 function Dashboard() {
     return (
-        <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto px-4 pt-24 pb-20">
             <h1 className="text-2xl font-bold">Welcome back, User</h1>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">

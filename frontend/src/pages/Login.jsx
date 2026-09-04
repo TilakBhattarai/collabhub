@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import axios from "axios"
+import api from "../api/axios";
 import { useState } from "react";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +17,8 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://127.0.0.1:8000/accounts/auth/login/"
-      const response = await axios.post(
-        url,
+      const response = await api.post(
+        "accounts/auth/login/",
         {
           username: username,
           password: password
@@ -37,7 +36,7 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 pt-24 pb-20">
       <form onSubmit={handleSubmit} className="w-full max-w-md bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
         <h1 className="text-2xl font-semibold text-gray-900">
           Welcome back
