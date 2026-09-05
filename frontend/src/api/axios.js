@@ -41,57 +41,39 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         // Access token expired / unauthorized
-        if (error.response?.status === 401) {
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry
+        ) {
+            originalRequest._retry = true;
 
             const refreshToken = localStorage.getItem("refreshToken");
 
-            // No refresh token
             if (!refreshToken) {
                 return Promise.reject(error);
             }
 
             try {
-
-                // Request new access token
                 const response = await axios.post(
                     "http://127.0.0.1:8000/accounts/api/token/refresh/",
                     {
-                        refresh: refreshToken
+                        refresh: refreshToken,
                     }
                 );
 
-                console.log("REFRESH SUCCESS:", response.data);
-
-                // Get new access token
                 const newAccessToken = response.data.access;
 
-                // Save new access token
                 localStorage.setItem(
                     "accessToken",
                     newAccessToken
                 );
 
-                // Add new token to original request
                 originalRequest.headers.Authorization =
                     `Bearer ${newAccessToken}`;
 
-                // Retry original request
                 return api(originalRequest);
 
             } catch (refreshError) {
-
-                // Debugging
-                console.log("REFRESH FAILED");
-                console.log(
-                    "STATUS:",
-                    refreshError.response?.status
-                );
-                console.log(
-                    "DATA:",
-                    refreshError.response?.data
-                );
-
-                // Refresh token itself is invalid/expired
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
 

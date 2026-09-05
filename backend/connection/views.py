@@ -24,6 +24,14 @@ class ConnectionView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        try:
+            receiver_id = int(receiver_id)
+        except (TypeError, ValueError):
+            return Response(
+                {"error": "Invalid receiver ID"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         if int(receiver_id) == request.user.id:
             return Response(
                 {"error": "You cannot connect with yourself"},
@@ -43,3 +51,14 @@ class ConnectionView(APIView):
 
         serializer = ConnectionSerializer(connection)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get(self, request):
+        requests = Connection.objects.filter(
+            receiver=request.user,
+            status="PENDING",
+        )
+        serializer = ConnectionSerializer(requests, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )

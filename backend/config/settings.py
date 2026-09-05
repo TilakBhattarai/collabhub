@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "accounts",
     "profiles",
-    "connections",
+    "connection",
 ]
 
 MIDDLEWARE = [

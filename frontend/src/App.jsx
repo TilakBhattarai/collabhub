@@ -11,6 +11,7 @@ import GuestRoute from "./components/GuestRoute"
 import Profile from "./pages/Profile"
 import EditProfile from "./pages/EditProfile"
 import Discover from "./pages/Discover"
+import Connections from "./pages/Connections"
 
 function App() {
 
@@ -69,6 +70,18 @@ function App() {
           }
 
         />
+
+        <Route
+          path="/connection"
+          element={
+            <ProtectedRoute>
+              <Connections />
+            </ProtectedRoute>
+          }
+
+        />
+
+
       </Routes>
     </>
   )

@@ -12,12 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
     class Meta:
         model = Profile
         fields = [
-            "user",
             "bio",
             "role",
             "skills",

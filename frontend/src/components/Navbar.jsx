@@ -35,6 +35,12 @@ function Navbar() {
                             >
                                 Discover
                             </Link>
+                            <Link
+                                to="/connection"
+                                className="text-sm text-gray-600 hover:text-gray-900"
+                            >
+                                Connections
+                            </Link>
                             <Link to="/profile" className="text-sm text-gray-600 hover:text-gray-900">Profile</Link>
                             <button onClick={handleLogout} className="text-sm text-gray-600 hover:text-gray-900">Logout</button>
 
@@ -68,6 +74,14 @@ function Navbar() {
                                 className="text-sm px-4 py-3 text-gray-600 hover:text-gray-900"
                             >
                                 Discover
+                            </Link>
+
+                            <Link
+                                to="/connection"
+                                onClick={() => setOpen(false)}
+                                className="text-sm px-4 py-3 text-gray-600 hover:text-gray-900"
+                            >
+                                Connections
                             </Link>
                             <Link
                                 to="/profile"
