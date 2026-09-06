@@ -3,18 +3,45 @@ import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
 
 export default function Connections() {
-    const [connections, setConnections] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const [myConnections, setMyConnections] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [acceptConnectionID, setAcceptConnectionID] = useState('');
+    const [rejectConnectionID, setRejectConnectionID] = useState('');
     const { showToast } = useToast();
 
     useEffect(() => {
-        const fetchConnections = async () => {
+        const fetchRequests = async () => {
             setLoading(true);
             try {
                 const response = await api.get(
                     "connection/requests/",
                 );
-                setConnections(response.data);
+                setRequests(response.data);
+                console.log(response.data);
+            } catch (error) {
+                if (error.response?.status === 401) {
+                    showToast("You are not authenticated");
+                } else if (error.response?.data?.error) {
+                    showToast(error.response.data.error);
+                } else {
+                    showToast("Something went wrong on fetching connections requests");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRequests();
+
+        const fetchConnections = async () => {
+            setLoading(true);
+
+            try {
+                const response = await api.get(
+                    "connection/my-connections/"
+                )
+                setMyConnections(response.data);
                 console.log(response.data);
             } catch (error) {
                 if (error.response?.status === 401) {
@@ -27,10 +54,65 @@ export default function Connections() {
             } finally {
                 setLoading(false);
             }
-        };
 
+        }
         fetchConnections();
+
     }, []);
+
+    const acceptConnection = async (connection_id) => {
+        setAcceptConnectionID(connection_id);
+
+        setLoading(true);
+
+        try {
+            const response = await api.post(
+                "connection/requests/accept",
+                {
+                    connection_id: connection_id,
+                }
+            )
+            showToast("Connection accepted");
+            console.log(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on accepting connection");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const rejectConnection = async (connection_id) => {
+        setRejectConnectionID(connection_id);
+
+        setLoading(true);
+
+        try {
+            const response = await api.post(
+                "connection/requests/reject",
+                {
+                    connection_id: connection_id,
+                }
+            )
+            showToast("Connection rejected");
+            console.log(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on rejecting connection");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
 
     if (loading) {
         return (
@@ -71,15 +153,15 @@ export default function Connections() {
                         </div>
 
                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                            {connections.length} pending
+                            {requests.length} pending
                         </span>
                     </div>
 
                     <div className="space-y-4">
 
-                        {connections.map((user) => (
+                        {requests.map((request) => (
                             <div
-                                key={user.id}
+                                key={request.id}
                                 className="rounded-xl border border-gray-200 bg-white p-5"
                             >
                                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -89,15 +171,15 @@ export default function Connections() {
 
                                         {/* Avatar */}
                                         <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-gray-900">
-                                            {user.sender.profile.profile_picture ? (
+                                            {request.sender.profile.profile_picture ? (
                                                 <img
-                                                    src={`http://127.0.0.1:8000${user.sender.profile.profile_picture}`}
-                                                    alt={user.sender.username}
+                                                    src={`http://127.0.0.1:8000${request.sender.profile.profile_picture}`}
+                                                    alt={request.sender.username}
                                                     className="h-full w-full object-cover"
                                                 />
                                             ) : (
                                                 <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">
-                                                    {user.sender.username.charAt(0).toUpperCase()}
+                                                    {request.sender.username.charAt(0).toUpperCase()}
                                                 </div>
                                             )}
                                         </div>
@@ -107,26 +189,26 @@ export default function Connections() {
 
                                             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                                                 <h3 className="font-semibold text-gray-900">
-                                                    {user.sender.username}
+                                                    {request.sender.username}
                                                 </h3>
                                             </div>
 
                                             <p className="mt-1 text-sm text-gray-600">
-                                                {user.sender.profile.role || "No role set"}
+                                                {request.sender.profile.role || "No role set"}
                                             </p>
 
                                             <p className="mt-1 text-xs text-gray-400">
-                                                {user.sender.profile.location || "No location set"}
+                                                {request.sender.profile.location || "No location set"}
                                             </p>
 
                                             <p className="mt-3 max-w-xl text-sm leading-6 text-gray-500">
-                                                {user.sender.profile.bio || "No bio set"}
+                                                {request.sender.profile.bio || "No bio set"}
                                             </p>
 
                                             {/* Skills */}
                                             <div className="mt-3 flex flex-wrap gap-2">
-                                                {user.sender.profile.skills ? (
-                                                    user.sender.profile.skills
+                                                {request.sender.profile.skills ? (
+                                                    request.sender.profile.skills
                                                         .split(",")
                                                         .map((skill) => skill.trim())
                                                         .filter(Boolean)
@@ -148,13 +230,15 @@ export default function Connections() {
                                     {/* Actions */}
                                     <div className="flex shrink-0 gap-2 sm:pt-1">
                                         <button
-                                            className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+                                            onClick={() => acceptConnection(request.id)}
+                                            className="rounded-md bg-black px-4 py-2 text-sm cursor-pointer font-medium text-white transition hover:bg-gray-800"
                                         >
                                             Accept
                                         </button>
 
                                         <button
-                                            className="rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
+                                            onClick={() => rejectConnection(request.id)}
+                                            className="rounded-md border border-gray-200 cursor-pointer bg-white px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
                                         >
                                             Decline
                                         </button>
@@ -163,7 +247,7 @@ export default function Connections() {
                             </div>
                         ))}
 
-                        {connections.length === 0 ? (
+                        {requests.length === 0 ? (
                             <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
                                 <p className="text-sm font-medium text-gray-700">
                                     No connection requests
@@ -175,35 +259,92 @@ export default function Connections() {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                {/* existing map */}
+                                existing map
                             </div>
                         )}
 
                     </div>
                 </section>
 
-                {/* Your Connections - UI only for now */}
-                {/* <section className="mt-12">
-                    <div className="mb-4">
+                {/* My Connections */}
+                <section className="mt-12">
+                    <div className="mb-5">
                         <h2 className="text-lg font-semibold text-gray-900">
-                            Your Connections
+                            My Connections
                         </h2>
 
                         <p className="mt-1 text-sm text-gray-500">
-                            People you are already connected with.
+                            People you're connected with.
                         </p>
                     </div>
 
-                    <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
-                        <p className="text-sm font-medium text-gray-700">
-                            No connections to display yet.
-                        </p>
+                    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
 
-                        <p className="mt-1 text-sm text-gray-400">
-                            Accepted connections will appear here.
-                        </p>
+                        {/* Connection */}
+                        {myConnections.map((connection) => (
+                            <div key={connection.id} className="flex items-center justify-between gap-4 border-b border-gray-100 p-4 last:border-0">
+
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-900">
+                                        {connection.user.profile.profile_picture ? (
+                                            <img
+                                                src={`http://127.0.0.1:8000${connection.user.profile.profile_picture}`}
+                                                alt={connection.user.username}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-white">
+                                                {connection.user.username.charAt(0).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="min-w-0">
+                                        <h3 className="truncate text-sm font-semibold text-gray-900">
+                                            {connection.user.username}
+                                        </h3>
+
+                                        <p className="truncate text-xs text-gray-500">
+                                            {connection.user.profile.role} · {connection.user.profile.location}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex shrink-0 gap-2">
+                                    <button
+                                        type="button"
+                                        className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
+                                    >
+                                        View
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+
+                            </div>
+                        ))}
+
+                        {myConnections.length === 0 ? (
+                            <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-10 text-center">
+                                <p className="text-sm font-medium text-gray-700">
+                                    No connections
+                                </p>
+
+                                <p className="mt-1 text-sm text-gray-400">
+                                    You don't have any connections right now.
+                                </p>
+                            </div>
+                        ) : (
+                            null
+                        )}
+
                     </div>
-                </section> */}
+                </section>
 
             </div>
         </div>

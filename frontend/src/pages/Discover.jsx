@@ -3,7 +3,7 @@ import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
 
 const Discover = () => {
-    const [users, setUser] = useState(null);
+    const [users, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
     const [connectingId, setConnectingId] = useState(null);
@@ -42,13 +42,14 @@ const Discover = () => {
                 }
             )
             console.log(response.data);
+            showToast("Connection sent successfully");
         } catch (error) {
             if (error.response?.status === 401) {
                 showToast("You are not authenticated");
             } else if (error.response?.data?.error) {
                 showToast(error.response.data.error);
             } else {
-                showToast("You have already sent a connection request");
+                showToast("Something went wrong");
             }
         } finally {
             setConnectingId(null);
@@ -152,19 +153,27 @@ const Discover = () => {
 
                             {/* Skills - Dummy for now */}
                             <div className="mt-5">
-                                <p className="text-sm font-medium text-gray-700 mb-2">
-                                    Skills
-                                </p>
+                                {user.skills && (
+                                    <p className="text-sm font-medium text-gray-700 mb-2">Skill</p>
+                                )}
 
                                 <div className="flex flex-wrap gap-2">
-                                    {user.skills.split(",").map((skill, index) => (
-                                        <span
-                                            key={index}
-                                            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-md"
-                                        >
-                                            {skill.trim() || "No skills yet"}
-                                        </span>
-                                    ))}
+                                    {user.skills ? (
+                                        user.skills
+                                            .split(",")
+                                            .map((skill) => skill.trim())
+                                            .filter(Boolean)
+                                            .map((skill, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-md"
+                                                >
+                                                    {skill}
+                                                </span>
+                                            ))
+                                    ) : (
+                                        <p>No skills</p>
+                                    )}
 
                                 </div>
                             </div>
