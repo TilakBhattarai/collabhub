@@ -12,6 +12,7 @@ import Profile from "./pages/Profile"
 import EditProfile from "./pages/EditProfile"
 import Discover from "./pages/Discover"
 import Connections from "./pages/Connections"
+import ProfileView from "./pages/ProfileView"
 
 function App() {
 
@@ -76,6 +77,16 @@ function App() {
           element={
             <ProtectedRoute>
               <Connections />
+            </ProtectedRoute>
+          }
+
+        />
+
+        <Route
+          path="my-connections/profile/:userId"
+          element={
+            <ProtectedRoute>
+              <ProfileView />
             </ProtectedRoute>
           }
 

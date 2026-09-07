@@ -42,6 +42,11 @@ const Discover = () => {
                 }
             )
             console.log(response.data);
+
+            setUser((prev) =>
+                prev.filter((user) => user.user.id != receiver_id)
+            )
+
             showToast("Connection sent successfully");
         } catch (error) {
             if (error.response?.status === 401) {
@@ -82,127 +87,139 @@ const Discover = () => {
                 </div>
 
                 {/* Users */}
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {users.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                            <span className="text-2xl">🔍</span>
+                        </div>
+                        <h3 className="text-base font-semibold text-gray-900">
+                            No one to discover yet
+                        </h3>
+                        <p className="mt-2 text-sm text-gray-500 max-w-sm">
+                            There aren't any profiles matching right now. Check back later or update your own profile to get noticed.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        {users.map((user) => (
+                            <div
+                                key={user.user.id}
+                                className="flex flex-col bg-white border border-gray-200 rounded-xl p-5 hover:border-gray-300 transition"
+                            >
 
-                    {users.map((user) => (
-                        <div
-                            key={user.user.id}
-                            className="flex flex-col bg-white border border-gray-200 rounded-xl p-5 hover:border-gray-300 transition"
-                        >
+                                {/* User Header */}
+                                <div className="flex items-center gap-4">
 
-                            {/* User Header */}
-                            <div className="flex items-center gap-4">
+                                    {user.profile_picture ? (
+                                        <img
+                                            src={`http://127.0.0.1:8000${user.profile_picture}`}
+                                            alt={user.user.username}
+                                            className="w-14 h-14 rounded-full object-cover border border-gray-200"
+                                        />
+                                    ) : (
+                                        <div className="w-14 h-14 rounded-full bg-gray-900 flex items-center justify-center text-white text-lg font-semibold">
+                                            {user.user.username
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        </div>
+                                    )}
 
-                                {user.profile_picture ? (
-                                    <img
-                                        src={`http://127.0.0.1:8000${user.profile_picture}`}
-                                        alt={user.user.username}
-                                        className="w-14 h-14 rounded-full object-cover border border-gray-200"
-                                    />
-                                ) : (
-                                    <div className="w-14 h-14 rounded-full bg-gray-900 flex items-center justify-center text-white text-lg font-semibold">
-                                        {user.user.username
-                                            .charAt(0)
-                                            .toUpperCase()}
+                                    <div className="min-w-0">
+                                        <h2 className="text-base font-semibold text-gray-900 truncate">
+                                            {user.user.username}
+                                        </h2>
+
+                                        <p className="mt-1 text-sm text-gray-500 truncate">
+                                            {user.role}
+                                        </p>
                                     </div>
-                                )}
 
-                                <div className="min-w-0">
-                                    <h2 className="text-base font-semibold text-gray-900 truncate">
-                                        {user.user.username}
-                                    </h2>
+                                </div>
 
-                                    <p className="mt-1 text-sm text-gray-500 truncate">
-                                        {user.role}
+                                {/* Bio */}
+                                <div className="mt-5">
+                                    <p className="text-sm leading-6 text-gray-600 line-clamp-3">
+                                        {user.bio || "No bio available."}
                                     </p>
                                 </div>
 
-                            </div>
+                                {/* Information */}
+                                <div className="mt-5 space-y-2 text-sm text-gray-500">
 
-                            {/* Bio */}
-                            <div className="mt-5">
-                                <p className="text-sm leading-6 text-gray-600 line-clamp-3">
-                                    {user.bio || "No bio available."}
-                                </p>
-                            </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium text-gray-700">
+                                            Location
+                                        </span>
 
-                            {/* Information */}
-                            <div className="mt-5 space-y-2 text-sm text-gray-500">
+                                        <span>
+                                            {user.location || "Not specified"}
+                                        </span>
+                                    </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="font-medium text-gray-700">
-                                        Location
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-medium text-gray-700">
+                                            Availability
+                                        </span>
 
-                                    <span>
-                                        {user.location || "Not specified"}
-                                    </span>
+                                        <span>
+                                            {user.availability || "Not specified"}
+                                        </span>
+                                    </div>
+
                                 </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="font-medium text-gray-700">
-                                        Availability
-                                    </span>
-
-                                    <span>
-                                        {user.availability || "Not specified"}
-                                    </span>
-                                </div>
-
-                            </div>
-
-                            {/* Skills - Dummy for now */}
-                            <div className="mt-5">
-                                {user.skills && (
-                                    <p className="text-sm font-medium text-gray-700 mb-2">Skill</p>
-                                )}
-
-                                <div className="flex flex-wrap gap-2">
-                                    {user.skills ? (
-                                        user.skills
-                                            .split(",")
-                                            .map((skill) => skill.trim())
-                                            .filter(Boolean)
-                                            .map((skill, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-md"
-                                                >
-                                                    {skill}
-                                                </span>
-                                            ))
-                                    ) : (
-                                        <p>No skills</p>
+                                {/* Skills - Dummy for now */}
+                                <div className="mt-5">
+                                    {user.skills && (
+                                        <p className="text-sm font-medium text-gray-700 mb-2">Skill</p>
                                     )}
 
+                                    <div className="flex flex-wrap gap-2">
+                                        {user.skills ? (
+                                            user.skills
+                                                .split(",")
+                                                .map((skill) => skill.trim())
+                                                .filter(Boolean)
+                                                .map((skill, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-md"
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))
+                                        ) : (
+                                            <p>No skills</p>
+                                        )}
+
+                                    </div>
                                 </div>
+
+                                {/* Actions */}
+                                <div className="mt-6 flex gap-3 border-t border-gray-100 pt-5">
+
+                                    <button
+                                        type="button"
+                                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+                                    >
+                                        View Profile
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleConnect(user.user.id)}
+                                        disabled={connectingId === user.user.id}
+                                        type="button"
+                                        className="flex-1 bg-blue-600 rounded-lg px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
+                                    >
+                                        {connectingId === user.user.id ? "Connecting..." : "Connect"}
+                                    </button>
+
+                                </div>
+
                             </div>
-
-                            {/* Actions */}
-                            <div className="mt-6 flex gap-3 border-t border-gray-100 pt-5">
-
-                                <button
-                                    type="button"
-                                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
-                                >
-                                    View Profile
-                                </button>
-
-                                <button
-                                    onClick={() => handleConnect(user.user.id)}
-                                    disabled={connectingId === user.user.id}
-                                    type="button"
-                                    className="flex-1 bg-blue-600 rounded-lg px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
-                                >
-                                    {connectingId === user.user.id ? "Connecting..." : "Connect"}
-                                </button>
-
-                            </div>
-
-                        </div>
-                    ))}
-
-                </div>
+                        ))}
+                    </div>
+                )}
 
             </div>
         </div>

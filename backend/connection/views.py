@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from .models import Connection
 from .serializers import ConnectionSerializer, MyConnectionSerializer
 from django.db.models import Q
+from profiles.models import Profile
+from profiles.serializers import ProfileSerializer
 
 User = get_user_model()
 
@@ -115,7 +117,7 @@ class AcceptConnectionView(APIView):
         connection.status = "ACCEPTED"
         connection.save()
         return Response(
-            {"message": "Connection Accepted"},
+            {"message": "Connection accepted successfully"},
             status=status.HTTP_200_OK,
         )
 
@@ -138,6 +140,41 @@ class RejectConnectionView(APIView):
         connection.status = "REJECTED"
         connection.save()
         return Response(
-            {"message": "Connection Rejected"},
+            {"message": "Connection rejected successfully"},
             status=status.HTTP_200_OK,
         )
+
+
+class RemoveConnectionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        connection_id = request.data.get("connectionId")
+
+        try:
+            connection_id = int(connection_id)
+        except (TypeError, ValueError):
+            return Response(
+                {"error": "Invalid connection ID"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        connection = Connection.objects.get(
+            Q(sender=request.user) | Q(receiver=request.user),
+            id=connection_id,
+            status="ACCEPTED",
+        )
+        connection.delete()
+        return Response(
+            {"message": "Connection removed successfully"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ConnectionProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id):
+        user = User.objects.get(id=id)
+        profile = Profile.objects.get(user=user)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)

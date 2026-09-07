@@ -17,4 +17,14 @@ urlpatterns = [
         name="reject_connection_request",
     ),
     path("my-connections/", views.MyConnectionsView.as_view(), name="my_connections"),
+    path(
+        "my-connections/remove/",
+        views.RemoveConnectionView.as_view(),
+        name="remove_connection",
+    ),
+    path(
+        "my-connections/profile/<int:id>/",
+        views.ConnectionProfileView.as_view(),
+        name="my_connection_profile",
+    ),
 ]

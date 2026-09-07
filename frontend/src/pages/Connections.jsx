@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Connections() {
     const [requests, setRequests] = useState([]);
@@ -8,7 +9,11 @@ export default function Connections() {
     const [loading, setLoading] = useState(false);
     const [acceptConnectionID, setAcceptConnectionID] = useState('');
     const [rejectConnectionID, setRejectConnectionID] = useState('');
+    const [removeConnectionID, setRemoveConnectionID] = useState('');
     const { showToast } = useToast();
+
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -34,31 +39,35 @@ export default function Connections() {
 
         fetchRequests();
 
-        const fetchConnections = async () => {
-            setLoading(true);
-
-            try {
-                const response = await api.get(
-                    "connection/my-connections/"
-                )
-                setMyConnections(response.data);
-                console.log(response.data);
-            } catch (error) {
-                if (error.response?.status === 401) {
-                    showToast("You are not authenticated");
-                } else if (error.response?.data?.error) {
-                    showToast(error.response.data.error);
-                } else {
-                    showToast("Something went wrong on fetching connections");
-                }
-            } finally {
-                setLoading(false);
-            }
-
-        }
-        fetchConnections();
-
     }, []);
+
+    const fetchConnections = async () => {
+        setLoading(true);
+
+        try {
+            const response = await api.get(
+                "connection/my-connections/"
+            )
+            setMyConnections(response.data);
+            console.log(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on fetching connections");
+            }
+        } finally {
+            setLoading(false);
+        }
+
+    }
+
+    useEffect(() => {
+        fetchConnections();
+    }, [])
+
 
     const acceptConnection = async (connection_id) => {
         setAcceptConnectionID(connection_id);
@@ -72,7 +81,16 @@ export default function Connections() {
                     connection_id: connection_id,
                 }
             )
-            showToast("Connection accepted");
+
+
+            setRequests((prev) =>
+                prev.filter((request) => request.id != connection_id)
+            )
+
+            await fetchConnections();
+
+            showToast("Connection accepted successfully");
+
             console.log(response.data);
         } catch (error) {
             if (error.response?.status === 401) {
@@ -99,7 +117,12 @@ export default function Connections() {
                     connection_id: connection_id,
                 }
             )
-            showToast("Connection rejected");
+            showToast("Connection rejected successfully");
+
+            setRequests((prev) =>
+                prev.filter((request) => request.id != connection_id)
+            )
+
             console.log(response.data);
         } catch (error) {
             if (error.response?.status === 401) {
@@ -108,6 +131,34 @@ export default function Connections() {
                 showToast(error.response.data.error);
             } else {
                 showToast("Something went wrong on rejecting connection");
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const removeConnection = async (connection_id) => {
+        setRemoveConnectionID(connection_id);
+
+        setLoading(true);
+        try {
+            const response = await api.post(
+                "connection/my-connections/remove/",
+                {
+                    connectionId: connection_id,
+                }
+            )
+            setMyConnections((prev) =>
+                prev.filter((connection) => connection.id != connection_id)
+            )
+            console.log(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on removing connection");
             }
         } finally {
             setLoading(false);
@@ -301,17 +352,18 @@ export default function Connections() {
 
                                     <div className="min-w-0">
                                         <h3 className="truncate text-sm font-semibold text-gray-900">
-                                            {connection.user.username}
+                                            {connection.user.username || "Username not set"}
                                         </h3>
 
                                         <p className="truncate text-xs text-gray-500">
-                                            {connection.user.profile.role} · {connection.user.profile.location}
+                                            {`${connection.user.profile.role || "Role not set"} · ${connection.user.profile.location || "Location not set"}`}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex shrink-0 gap-2">
                                     <button
+                                        onClick={() => navigate(`/my-connections/profile/${connection.user.id}`)}
                                         type="button"
                                         className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
                                     >
@@ -319,6 +371,7 @@ export default function Connections() {
                                     </button>
 
                                     <button
+                                        onClick={() => removeConnection(connection.id)}
                                         type="button"
                                         className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
                                     >
@@ -346,7 +399,7 @@ export default function Connections() {
                     </div>
                 </section>
 
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

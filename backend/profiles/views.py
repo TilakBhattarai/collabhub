@@ -5,6 +5,8 @@ from .models import Profile
 from .serializers import ProfileSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from connection.models import Connection
+from django.db.models import Q
 
 
 class ProfileView(APIView):
@@ -38,6 +40,23 @@ class DiscoverView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        users = Profile.objects.exclude(user=request.user)
+
+        connections = Connection.objects.filter(
+            Q(sender=request.user) | Q(receiver=request.user),
+            status__in=["PENDING", "ACCEPTED"],
+        )
+
+        excluded_user_ids = []
+
+        for connection in connections:
+            if connection.sender == request.user:
+                excluded_user_ids.append(connection.receiver.id)
+            else:
+                excluded_user_ids.append(connection.sender.id)
+
+        users = Profile.objects.exclude(user=request.user).exclude(
+            user_id__in=excluded_user_ids
+        )
+
         serializer = ProfileSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
