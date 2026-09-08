@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from connection.models import Connection
 from django.db.models import Q
+from .filters import ProfileFilter
 
 
 class ProfileView(APIView):
@@ -57,6 +58,8 @@ class DiscoverView(APIView):
         users = Profile.objects.exclude(user=request.user).exclude(
             user_id__in=excluded_user_ids
         )
+
+        users = ProfileFilter(request.GET, queryset=users).qs
 
         serializer = ProfileSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

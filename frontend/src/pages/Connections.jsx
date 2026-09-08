@@ -365,7 +365,7 @@ export default function Connections() {
                                     <button
                                         onClick={() => navigate(`/my-connections/profile/${connection.user.id}`)}
                                         type="button"
-                                        className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
+                                        className="rounded-lg border border-gray-300 cursor-pointer px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
                                     >
                                         View
                                     </button>
@@ -373,7 +373,7 @@ export default function Connections() {
                                     <button
                                         onClick={() => removeConnection(connection.id)}
                                         type="button"
-                                        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
+                                        className="rounded-lg border border-red-200 cursor-pointer px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
                                     >
                                         Remove
                                     </button>
