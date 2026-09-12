@@ -14,6 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "profile"]
 
 
+class ProjectOwnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "email"]
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)

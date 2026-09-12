@@ -13,6 +13,8 @@ import EditProfile from "./pages/EditProfile"
 import Discover from "./pages/Discover"
 import Connections from "./pages/Connections"
 import ProfileView from "./pages/ProfileView"
+import CreateProject from "./pages/CreateProject"
+import Projects from "./pages/Projects"
 
 function App() {
 
@@ -89,11 +91,28 @@ function App() {
               <ProfileView />
             </ProtectedRoute>
           }
+        />
 
+        <Route
+          path="project/create"
+          element={
+            <ProtectedRoute>
+              <CreateProject />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
         />
 
 
-      </Routes>
+      </Routes >
     </>
   )
 }

@@ -14,8 +14,9 @@ const RegisterForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (password1 != password2) {
-            showToast("passwords do not match!")
+            showToast("passwords do not match!");
             return;
         }
 
@@ -30,20 +31,23 @@ const RegisterForm = () => {
         }
 
         try {
-            const url = "http://127.0.0.1:8000/accounts/auth/register/";
-            const response = await axios.post(
-                url,
-                {
-                    username: username,
-                    email: email,
-                    password1: password1,
-                    password2: password2,
-                }
+            const url =
+                "http://127.0.0.1:8000/accounts/auth/register/";
 
-            )
+            const response = await axios.post(url, {
+                username: username,
+                email: email,
+                password1: password1,
+                password2: password2,
+            });
+
             console.log(response);
+
             navigate("/login");
-            showToast("Registration successful! You can now login.");
+
+            showToast(
+                "Registration successful! You can now login."
+            );
 
             setUsername("");
             setEmail("");
@@ -58,81 +62,108 @@ const RegisterForm = () => {
                 const messages = Object.values(data).flat();
                 showToast(messages.join(" "));
             } else {
-                showToast("Something went wrong. Please try again.");
+                showToast(
+                    "Something went wrong. Please try again."
+                );
             }
         }
-
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 ">
+        <form onSubmit={handleSubmit} className="space-y-5">
 
+            {/* Username */}
             <div>
-                <label className="block mb-1 text-sm font-medium">
+                <label
+                    htmlFor="username"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
                     Username
                 </label>
 
                 <input
+                    id="username"
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter username"
+                    placeholder="Choose a username"
                     required
-                    className="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                 />
             </div>
 
+
+            {/* Email */}
             <div>
-                <label className="block mb-1 text-sm font-medium">
+                <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
                     Email
                 </label>
 
                 <input
+                    id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
+                    placeholder="you@example.com"
                     required
-                    className="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                 />
             </div>
 
+
+            {/* Password */}
             <div>
-                <label className="block mb-1 text-sm font-medium">
+                <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
                     Password
                 </label>
 
                 <input
+                    id="password"
                     type="password"
                     value={password1}
                     onChange={(e) => setPassword1(e.target.value)}
-                    placeholder="Password"
+                    placeholder="At least 8 characters"
                     required
-                    className="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                 />
             </div>
 
+
+            {/* Confirm Password */}
             <div>
-                <label className="block mb-1 text-sm font-medium">
-                    Confirm Password
+                <label
+                    htmlFor="confirm-password"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                    Confirm password
                 </label>
 
                 <input
+                    id="confirm-password"
                     type="password"
                     value={password2}
                     onChange={(e) => setPassword2(e.target.value)}
-                    placeholder="Confirm password"
+                    placeholder="Enter your password again"
                     required
-                    className="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                 />
             </div>
 
+
+            {/* Submit */}
             <button
                 type="submit"
-                className="w-full mt-3 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition"
+                className="mt-2 w-full cursor-pointer rounded-md bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
             >
-                Register
+                Create account
             </button>
+
         </form>
     );
 };

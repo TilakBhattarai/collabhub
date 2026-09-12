@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
+import { ArrowLeft } from "lucide-react";
 
 const EditProfile = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const EditProfile = () => {
     const [githubLink, setGithubLink] = useState("");
     const [portfolioLink, setPortfolioLink] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
-    const [profilePicturePreview, setProfilePicturePreview] = useState('');
+    const [profilePicturePreview, setProfilePicturePreview] = useState("");
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -114,7 +115,7 @@ const EditProfile = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-gray-500">
+                <p className="text-sm text-gray-500">
                     Loading...
                 </p>
             </div>
@@ -123,16 +124,26 @@ const EditProfile = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4 pt-24 pb-20">
+        <div className="min-h-screen bg-gray-50 px-5 pt-24 pb-20">
             <div className="mx-auto max-w-3xl">
+
+                {/* Back */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="mb-7 inline-flex items-center gap-2 text-sm text-gray-500 transition hover:text-gray-900 cursor-pointer"
+                >
+                    <ArrowLeft size={16} />
+                    Back
+                </button>
+
 
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-semibold text-gray-900">
+                    <h1 className="text-2xl font-semibold text-gray-900">
                         Edit Profile
                     </h1>
 
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-2 text-sm leading-6 text-gray-500">
                         Update your profile information and let others know
                         more about you.
                     </p>
@@ -141,21 +152,23 @@ const EditProfile = () => {
 
                 <form
                     onSubmit={handleSubmit}
-                    className="overflow-hidden rounded-2xl border border-gray-200 bg-white"
+                    className="border border-gray-200 bg-white rounded-md"
                 >
 
                     {/* Basic Information */}
-                    <div className="border-b border-gray-200 p-6 sm:p-8">
+                    <section className="border-b border-gray-200 p-6 sm:p-8">
 
-                        <h2 className="text-lg font-semibold text-gray-900">
-                            Basic Information
-                        </h2>
+                        <div>
+                            <h2 className="text-sm font-semibold text-gray-900">
+                                Basic Information
+                            </h2>
 
-                        <p className="mt-1 text-sm text-gray-500">
-                            Tell people who you are.
-                        </p>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Tell people who you are.
+                            </p>
+                        </div>
 
-                        <div className="mt-6 space-y-5">
+                        <div className="mt-6 space-y-6">
 
                             {/* Role */}
                             <div>
@@ -168,16 +181,18 @@ const EditProfile = () => {
                                     value={role}
                                     onChange={(e) => setRole(e.target.value)}
                                     placeholder="e.g. Full Stack Developer"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
                             </div>
+
+
                             {/* Profile Picture */}
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-800">
+                                <label className="mb-3 block text-sm font-medium text-gray-800">
                                     Profile Picture
                                 </label>
 
-                                <div className="flex items-center gap-5">
+                                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
 
                                     {profilePicturePreview ? (
                                         <img
@@ -187,10 +202,10 @@ const EditProfile = () => {
                                                     : `http://127.0.0.1:8000${profilePicturePreview}`
                                             }
                                             alt="Profile preview"
-                                            className="h-20 w-20 rounded-full object-cover border border-gray-200"
+                                            className="h-20 w-20 rounded-full border border-gray-200 object-cover"
                                         />
                                     ) : (
-                                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-900 text-2xl font-semibold text-white">
+                                        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-violet-100 text-2xl font-semibold text-violet-700">
                                             ?
                                         </div>
                                     )}
@@ -209,11 +224,11 @@ const EditProfile = () => {
                                                     URL.createObjectURL(file)
                                                 );
                                             }}
-                                            className="block w-full text-sm text-gray-500"
+                                            className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-700 hover:file:bg-violet-100"
                                         />
 
                                         <p className="mt-2 text-xs text-gray-400">
-                                            JPG, PNG or WebP. Choose a clear profile picture.
+                                            JPG, PNG or WebP.
                                         </p>
                                     </div>
 
@@ -232,7 +247,7 @@ const EditProfile = () => {
                                     onChange={(e) => setBio(e.target.value)}
                                     rows="4"
                                     placeholder="Tell others about yourself..."
-                                    className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full resize-none rounded-md border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
                             </div>
 
@@ -246,22 +261,20 @@ const EditProfile = () => {
                                 <input
                                     type="text"
                                     value={location}
-                                    onChange={(e) =>
-                                        setLocation(e.target.value)
-                                    }
+                                    onChange={(e) => setLocation(e.target.value)}
                                     placeholder="e.g. Itahari, Nepal"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
                             </div>
 
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* Experience & Skills */}
-                    <div className="border-b border-gray-200 p-6 sm:p-8">
+                    <section className="border-b border-gray-200 p-6 sm:p-8">
 
-                        <h2 className="text-lg font-semibold text-gray-900">
+                        <h2 className="text-sm font-semibold text-gray-900">
                             Experience & Skills
                         </h2>
 
@@ -269,7 +282,7 @@ const EditProfile = () => {
                             Show what you can bring to a project.
                         </p>
 
-                        <div className="mt-6 space-y-5">
+                        <div className="mt-6 space-y-6">
 
                             {/* Experience */}
                             <div>
@@ -279,14 +292,13 @@ const EditProfile = () => {
 
                                 <textarea
                                     value={experience}
-                                    onChange={(e) =>
-                                        setExperience(e.target.value)
-                                    }
+                                    onChange={(e) => setExperience(e.target.value)}
                                     rows="4"
                                     placeholder="e.g. 1 year building React applications..."
-                                    className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full resize-none rounded-md border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
                             </div>
+
 
                             {/* Skills */}
                             <div>
@@ -299,7 +311,7 @@ const EditProfile = () => {
                                     value={skills}
                                     onChange={(e) => setSkills(e.target.value)}
                                     placeholder="e.g. React, JavaScript, Django, PostgreSQL"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
 
                                 <p className="mt-2 text-xs text-gray-400">
@@ -308,13 +320,13 @@ const EditProfile = () => {
                             </div>
 
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* Availability */}
-                    <div className="border-b border-gray-200 p-6 sm:p-8">
+                    <section className="border-b border-gray-200 p-6 sm:p-8">
 
-                        <h2 className="text-lg font-semibold text-gray-900">
+                        <h2 className="text-sm font-semibold text-gray-900">
                             Availability
                         </h2>
 
@@ -330,10 +342,8 @@ const EditProfile = () => {
 
                             <select
                                 value={availability}
-                                onChange={(e) =>
-                                    setAvailability(e.target.value)
-                                }
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-gray-900"
+                                onChange={(e) => setAvailability(e.target.value)}
+                                className="w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                             >
                                 <option value="">
                                     Select availability
@@ -357,13 +367,13 @@ const EditProfile = () => {
                             </select>
 
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* Looking For */}
-                    <div className="border-b border-gray-200 p-6 sm:p-8">
+                    <section className="border-b border-gray-200 p-6 sm:p-8">
 
-                        <h2 className="text-lg font-semibold text-gray-900">
+                        <h2 className="text-sm font-semibold text-gray-900">
                             Looking For
                         </h2>
 
@@ -380,22 +390,20 @@ const EditProfile = () => {
 
                             <textarea
                                 value={lookingFor}
-                                onChange={(e) =>
-                                    setLookingFor(e.target.value)
-                                }
+                                onChange={(e) => setLookingFor(e.target.value)}
                                 rows="4"
                                 placeholder="e.g. Developers to build projects with..."
-                                className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                className="w-full resize-none rounded-md border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                             />
 
                         </div>
-                    </div>
+                    </section>
 
 
                     {/* Links */}
-                    <div className="border-b border-gray-200 p-6 sm:p-8">
+                    <section className="border-b border-gray-200 p-6 sm:p-8">
 
-                        <h2 className="text-lg font-semibold text-gray-900">
+                        <h2 className="text-sm font-semibold text-gray-900">
                             Links
                         </h2>
 
@@ -403,11 +411,10 @@ const EditProfile = () => {
                             Add your GitHub and portfolio.
                         </p>
 
-                        <div className="mt-6 space-y-5">
+                        <div className="mt-6 space-y-6">
 
                             {/* GitHub */}
                             <div>
-
                                 <label className="mb-2 block text-sm font-medium text-gray-800">
                                     GitHub
                                 </label>
@@ -415,19 +422,15 @@ const EditProfile = () => {
                                 <input
                                     type="url"
                                     value={githubLink}
-                                    onChange={(e) =>
-                                        setGithubLink(e.target.value)
-                                    }
+                                    onChange={(e) => setGithubLink(e.target.value)}
                                     placeholder="https://github.com/username"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
-
                             </div>
 
 
                             {/* Portfolio */}
                             <div>
-
                                 <label className="mb-2 block text-sm font-medium text-gray-800">
                                     Portfolio
                                 </label>
@@ -435,38 +438,33 @@ const EditProfile = () => {
                                 <input
                                     type="url"
                                     value={portfolioLink}
-                                    onChange={(e) =>
-                                        setPortfolioLink(e.target.value)
-                                    }
+                                    onChange={(e) => setPortfolioLink(e.target.value)}
                                     placeholder="https://yourportfolio.com"
-                                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-gray-900"
+                                    className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
                                 />
-
                             </div>
 
                         </div>
-                    </div>
+                    </section>
 
 
-                    {/* Buttons */}
-                    <div className="flex items-center justify-end gap-3 bg-gray-50 px-6 py-5 sm:px-8">
+                    {/* Actions */}
+                    <div className="flex items-center justify-end gap-3 px-6 py-5 sm:px-8">
 
-                        {/* Cancel */}
                         <button
                             type="button"
-                            onClick={() => navigate("/profile")}
+                            onClick={() => navigate(-1)}
                             disabled={saving}
-                            className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-md border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             Cancel
                         </button>
 
 
-                        {/* Save */}
                         <button
                             type="submit"
                             disabled={saving}
-                            className="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {saving ? "Saving..." : "Save Changes"}
                         </button>

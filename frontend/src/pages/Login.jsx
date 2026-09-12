@@ -16,28 +16,31 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await api.post(
         "accounts/auth/login/",
         {
           username: username,
-          password: password
+          password: password,
         }
-      )
+      );
 
       login(response.data.access_token, response.data.refresh_token);
 
       showToast("Successfully Logged in.");
       navigate("/dashboard");
-
     } catch (error) {
       showToast(error.response?.data?.error || "Login Failed");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 pt-24 pb-20">
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white border border-gray-200 rounded-lg p-8"
+      >
         <h1 className="text-2xl font-semibold text-gray-900">
           Welcome back
         </h1>
@@ -56,7 +59,7 @@ function Login() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+            className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
           />
         </div>
 
@@ -70,14 +73,14 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+            className="w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
           />
         </div>
 
         <div className="flex justify-end mt-2">
           <Link
             to="/forgot-password"
-            className="text-sm text-gray-600 hover:text-gray-900"
+            className="text-sm text-violet-700 hover:text-violet-800"
           >
             Forgot password?
           </Link>
@@ -85,7 +88,7 @@ function Login() {
 
         <button
           type="submit"
-          className="w-full mt-6 rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition"
+          className="w-full mt-6 rounded-md bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-700 transition cursor-pointer"
         >
           Sign in
         </button>
@@ -94,7 +97,7 @@ function Login() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-medium text-gray-900 hover:underline"
+            className="font-medium text-violet-700 hover:text-violet-800"
           >
             Create account
           </Link>

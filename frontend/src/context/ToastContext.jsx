@@ -8,8 +8,11 @@ export const ToastProvider = ({ children }) => {
     const showToast = (message) => {
         setMessage(message);
     }
+    const clearToast = () => {
+        setMessage("");
+    };
     return (
-        <ToastContext.Provider value={{ message, showToast }}>
+        <ToastContext.Provider value={{ message, showToast, clearToast }}>
             {children}
         </ToastContext.Provider>
     );
