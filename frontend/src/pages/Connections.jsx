@@ -431,7 +431,7 @@ export default function Connections() {
                                         <button
                                             onClick={() =>
                                                 navigate(
-                                                    `/my-connections/profile/${connection.user.id}`
+                                                    `/profile/${connection.user.id}`
                                                 )
                                             }
                                             type="button"

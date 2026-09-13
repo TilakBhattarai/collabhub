@@ -289,7 +289,7 @@ const Discover = () => {
                                     <button
                                         onClick={() =>
                                             navigate(
-                                                `/my-connections/profile/${user.user.id}`
+                                                `/profile/${user.user.id}`
                                             )
                                         }
                                         type="button"

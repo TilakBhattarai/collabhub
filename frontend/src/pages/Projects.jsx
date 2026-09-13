@@ -31,6 +31,7 @@ const Projects = () => {
         try {
             const response = await api.get("projects/");
             setProjects(response.data);
+            console.log(response.data);
         } catch (error) {
             if (error.response?.status === 401) {
                 showToast("You are not authenticated");
@@ -76,7 +77,7 @@ const Projects = () => {
 
                     {projects.length > 0 && (
                         <button
-                            onClick={() => navigate("create/")}
+                            onClick={() => navigate("/project/create")}
                             className="rounded-md bg-violet-600 px-4 py-2.5 text-sm font-medium text-white cursor-pointer hover:bg-violet-700 transition"
                         >
                             Create Project
@@ -147,12 +148,21 @@ const Projects = () => {
                                     </div>
                                 </div>
 
+
                                 {/* Owner */}
                                 <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-4">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-medium text-violet-700">
-                                        {project.owner?.username
-                                            ?.charAt(0)
-                                            ?.toUpperCase() || "?"}
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-medium text-violet-700 overflow-hidden">
+                                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-medium text-violet-700 overflow-hidden">
+                                            {project.owner?.profile?.profile_picture ? (
+                                                <img
+                                                    src={project.owner.profile.profile_picture}
+                                                    alt={project.owner.username}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            ) : (
+                                                project.owner?.username?.charAt(0)?.toUpperCase() || "?"
+                                            )}
+                                        </div>
                                     </div>
 
                                     <div className="min-w-0">
@@ -181,6 +191,7 @@ const Projects = () => {
 
                                 {/* View */}
                                 <button
+                                    onClick={() => navigate(`/projects/${project.id}`)}
                                     className="mt-5 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-50 transition"
                                 >
                                     View Project
@@ -206,7 +217,7 @@ const Projects = () => {
                         </p>
 
                         <button
-                            onClick={() => navigate("create/")}
+                            onClick={() => navigate("/project/create")}
                             className="mt-5 rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white cursor-pointer hover:bg-violet-700 transition"
                         >
                             Create Project
@@ -216,7 +227,7 @@ const Projects = () => {
                 )}
 
             </div>
-        </div>
+        </div >
     );
 };
 

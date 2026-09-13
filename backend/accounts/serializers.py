@@ -15,9 +15,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProjectOwnerSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ["id", "username", "email"]
+        fields = ["id", "username", "email", "profile"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
