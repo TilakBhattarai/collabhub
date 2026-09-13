@@ -1,8 +1,8 @@
 # CollabHub 🚀
 
-**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover people with complementary skills, connect with them, and eventually build projects together.
+**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover people with complementary skills, connect with them, create projects, and eventually work together as teams.
 
-The project is being developed incrementally, with the goal of creating a practical platform for finding collaborators, creating and discovering projects, forming teams, and managing collaborative work.
+The project is being developed incrementally, with each feature built, tested, and improved before moving to the next stage.
 
 ---
 
@@ -101,12 +101,32 @@ The project is being developed incrementally, with the goal of creating a practi
 * Browse available projects
 * Project listing page
 * Project cards with owner information
+* Project owner profile picture
 * Project creation date
 * Project status display
 * Required skills display
 * Project empty states
 * Project loading and error handling
 * Dashboard → Create Project flow
+
+### 📄 Project Details
+
+* Dedicated project details page
+* Dynamic project information
+* Project title
+* Project description
+* Required skills
+* Project visibility
+* Project status
+* Created date
+* Updated date
+* Project owner information
+* Project owner profile picture
+* Avatar fallback when no profile picture exists
+* View Project Owner Profile
+* Public project behavior
+* Private project behavior
+* Private projects do not currently allow join requests
 
 ### 🎨 UI & UX
 
@@ -125,9 +145,9 @@ The project is being developed incrementally, with the goal of creating a practi
 
 ## 🏗️ Project Roadmap
 
-The project is being developed feature by feature.
+CollabHub is being developed feature by feature, with each major feature completed before moving to the next stage.
 
-### Completed
+### ✅ Completed
 
 * [x] Authentication
 * [x] JWT authentication
@@ -149,22 +169,48 @@ The project is being developed feature by feature.
 * [x] Project visibility and status
 * [x] Required project skills
 * [x] Dashboard → Create Project
+* [x] Project Details page
+* [x] Project owner information
+* [x] Project owner profile picture
+* [x] View Project Owner Profile
+* [x] Public / private project behavior
 * [x] Professional UI system
 * [x] Toast notification system
 * [x] Automatic toast dismissal
 
-### In Progress / Next
+### 🚧 Current / Next
 
-* [ ] Project details
-* [ ] Project applications / invitations
-* [ ] Matching collaborators based on skills
+#### Project Management
+
+* [ ] Dedicated My Projects page
+* [ ] View project from My Projects
+* [ ] Edit project
+* [ ] Delete project
+* [ ] Project owner permissions
+* [ ] Delete confirmation and handling
+
+#### Project Collaboration
+
+* [ ] Project join requests
+* [ ] Send join request
+* [ ] Join request status
+* [ ] Project owner request management
+* [ ] Accept / reject join requests
+* [ ] Project members
+
+#### Teams & Work Management
+
 * [ ] Teams
 * [ ] Team management
 * [ ] Tasks
 * [ ] Notifications
 * [ ] Dashboard data and activity
 
-### Future / Stretch Features
+---
+
+## 🔮 Future / Stretch Features
+
+These features will be considered after the core collaboration workflow is stable.
 
 * [ ] Milestones
 * [ ] Real-time chat
@@ -225,17 +271,58 @@ React • JavaScript • Tailwind
 
 Instead of searching randomly for teammates, users can build profiles around their skills and interests, discover potential collaborators, explore projects, connect with other builders, and eventually form teams to work together.
 
+The long-term collaboration flow is:
+
+```text
+Profile
+   ↓
+Discover People
+   ↓
+Connect
+   ↓
+Create / Discover Projects
+   ↓
+Project Details
+   ↓
+My Projects
+   ↓
+Project Management
+   ↓
+Join Requests
+   ↓
+Project Members
+   ↓
+Teams
+   ↓
+Tasks
+   ↓
+Collaboration
+```
+
 ---
 
 ## 🚧 Development Status
 
 CollabHub is currently under active development.
 
-The authentication, profile, discovery, connection, and initial project systems have been implemented.
+The authentication, profile, discovery, connection, and core project systems have been implemented.
 
-Users can currently create profiles, discover and connect with other users, create projects, and browse available projects.
+Users can currently:
 
-The next major stage is building **Project Details**, followed by project applications/invitations, teams, and task management.
+* Create and manage profiles
+* Discover other users
+* Connect with potential collaborators
+* Create projects
+* Browse projects
+* View detailed project information
+* View project owners
+* Explore public and private project behavior
+
+The current development stage is focused on **project management**.
+
+The next milestone is a dedicated **My Projects** section where project owners will be able to view and manage their own projects through View, Edit, and Delete actions.
+
+After project management is complete, the next major stage will be building **Project Join Requests**, followed by project members, teams, and task management.
 
 ---
 
