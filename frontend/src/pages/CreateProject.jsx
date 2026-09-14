@@ -153,6 +153,7 @@ const CreateProject = () => {
                                     }
                                     placeholder="Explain the idea, the problem it solves, and what you want to build."
                                     required
+                                    maxLength={1000}
                                     className={`${inputClass} resize-y min-h-[120px]`}
                                 />
                             </div>

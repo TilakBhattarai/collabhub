@@ -16,6 +16,7 @@ import ProfileView from "./pages/ProfileView"
 import CreateProject from "./pages/CreateProject"
 import Projects from "./pages/Projects"
 import ProjectDetails from "./pages/ProjectDetails"
+import MyProjects from "./pages/MyProjects"
 
 function App() {
 
@@ -108,6 +109,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Projects />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="myprojects"
+          element={
+            <ProtectedRoute>
+              <MyProjects />
             </ProtectedRoute>
           }
         />
