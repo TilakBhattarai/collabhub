@@ -128,6 +128,22 @@ The project is being developed incrementally, with each feature built, tested, a
 * Private project behavior
 * Private projects do not currently allow join requests
 
+### 📂 My Projects
+
+* Dedicated My Projects page
+* View projects owned by the authenticated user
+* Project statistics
+* View project details
+* Edit projects
+* Delete projects
+* Project owner permissions
+* Delete confirmation
+* Delete loading state
+* Delete error handling
+* Automatic project list update after deletion
+* My Projects empty state
+* Navigation to My Projects from the main navigation
+
 ### 🎨 UI & UX
 
 * Consistent CollabHub design system
@@ -174,20 +190,19 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Project owner profile picture
 * [x] View Project Owner Profile
 * [x] Public / private project behavior
+* [x] My Projects page
+* [x] View projects from My Projects
+* [x] Edit projects
+* [x] Delete projects
+* [x] Project owner permissions
+* [x] Delete confirmation and handling
+* [x] My Projects empty state
+* [x] My Projects navigation
 * [x] Professional UI system
 * [x] Toast notification system
 * [x] Automatic toast dismissal
 
 ### 🚧 Current / Next
-
-#### Project Management
-
-* [ ] Dedicated My Projects page
-* [ ] View project from My Projects
-* [ ] Edit project
-* [ ] Delete project
-* [ ] Project owner permissions
-* [ ] Delete confirmation and handling
 
 #### Project Collaboration
 
@@ -305,7 +320,7 @@ Collaboration
 
 CollabHub is currently under active development.
 
-The authentication, profile, discovery, connection, and core project systems have been implemented.
+The authentication, profile, discovery, connection, and core project management systems have been implemented.
 
 Users can currently:
 
@@ -317,12 +332,15 @@ Users can currently:
 * View detailed project information
 * View project owners
 * Explore public and private project behavior
+* View and manage their own projects
+* Edit their projects
+* Delete their projects with owner-level permission checks
 
-The current development stage is focused on **project management**.
+The current development stage is focused on **project collaboration**.
 
-The next milestone is a dedicated **My Projects** section where project owners will be able to view and manage their own projects through View, Edit, and Delete actions.
+The next milestone is building **Project Join Requests**, allowing users to request to join public projects and allowing project owners to review, accept, or reject those requests.
 
-After project management is complete, the next major stage will be building **Project Join Requests**, followed by project members, teams, and task management.
+After join requests are complete, the next stages will introduce **Project Members**, followed by teams and task management.
 
 ---
 
