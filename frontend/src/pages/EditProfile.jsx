@@ -42,8 +42,6 @@ const EditProfile = () => {
                 setProfilePicturePreview(data.profile_picture || "");
 
             } catch (error) {
-                console.log(error);
-
                 if (error.response?.status === 401) {
                     showToast("You are not authenticated");
                     navigate("/login");
@@ -224,7 +222,7 @@ const EditProfile = () => {
                                                     URL.createObjectURL(file)
                                                 );
                                             }}
-                                            className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-700 hover:file:bg-violet-100"
+                                            className="block w-full text-sm cursor-pointer text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-700 hover:file:bg-violet-100"
                                         />
 
                                         <p className="mt-2 text-xs text-gray-400">
@@ -455,7 +453,7 @@ const EditProfile = () => {
                             type="button"
                             onClick={() => navigate(-1)}
                             disabled={saving}
-                            className="rounded-md border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-md border border-gray-300 cursor-pointer bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             Cancel
                         </button>
@@ -464,7 +462,7 @@ const EditProfile = () => {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-md bg-violet-600 px-5 py-2.5 cursor-pointer text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {saving ? "Saving..." : "Save Changes"}
                         </button>

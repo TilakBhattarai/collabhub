@@ -4,7 +4,7 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 const statusConfig = {
-    LOOKING_FOR_CONTRIBUTERS: {
+    LOOKING_FOR_CONTRIBUTORS: {
         label: "Looking for Contributors",
         className: "text-violet-700 bg-violet-50 border-violet-100",
     },

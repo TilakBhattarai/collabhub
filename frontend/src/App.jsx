@@ -17,6 +17,7 @@ import CreateProject from "./pages/CreateProject"
 import Projects from "./pages/Projects"
 import ProjectDetails from "./pages/ProjectDetails"
 import MyProjects from "./pages/MyProjects"
+import EditProject from "./pages/EditProject"
 
 function App() {
 
@@ -127,6 +128,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ProjectDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="myprojects/:projectId"
+          element={
+            <ProtectedRoute>
+              <EditProject />
             </ProtectedRoute>
           }
         />

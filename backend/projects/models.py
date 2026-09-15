@@ -10,7 +10,7 @@ class Project(models.Model):
         ("PRIVATE", "Private"),
     ]
     STATUS_CHOICES = [
-        ("LOOKING_FOR_CONTRIBUTERS", "Looking for Contributors"),
+        ("LOOKING_FOR_CONTRIBUTORS", "Looking for Contributors"),
         ("IN_PROGRESS", "In Progress"),
         ("COMPLETED", "Completed"),
     ]

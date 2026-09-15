@@ -22,8 +22,8 @@ const statusStyles = {
         background: "bg-amber-50",
     },
 
-    LOOKING_FOR_CONTRIBUTERS: {
-        text: "Looking For Contributor",
+    LOOKING_FOR_CONTRIBUTORS: {
+        text: "Looking For Contributors",
         dot: "bg-violet-600",
         color: "text-violet-700",
         background: "bg-violet-50",
@@ -39,8 +39,8 @@ const statusStyles = {
 
 const visibilityStyles = {
     PUBLIC: "Public",
-    PRIVATE: "Private"
-}
+    PRIVATE: "Private",
+};
 
 function StatCard({ stat }) {
     const Icon = stat.icon;
@@ -64,143 +64,54 @@ function StatCard({ stat }) {
     );
 }
 
-function ProjectCard({ project }) {
-    const status = statusStyles[project.status];
-
-    const navigate = useNavigate();
-
-    return (
-        <div className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md">
-            {/* Top row */}
-            <div className="flex items-start justify-between gap-4">
-                <div
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${status.background} ${status.color}`}
-                >
-                    <span
-                        className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
-                    />
-                    {statusStyles[project.status].text}
-                </div>
-
-                <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-600">
-                    {visibilityStyles[project.visibility]}
-                </span>
-            </div>
-
-            {/* Project info */}
-            <div className="mt-4">
-                <h3 className="text-base font-semibold text-gray-900">
-                    {project.title}
-                </h3>
-
-                <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
-                    {project.description}
-                </p>
-            </div>
-
-            {/* Skills */}
-            <div className="mt-4 flex min-h-7 flex-wrap gap-2">
-                {project.required_skills.split(",").map((skill) => (
-                    <span
-                        key={skill}
-                        className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
-                    >
-                        {skill.trim()}
-                    </span>
-                ))}
-            </div>
-
-            {/* Metadata
-            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-xs text-gray-500">
-                <span className="flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5" />
-                    {project.members} members
-                </span>
-
-                <span className="flex items-center gap-1.5">
-                    <Clock3 className="h-3.5 w-3.5" />
-                    {project.updated}
-                </span>
-            </div> */}
-
-            {/* Actions */}
-            <div className="mt-5 grid grid-cols-4 gap-2 border-t border-gray-100 pt-4">
-                <button
-                    onClick={() => navigate(`/projects/${project.id}`)}
-                    type="button"
-                    className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                >
-                    <Eye className="h-3.5 w-3.5" />
-                    View
-                </button>
-
-                <button
-                    type="button"
-                    className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                >
-                    <BarChart3 className="h-3.5 w-3.5" />
-                    Analytics
-                </button>
-
-                <button
-                    type="button"
-                    className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                >
-                    <Pencil className="h-3.5 w-3.5" />
-                    Edit
-                </button>
-
-                <button
-                    type="button"
-                    className="inline-flex h-9 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
-                >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    Delete
-                </button>
-            </div>
-        </div>
-    );
-}
-
-
-
-
-
 export default function MyProjects() {
     const navigate = useNavigate();
-
     const { showToast } = useToast();
+
     const [myProjects, setmyProjects] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
 
     const stats = [
-        { label: "Total Projects", value: myProjects.length, icon: FolderKanban },
+        {
+            label: "Total Projects",
+            value: myProjects.length,
+            icon: FolderKanban,
+        },
         {
             label: "Looking for Contributors",
-            value: myProjects.filter((project) => project.status === "LOOKING_FOR_CONTRIBUTERS").length,
-            icon: Users
+            value: myProjects.filter(
+                (project) =>
+                    project.status === "LOOKING_FOR_CONTRIBUTORS"
+            ).length,
+            icon: Users,
         },
         {
             label: "In Progress",
-            value: myProjects.filter((project) => project.status === "IN_PROGRESS").length,
-            icon: Clock3
+            value: myProjects.filter(
+                (project) => project.status === "IN_PROGRESS"
+            ).length,
+            icon: Clock3,
         },
         {
             label: "Completed",
-            value: myProjects.filter((project) => project.status === 'COMPLETED').length,
-            icon: FolderKanban
+            value: myProjects.filter(
+                (project) => project.status === "COMPLETED"
+            ).length,
+            icon: FolderKanban,
         },
     ];
 
-
     const fetchmyProjects = async () => {
         setLoading(true);
+
         try {
             const response = await api.get(
                 "projects/my_projects/"
-            )
-            setmyProjects(response.data)
-            console.log(response.data);
+            );
+
+            setmyProjects(response.data);
         } catch (error) {
             if (error.response?.status === 401) {
                 showToast("You are not authenticated");
@@ -212,12 +123,52 @@ export default function MyProjects() {
         } finally {
             setLoading(false);
         }
-    }
+    };
+
+    const deleteProject = async (projectId) => {
+        setDeletingId(projectId);
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this project?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setDeleting(true);
+
+        try {
+            await api.delete(`projects/${projectId}/`);
+
+            setmyProjects((prevProjects) => (
+                prevProjects.filter((project) => project.id != projectId)
+            ))
+
+            showToast("Project deleted successfully");
+            navigate("/projects");
+
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.status === 403) {
+                showToast(
+                    "You do not have permission to delete this project"
+                );
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast(
+                    "Something went wrong while deleting the project"
+                );
+            }
+        } finally {
+            setDeleting(false);
+        }
+    };
 
     useEffect(() => {
-        fetchmyProjects()
-    }, [])
-
+        fetchmyProjects();
+    }, []);
 
     if (loading) {
         return (
@@ -232,6 +183,7 @@ export default function MyProjects() {
     return (
         <div className="min-h-screen bg-gray-50/60">
             <div className="mx-auto max-w-6xl px-6 pb-16 pt-16 sm:px-8 lg:px-10">
+
                 {/* Header */}
                 <div className="flex flex-col gap-5 border-b border-gray-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
                     <div>
@@ -258,7 +210,10 @@ export default function MyProjects() {
                 {/* Statistics */}
                 <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat) => (
-                        <StatCard key={stat.label} stat={stat} />
+                        <StatCard
+                            key={stat.label}
+                            stat={stat}
+                        />
                     ))}
                 </div>
 
@@ -276,13 +231,136 @@ export default function MyProjects() {
 
                     {/* Project grid */}
                     <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                        {myProjects.map((project) => (
-                            <ProjectCard
-                                key={project.id}
-                                project={project}
-                            />
-                        ))}
+
+                        {myProjects.map((project) => {
+                            const status =
+                                statusStyles[project.status];
+
+                            return (
+                                <div
+                                    key={project.id}
+                                    className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
+                                >
+                                    {/* Top row */}
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div
+                                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${status.background} ${status.color}`}
+                                        >
+                                            <span
+                                                className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
+                                            />
+
+                                            {status.text}
+                                        </div>
+
+                                        <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-600">
+                                            {visibilityStyles[
+                                                project.visibility
+                                            ]}
+                                        </span>
+                                    </div>
+
+                                    {/* Project info */}
+                                    <div className="mt-4">
+                                        <h3 className="text-base font-semibold text-gray-900">
+                                            {project.title}
+                                        </h3>
+
+                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
+                                            {project.description}
+                                        </p>
+                                    </div>
+
+                                    {/* Skills */}
+                                    <div className="mt-4 flex min-h-7 flex-wrap gap-2">
+                                        {(project.required_skills || "").split(",").filter(Boolean).map((skill) => (
+                                            <span
+                                                key={skill}
+                                                className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
+                                            >
+                                                {skill.trim()}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="mt-5 grid grid-cols-4 gap-2 border-t border-gray-100 pt-4">
+
+                                        {/* View */}
+                                        <button
+                                            onClick={() =>
+                                                navigate(
+                                                    `/projects/${project.id}`
+                                                )
+                                            }
+                                            type="button"
+                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                        >
+                                            <Eye className="h-3.5 w-3.5" />
+                                            View
+                                        </button>
+
+                                        {/* Analytics */}
+                                        <button
+                                            type="button"
+                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                        >
+                                            <BarChart3 className="h-3.5 w-3.5" />
+                                            Analytics
+                                        </button>
+
+                                        {/* Edit */}
+                                        <button
+                                            onClick={() =>
+                                                navigate(
+                                                    `/myprojects/${project.id}`
+                                                )
+                                            }
+                                            type="button"
+                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                        >
+                                            <Pencil className="h-3.5 w-3.5" />
+                                            Edit
+                                        </button>
+
+                                        {/* Delete */}
+                                        <button
+                                            disabled={deleting}
+                                            onClick={() =>
+                                                deleteProject(project.id)
+                                            }
+                                            type="button"
+                                            className="inline-flex h-9 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                            {deleting ? "Deleting..." : "Delete"}
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
+
+                    {myProjects.length === 0 && (
+                        <div className="mt-8 border-t border-gray-200 py-16 text-center">
+
+                            <h3 className="text-base font-semibold text-gray-900">
+                                You haven't created any projects yet
+                            </h3>
+
+                            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-gray-500">
+                                Start a project of your own and find collaborators to help bring it to life.
+                            </p>
+
+                            <button
+                                onClick={() => navigate("/project/create")}
+                                className="mt-5 rounded-md bg-violet-600 px-5 py-2.5 text-sm font-medium text-white cursor-pointer hover:bg-violet-700 transition"
+                            >
+                                Create Project
+                            </button>
+
+                        </div>
+                    )}
                 </section>
             </div>
         </div>

@@ -53,6 +53,13 @@ function Navbar() {
                             </Link>
 
                             <Link
+                                to="/myprojects"
+                                className="text-sm text-gray-600 hover:text-violet-700 transition"
+                            >
+                                My Projects
+                            </Link>
+
+                            <Link
                                 to="/connection"
                                 className="text-sm text-gray-600 hover:text-violet-700 transition"
                             >
@@ -144,6 +151,14 @@ function Navbar() {
                                 className="px-4 py-3 text-sm text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition"
                             >
                                 Projects
+                            </Link>
+
+                            <Link
+                                to="/myprojects"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition"
+                            >
+                                My Projects
                             </Link>
 
                             <Link
