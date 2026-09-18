@@ -145,7 +145,7 @@ export default function MyProjects() {
             ))
 
             showToast("Project deleted successfully");
-            navigate("/projects");
+            navigate("/myprojects");
 
         } catch (error) {
             if (error.response?.status === 401) {

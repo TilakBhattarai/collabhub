@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function ProjectDetails() {
     const [project, setProject] = useState(null);
@@ -11,6 +12,7 @@ export default function ProjectDetails() {
     const { projectId } = useParams();
     const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
+    const { userId } = useAuth();
 
     const projectDetail = async () => {
         setLoading(true);
@@ -42,7 +44,7 @@ export default function ProjectDetails() {
         PRIVATE: 'Private'
     }
     const statusConfig = {
-        LOOKING_FOR_CONTRIBUTERS: {
+        LOOKING_FOR_CONTRIBUTORS: {
             label: "Looking for Contributors",
             className: "text-violet-700 bg-violet-50 border-violet-100",
         },
@@ -65,6 +67,9 @@ export default function ProjectDetails() {
             </div>
         );
     }
+
+    const isOwner = Number(userId) === Number(project?.owner?.id);
+
 
     return (
         <div className="min-h-screen bg-white pt-20 pb-20">
@@ -99,7 +104,7 @@ export default function ProjectDetails() {
                                 </h1>
                                 <div className="flex flex-wrap items-center gap-2">
                                     <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-violet-50 text-violet-700">
-                                        {project.status || "Status not set"}
+                                        {statusConfig[project.status].label || "Status not set"}
                                     </span>
                                     <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-600">
                                         {visibilityConfig[project.visibility]}
@@ -230,29 +235,37 @@ export default function ProjectDetails() {
                             </div>
 
                             {/* Join section */}
-                            <div className="border border-gray-200 rounded-lg p-6">
-                                <p className="text-sm font-medium text-gray-900 mb-1">
-                                    Interested in contributing to this project?
-                                </p>
-                                <p className="text-xs text-gray-500 mb-4">
-                                    Make sure your skills match the project requirements before
-                                    sending a request.
-                                </p>
-                                {project.visibility === "PRIVATE" ? (
-                                    <div className="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-center">
-                                        <p className="text-sm font-medium text-gray-700">
-                                            Private Project
+                            {!isOwner && (
+                                <div className="border border-gray-200 rounded-lg p-6">
+
+                                    <>
+                                        <p className="text-sm font-medium text-gray-900 mb-1">
+                                            Interested in contributing to this project?
                                         </p>
-                                        <p className="mt-1 text-xs text-gray-500">
-                                            Join requests are not available for private projects.
+
+                                        <p className="text-xs text-gray-500 mb-4">
+                                            Make sure your skills match the project requirements before
+                                            sending a request.
                                         </p>
-                                    </div>
-                                ) : (
-                                    <button className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors">
-                                        Send Join Request
-                                    </button>
-                                )}
-                            </div>
+
+                                        {project.visibility === "PRIVATE" ? (
+                                            <div className="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-center">
+                                                <p className="text-sm font-medium text-gray-700">
+                                                    Private Project
+                                                </p>
+                                                <p className="mt-1 text-xs text-gray-500">
+                                                    Join requests are not available for private projects.
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <button className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors">
+                                                Send Join Request
+                                            </button>
+                                        )}
+                                    </>
+
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -274,7 +287,8 @@ export default function ProjectDetails() {
                         Back to Projects
                     </button>
                 </div>
-            )}
+            )
+            }
 
 
         </div >
