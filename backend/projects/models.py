@@ -36,3 +36,40 @@ class Project(models.Model):
 
     def __str__(self):
         return f"{self.owner.username} created {self.title}"
+
+
+class JoinRequest(models.Model):
+
+    STATUS_CHOICES = [
+        ("ACCEPTED", "Accepted"),
+        ("REJECTED", "Rejected"),
+        ("PENDING", "Pending"),
+    ]
+
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="join_requests"
+    )
+
+    status = models.CharField(
+        choices=STATUS_CHOICES,
+        max_length=10,
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="join_requests",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["sender", "project"],
+                name="unique_request",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.sender} requested on project {self.project.title}"

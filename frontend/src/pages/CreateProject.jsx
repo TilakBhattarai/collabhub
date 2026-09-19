@@ -18,18 +18,26 @@ const CreateProject = () => {
     const createProject = async (e) => {
         e.preventDefault();
 
+        if (!status || !visibility) {
+            showToast("Please select visibility and status");
+            return;
+        }
+
+        if (title.length > 100) {
+            showToast("Title length exceeded. Please keep title upto 100");
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const response = await api.post("projects/", {
+            await api.post("projects/", {
                 title,
                 description,
                 required_skills,
                 visibility,
                 status,
             });
-
-            console.log(response.data);
 
             showToast("Project created successfully");
             navigate("/dashboard");
@@ -125,11 +133,10 @@ const CreateProject = () => {
                                     id="title"
                                     type="text"
                                     value={title}
-                                    onChange={(e) =>
-                                        setTitle(e.target.value)
-                                    }
+                                    onChange={(e) => setTitle(e.target.value)}
                                     placeholder="What are you building?"
                                     required
+                                    maxLength={100}
                                     className={inputClass}
                                 />
                             </div>
@@ -219,6 +226,7 @@ const CreateProject = () => {
                                     <label className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-700">
                                         <input
                                             type="radio"
+                                            required
                                             name="visibility"
                                             value="PUBLIC"
                                             checked={
@@ -239,6 +247,7 @@ const CreateProject = () => {
                                     <label className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-700">
                                         <input
                                             type="radio"
+                                            required
                                             name="visibility"
                                             value="PRIVATE"
                                             checked={
@@ -281,7 +290,7 @@ const CreateProject = () => {
                                         Select project status
                                     </option>
 
-                                    <option value="LOOKING_FOR_CONTRIBUTERS">
+                                    <option value="LOOKING_FOR_CONTRIBUTORS">
                                         Looking for Contributors
                                     </option>
 

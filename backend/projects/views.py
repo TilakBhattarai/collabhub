@@ -1,10 +1,11 @@
 from rest_framework.permissions import IsAuthenticated
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, JoinRequest
+from .serializers import ProjectSerializer, JoinRequestSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 
 class ProjectViewSet(ModelViewSet):
@@ -63,3 +64,33 @@ class ProjectViewSet(ModelViewSet):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class JoinRequestViewSet(ModelViewSet):
+    queryset = JoinRequest.objects.all()
+    serializer_class = JoinRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        project = serializer.validated_data["project"]
+
+        if project.owner.id == self.request.user.id:
+            raise ValidationError(
+                {"error": "You cannot send the request to your own project"}
+            )
+
+        if project.visibility == "PRIVATE":
+            raise ValidationError(
+                {
+                    "error": "This project is private. You cannot send a request to it.",
+                }
+            )
+
+        if JoinRequest.objects.filter(
+            sender=self.request.user, project=project
+        ).exists():
+            raise ValidationError(
+                {"error": "You have already sent a request to this project."}
+            )
+
+        serializer.save(sender=self.request.user, status="PENDING")

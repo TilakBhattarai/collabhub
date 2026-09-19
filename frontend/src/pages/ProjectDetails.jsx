@@ -8,11 +8,13 @@ import { useAuth } from "../context/AuthContext";
 
 export default function ProjectDetails() {
     const [project, setProject] = useState(null);
+    const [requests, setRequests] = useState([]);
     const navigate = useNavigate();
     const { projectId } = useParams();
     const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
     const { userId } = useAuth();
+    const [sending, setSending] = useState(null);
 
     const projectDetail = async () => {
         setLoading(true);
@@ -21,7 +23,7 @@ export default function ProjectDetails() {
                 `projects/${projectId}/`,
             )
             setProject(response.data);
-            console.log(response.data);
+            // console.log(response.data);
         } catch (error) {
             if (error.response?.status === 401) {
                 showToast("You are not authenticated");
@@ -57,6 +59,58 @@ export default function ProjectDetails() {
             className: "text-gray-600 bg-gray-50 border-gray-200",
         },
     };
+
+    const fetchRequests = async () => {
+        try {
+            const response = await api.get(
+                `projects/request/`,
+            )
+            setRequests(response.data);
+            // console.log(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on fetching requests");
+            }
+        }
+    }
+
+    const handleRequest = async (projectId) => {
+        setSending(true);
+
+        try {
+            await api.post(
+                "projects/request/",
+                {
+                    project: projectId
+                }
+            )
+
+            await fetchRequests();
+        } catch (error) {
+            if (error.response?.status === 401) {
+                showToast("You are not authenticated");
+            } else if (error.response?.data?.error) {
+                showToast(error.response.data.error);
+            } else {
+                showToast("Something went wrong on sending request");
+            }
+        } finally {
+            setSending(false);
+        }
+    }
+
+    const request = requests.find(
+        (req) =>
+            Number(req?.project) === Number(project?.id)
+    );
+
+    useEffect(() => {
+        fetchRequests()
+    }, [])
 
     if (loading) {
         return (
@@ -257,9 +311,35 @@ export default function ProjectDetails() {
                                                     Join requests are not available for private projects.
                                                 </p>
                                             </div>
+                                        ) : !request ? (
+                                            <button
+                                                onClick={() => handleRequest(project.id)}
+                                                disabled={sending}
+                                                className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors"
+                                            >
+                                                {sending ? "Sending..." : "Send Join Request"}
+                                            </button>
+                                        ) : request.status === "PENDING" ? (
+                                            <button
+                                                disabled
+                                                className="w-full text-sm font-medium py-2.5 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+                                            >
+                                                Request Pending
+                                            </button>
+                                        ) : request.status === "ACCEPTED" ? (
+                                            <button
+                                                disabled
+                                                className="w-full text-sm font-medium py-2.5 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+                                            >
+                                                Request Accepted
+                                            </button>
                                         ) : (
-                                            <button className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors">
-                                                Send Join Request
+                                            <button
+                                                onClick={() => handleRequest(project.id)}
+                                                disabled={sending}
+                                                className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md bg-violet-600 text-white hover:bg-violet-700 transition-colors"
+                                            >
+                                                {sending ? "Sending..." : "Request Again"}
                                             </button>
                                         )}
                                     </>
