@@ -127,6 +127,7 @@ The project is being developed incrementally, with each feature built, tested, a
 * Public project behavior
 * Private project behavior
 * Private projects do not currently allow join requests
+* Project owner cannot send a join request to their own project
 
 ### 📂 My Projects
 
@@ -143,6 +144,20 @@ The project is being developed incrementally, with each feature built, tested, a
 * Automatic project list update after deletion
 * My Projects empty state
 * Navigation to My Projects from the main navigation
+
+### 🤝 Project Join Requests
+
+* Send join requests to public projects
+* Prevent project owners from requesting their own projects
+* Prevent duplicate join requests
+* Automatically assign the authenticated user as the sender
+* Automatically set new requests to `PENDING`
+* Public / private project validation
+* View the authenticated user's join requests
+* Display pending request status
+* Display accepted request status
+* Request again after rejection
+* Backend permission and validation checks
 
 ### 🎨 UI & UX
 
@@ -201,14 +216,16 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Professional UI system
 * [x] Toast notification system
 * [x] Automatic toast dismissal
+* [x] Project join request creation
+* [x] Join request validation
+* [x] Join request status handling
 
 ### 🚧 Current / Next
 
 #### Project Collaboration
 
-* [ ] Project join requests
-* [ ] Send join request
-* [ ] Join request status
+* [x] Send join request
+* [x] Join request status
 * [ ] Project owner request management
 * [ ] Accept / reject join requests
 * [ ] Project members
@@ -335,12 +352,14 @@ Users can currently:
 * View and manage their own projects
 * Edit their projects
 * Delete their projects with owner-level permission checks
+* Send join requests to public projects
+* Track the status of their join requests
 
 The current development stage is focused on **project collaboration**.
 
-The next milestone is building **Project Join Requests**, allowing users to request to join public projects and allowing project owners to review, accept, or reject those requests.
+The next milestone is building **Project Owner Request Management**, allowing project owners to view incoming requests for their projects and accept or reject them.
 
-After join requests are complete, the next stages will introduce **Project Members**, followed by teams and task management.
+After that, **Project Members** will connect accepted requests to actual project participation, followed by teams and task management.
 
 ---
 
