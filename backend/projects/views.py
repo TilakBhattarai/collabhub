@@ -94,3 +94,9 @@ class JoinRequestViewSet(ModelViewSet):
             )
 
         serializer.save(sender=self.request.user, status="PENDING")
+
+    @action(detail=False, methods=["get"])
+    def owner_requests(self, request):
+        requests = JoinRequest.objects.filter(project__owner=request.user)
+        serializer = self.get_serializer(requests, many=True)
+        return Response(serializer.data)

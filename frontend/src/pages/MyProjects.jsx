@@ -182,7 +182,7 @@ export default function MyProjects() {
 
     return (
         <div className="min-h-screen bg-gray-50/60">
-            <div className="mx-auto max-w-6xl px-6 pb-16 pt-16 sm:px-8 lg:px-10">
+            <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-10 pt-24 pb-20">
 
                 {/* Header */}
                 <div className="flex flex-col gap-5 border-b border-gray-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
