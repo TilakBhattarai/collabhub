@@ -158,6 +158,11 @@ The project is being developed incrementally, with each feature built, tested, a
 * Display accepted request status
 * Request again after rejection
 * Backend permission and validation checks
+* Project owners can view incoming join requests for their projects
+* Display requester profile information
+* Display requester role and skills
+* Display requested project information
+* Display request status and request date
 
 ### 🎨 UI & UX
 
@@ -219,6 +224,7 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Project join request creation
 * [x] Join request validation
 * [x] Join request status handling
+* [x] Project owner incoming request view
 
 ### 🚧 Current / Next
 
@@ -226,7 +232,7 @@ CollabHub is being developed feature by feature, with each major feature complet
 
 * [x] Send join request
 * [x] Join request status
-* [ ] Project owner request management
+* [x] Project owner incoming request view
 * [ ] Accept / reject join requests
 * [ ] Project members
 
@@ -354,12 +360,13 @@ Users can currently:
 * Delete their projects with owner-level permission checks
 * Send join requests to public projects
 * Track the status of their join requests
+* Project owners can view incoming join requests for their projects
 
 The current development stage is focused on **project collaboration**.
 
-The next milestone is building **Project Owner Request Management**, allowing project owners to view incoming requests for their projects and accept or reject them.
+Project owners can currently view incoming join requests for their projects, including requester information, skills, project details, request status, and request date.
 
-After that, **Project Members** will connect accepted requests to actual project participation, followed by teams and task management.
+The next milestone is adding **Accept / Reject Join Requests**. After that, **Project Members** will connect accepted requests to actual project participation, followed by teams and task management.
 
 ---
 
