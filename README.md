@@ -128,6 +128,8 @@ The project is being developed incrementally, with each feature built, tested, a
 * Private project behavior
 * Private projects do not currently allow join requests
 * Project owner cannot send a join request to their own project
+* Send join request to public projects
+* Join request status handling
 
 ### 📂 My Projects
 
@@ -149,7 +151,7 @@ The project is being developed incrementally, with each feature built, tested, a
 
 * Send join requests to public projects
 * Prevent project owners from requesting their own projects
-* Prevent duplicate join requests
+* Prevent duplicate pending requests
 * Automatically assign the authenticated user as the sender
 * Automatically set new requests to `PENDING`
 * Public / private project validation
@@ -163,6 +165,11 @@ The project is being developed incrementally, with each feature built, tested, a
 * Display requester role and skills
 * Display requested project information
 * Display request status and request date
+* Accept join requests
+* Reject join requests
+* Prevent unauthorized users from accepting or rejecting requests
+* Prevent already processed requests from being accepted or rejected
+* Remove processed requests from the pending owner view
 
 ### 🎨 UI & UX
 
@@ -221,10 +228,14 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Professional UI system
 * [x] Toast notification system
 * [x] Automatic toast dismissal
-* [x] Project join request creation
+* [x] Join request creation
 * [x] Join request validation
 * [x] Join request status handling
 * [x] Project owner incoming request view
+* [x] Accept join requests
+* [x] Reject join requests
+* [x] Owner permission checks for join requests
+* [x] Pending join request handling
 
 ### 🚧 Current / Next
 
@@ -233,8 +244,11 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Send join request
 * [x] Join request status
 * [x] Project owner incoming request view
-* [ ] Accept / reject join requests
+* [x] Accept join requests
+* [x] Reject join requests
+* [ ] Project Details request status UI
 * [ ] Project members
+* [ ] Accepted member handling
 
 #### Teams & Work Management
 
@@ -322,11 +336,9 @@ Create / Discover Projects
    ↓
 Project Details
    ↓
-My Projects
-   ↓
-Project Management
-   ↓
 Join Requests
+   ↓
+Accept / Reject
    ↓
 Project Members
    ↓
@@ -359,14 +371,16 @@ Users can currently:
 * Edit their projects
 * Delete their projects with owner-level permission checks
 * Send join requests to public projects
-* Track the status of their join requests
-* Project owners can view incoming join requests for their projects
+* Track join request status
+* Request again after rejection
+* View incoming join requests as project owners
+* Accept join requests
+* Reject join requests
+* Enforce project-owner permissions when processing requests
 
 The current development stage is focused on **project collaboration**.
 
-Project owners can currently view incoming join requests for their projects, including requester information, skills, project details, request status, and request date.
-
-The next milestone is adding **Accept / Reject Join Requests**. After that, **Project Members** will connect accepted requests to actual project participation, followed by teams and task management.
+The Join Request workflow is now functional from creation through owner-side acceptance or rejection. The next step is connecting accepted requests to actual **Project Members**, followed by teams and task management.
 
 ---
 
