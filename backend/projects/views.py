@@ -87,16 +87,75 @@ class JoinRequestViewSet(ModelViewSet):
             )
 
         if JoinRequest.objects.filter(
-            sender=self.request.user, project=project
+            sender=self.request.user,
+            project=project,
+            status="PENDING",
         ).exists():
             raise ValidationError(
-                {"error": "You have already sent a request to this project."}
+                {"error": "You already have a pending request for this project."}
             )
 
         serializer.save(sender=self.request.user, status="PENDING")
 
     @action(detail=False, methods=["get"])
     def owner_requests(self, request):
-        requests = JoinRequest.objects.filter(project__owner=request.user)
+        requests = JoinRequest.objects.filter(
+            project__owner=request.user, status="PENDING"
+        )
         serializer = self.get_serializer(requests, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def accept(self, request, pk=None):
+        join_request = self.get_object()
+
+        if join_request.project.owner.id != request.user.id:
+            return Response(
+                {
+                    "error": "Only the project owner can accept join requests for this project."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if join_request.status != "PENDING":
+            return Response(
+                {
+                    "error": f"This request has already been {join_request.status.lower()}"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        join_request.status = "ACCEPTED"
+        join_request.save()
+        return Response(
+            {"message": "Request accepted successfully."},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+    @action(detail=True, methods=["post"])
+    def reject(self, request, pk=None):
+        join_request = self.get_object()
+
+        if join_request.project.owner.id != request.user.id:
+            return Response(
+                {
+                    "error": "Only the project owner can reject join requests for this project."
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if join_request.status != "PENDING":
+            return Response(
+                {
+                    "error": f"This request has already been {join_request.status.lower()}"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        join_request.status = "REJECTED"
+        join_request.save()
+
+        return Response(
+            {"message": "Request rejected successfully."},
+            status=status.HTTP_200_OK,
+        )

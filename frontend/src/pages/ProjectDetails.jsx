@@ -105,7 +105,7 @@ export default function ProjectDetails() {
 
     const request = requests.find(
         (req) =>
-            Number(req?.project) === Number(project?.id)
+            Number(req?.project?.id) === Number(project?.id)
     );
 
     useEffect(() => {

@@ -143,7 +143,7 @@ function App() {
         />
 
         <Route
-          path="/requests"
+          path="/projects/request"
           element={
             <ProtectedRoute>
               <JoinRequests />
