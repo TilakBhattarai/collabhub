@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
 import { ArrowLeft } from "lucide-react";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const EditProfile = () => {
     const navigate = useNavigate();
@@ -42,15 +44,7 @@ const EditProfile = () => {
                 setProfilePicturePreview(data.profile_picture || "");
 
             } catch (error) {
-                if (error.response?.status === 401) {
-                    showToast("You are not authenticated");
-                    navigate("/login");
-                } else if (error.response?.status === 404) {
-                    showToast("Your profile hasn't been created yet!");
-                    navigate("/profile");
-                } else {
-                    showToast("Something went wrong while loading your profile");
-                }
+                HandleApiError(error, showToast, "Couldn't load your profile. Please try again.")
 
             } finally {
                 setLoading(false);
@@ -83,27 +77,15 @@ const EditProfile = () => {
                 formData.append("profile_picture", profilePicture);
             }
 
-            const response = await api.patch(
+            await api.patch(
                 "profile/edit/",
                 formData
             );
-
-            console.log(response.data);
-
             showToast("Profile updated successfully!");
             navigate("/profile");
 
         } catch (error) {
-            console.log(error);
-
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong while updating your profile");
-            }
-
+            HandleApiError(error, showToast, "Failed to save changes. Please try again.")
         } finally {
             setSaving(false);
         }
@@ -111,13 +93,7 @@ const EditProfile = () => {
 
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
 
 

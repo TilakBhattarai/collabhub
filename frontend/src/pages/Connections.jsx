@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 export default function Connections() {
     const [requests, setRequests] = useState([]);
@@ -10,6 +13,7 @@ export default function Connections() {
     const [acceptConnectionID, setAcceptConnectionID] = useState("");
     const [rejectConnectionID, setRejectConnectionID] = useState("");
     const [removeConnectionID, setRemoveConnectionID] = useState("");
+    const [initialLoading, setInitialLoading] = useState(false);
 
     const { showToast } = useToast();
     const navigate = useNavigate();
@@ -25,15 +29,7 @@ export default function Connections() {
 
                 setRequests(response.data);
             } catch (error) {
-                if (error.response?.status === 401) {
-                    showToast("You are not authenticated");
-                } else if (error.response?.data?.error) {
-                    showToast(error.response.data.error);
-                } else {
-                    showToast(
-                        "Something went wrong on fetching connections requests"
-                    );
-                }
+                HandleApiError(error, showToast, "Something went wrong on fetching connections requests");
             } finally {
                 setLoading(false);
             }
@@ -52,15 +48,7 @@ export default function Connections() {
 
             setMyConnections(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on fetching connections"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to load connections. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -72,10 +60,10 @@ export default function Connections() {
 
     const acceptConnection = async (connection_id) => {
         setAcceptConnectionID(connection_id);
-        setLoading(true);
+        setInitialLoading(true);
 
         try {
-            const response = await api.post(
+            await api.post(
                 "connection/requests/accept",
                 {
                     connection_id: connection_id,
@@ -90,27 +78,18 @@ export default function Connections() {
 
             await fetchConnections();
 
-            showToast("Connection accepted successfully");
+            showToast("Connection accepted");
 
-            console.log(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on accepting connection"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to accept connection. Please try again.");
         } finally {
-            setLoading(false);
+            setInitialLoading(false);
         }
     };
 
     const rejectConnection = async (connection_id) => {
         setRejectConnectionID(connection_id);
-        setLoading(true);
+        setInitialLoading(true);
 
         try {
             const response = await api.post(
@@ -128,33 +107,32 @@ export default function Connections() {
                 )
             );
 
-            console.log(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on rejecting connection"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to reject connection. Please try again.");
         } finally {
-            setLoading(false);
+            setInitialLoading(false);
         }
     };
 
     const removeConnection = async (connection_id) => {
+
+        const deleteConnection = window.confirm("Are you sure you want to remove this connection?");
+        if (!deleteConnection) {
+            return false;
+        }
+
         setRemoveConnectionID(connection_id);
-        setLoading(true);
+        setInitialLoading(true);
 
         try {
-            const response = await api.post(
+            await api.post(
                 "connection/my-connections/remove/",
                 {
                     connectionId: connection_id,
                 }
             );
+
+            showToast("Connection removed successfully");
 
             setMyConnections((prev) =>
                 prev.filter(
@@ -162,31 +140,17 @@ export default function Connections() {
                 )
             );
 
-            console.log(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on removing connection"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to remove connection. Please try again.")
         } finally {
-            setLoading(false);
+            setInitialLoading(false);
         }
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
+
 
     return (
         <div className="min-h-screen bg-gray-50 px-5 pb-20 pt-24">
@@ -256,7 +220,6 @@ export default function Connections() {
                                                 )}
                                             </div>
 
-
                                             {/* Details */}
                                             <div className="min-w-0">
 
@@ -309,13 +272,26 @@ export default function Connections() {
 
                                             <button
                                                 onClick={() =>
+                                                    navigate(
+                                                        `/profile/${request.sender.id}`
+                                                    )
+                                                }
+                                                type="button"
+                                                className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
+                                            >
+                                                View
+                                            </button>
+
+                                            <button
+                                                onClick={() =>
                                                     acceptConnection(
                                                         request.id
                                                     )
                                                 }
+                                                disabled={initialLoading}
                                                 className="cursor-pointer rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
                                             >
-                                                Accept
+                                                {initialLoading && acceptConnectionID == request.id ? "Accepting..." : "Accept"}
                                             </button>
 
                                             <button
@@ -324,9 +300,10 @@ export default function Connections() {
                                                         request.id
                                                     )
                                                 }
-                                                className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                                                disabled={initialLoading}
+                                                className="cursor-pointer rounded-md border border-red-200 text-red-400 hover:text-red-700 hover:border-red-300 bg-red-50 hover:bg-red-100 px-4 py-2 text-sm font-medium transition"
                                             >
-                                                Decline
+                                                {initialLoading && rejectConnectionID === request.id ? "Rejecting..." : "Reject"}
                                             </button>
 
                                         </div>
@@ -441,15 +418,12 @@ export default function Connections() {
                                         </button>
 
                                         <button
-                                            onClick={() =>
-                                                removeConnection(
-                                                    connection.id
-                                                )
-                                            }
+                                            onClick={() => removeConnection(connection.id)}
+                                            disabled={initialLoading && removeConnectionID === connection.user.id}
                                             type="button"
-                                            className="cursor-pointer rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:bg-gray-50"
+                                            className="cursor-pointer rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
                                         >
-                                            Remove
+                                            {initialLoading && removeConnectionID === connection.user.id ? "Removing..." : "Remove"}
                                         </button>
 
                                     </div>
@@ -487,7 +461,7 @@ export default function Connections() {
 
                 </section>
 
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

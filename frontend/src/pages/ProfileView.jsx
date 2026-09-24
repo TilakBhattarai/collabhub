@@ -3,6 +3,8 @@ import api from "../api/axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import { ArrowLeft } from "lucide-react";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const ProfileView = () => {
     const [connectionProfile, setConnectionProfile] = useState(null);
@@ -22,15 +24,7 @@ const ProfileView = () => {
 
             setConnectionProfile(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on fetching connection's profile"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to load profile. Please try again.")
         } finally {
             setLoading(false);
         }
@@ -40,14 +34,10 @@ const ProfileView = () => {
         fetchProfile();
     }, [userId]);
 
+
+
     if (loading || !connectionProfile) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading profile...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
 
     return (
@@ -99,10 +89,20 @@ const ProfileView = () => {
                             </div>
                         </div>
 
-                        <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
-                            <span className="h-2 w-2 rounded-full bg-violet-600" />
-                            Connected
-                        </div>
+                        {connectionProfile.is_connected ? (
+
+                            <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
+                                <span className="h-2 w-2 rounded-full bg-violet-600" />
+                                Connected
+                            </div>
+
+                        ) : (
+                            <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
+                                <span className="h-2 w-2 rounded-full bg-violet-600" />
+                                Not Connected
+                            </div>
+                        )}
+
 
                         <button
                             type="button"

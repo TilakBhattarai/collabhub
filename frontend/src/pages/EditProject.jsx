@@ -4,6 +4,8 @@ import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useParams } from "react-router-dom";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const EditProject = () => {
     const [title, setTitle] = useState("");
@@ -34,23 +36,14 @@ const EditProject = () => {
 
 
         } catch (error) {
-            if (error.response?.status === 401) {
-                console.log(error.response?.data);
-                showToast("You are not authenticated");
-                navigate("/login");
-            } else if (error.response?.status === 404) {
-                showToast("Project not found");
-                navigate("/projects");
-            } else {
-                showToast("Something went wrong while updating the project");
-            }
+            HandleApiError(error, showToast, "Failed to fetch project. Please try again.")
 
         } finally {
             setLoading(false);
         }
     }
 
-    const updateProfile = async (e) => {
+    const updateProject = async (e) => {
         e.preventDefault();
         setSaving(true);
 
@@ -65,17 +58,10 @@ const EditProject = () => {
                     status,
                 }
             )
-            console.log(response.data);
             showToast("Project updated successfully");
             navigate(-1);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong while updating your project");
-            }
+            HandleApiError(error, showToast, "Failed to update project. Please try again.")
 
         } finally {
             setSaving(false);
@@ -87,15 +73,10 @@ const EditProject = () => {
         fetchProject();
     }, [projectId]);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading projects...
-                </p>
-            </div>
-        );
+    if(loading) {
+        return <Loading />;
     }
+
 
 
     return (
@@ -125,7 +106,7 @@ const EditProject = () => {
 
 
 
-                <form onSubmit={updateProfile} className="border border-gray-200 bg-white rounded-md">
+                <form onSubmit={updateProject} className="border border-gray-200 bg-white rounded-md">
 
                     {/* Project Details */}
                     <section className="border-b border-gray-200 p-6 sm:p-8">

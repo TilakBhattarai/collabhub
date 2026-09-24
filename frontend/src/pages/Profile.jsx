@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useToast } from "../context/ToastContext";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 function Profile() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
-    const [error, setError] = useState("");
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,16 +25,15 @@ function Profile() {
                 const response = await api.get("profile/");
                 setProfile(response.data);
             } catch (error) {
-                if (error.response?.status == 404) {
-                    setError("Your profile hasn't been created yet!");
-                    showToast("Your profile hasn't been created yet!");
-                } else if (error.response?.status == 401) {
-                    setError("You are not authenticated");
-                    showToast("You are not authenticated");
-                } else {
-                    setError("Something went wrong while loading your profile");
-                    showToast("Something went wrong while loading your profile");
-                }
+                HandleApiError(
+                    error,
+                    showToast,
+                    "Couldn't load profile. Please try again.",
+                    {
+                        401: "Please log in to view your profile.",
+                        404: "Your profile hasn't been created yet!",
+                    }
+                );
             } finally {
                 setLoading(false);
             }
@@ -44,23 +43,7 @@ function Profile() {
     }, []);
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading profile...
-                </p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <p className="text-sm text-gray-600">{error}</p>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     const username = profile.user?.username || "User";

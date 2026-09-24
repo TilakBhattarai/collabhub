@@ -3,6 +3,8 @@ import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const CreateProject = () => {
     const [title, setTitle] = useState("");
@@ -42,29 +44,16 @@ const CreateProject = () => {
             showToast("Project created successfully");
             navigate("/dashboard");
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on creating projects"
-                );
-            }
+            HandleApiError(error, showToast, "Something went wrong on creating project.")
         } finally {
             setLoading(false);
         }
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Creating project...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
+
 
     const inputClass =
         "mt-2 w-full rounded-md border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-violet-500 focus:ring-1 focus:ring-violet-500";

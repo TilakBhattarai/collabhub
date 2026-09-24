@@ -177,4 +177,16 @@ class ConnectionProfileView(APIView):
         user = User.objects.get(id=id)
         profile = Profile.objects.get(user=user)
         serializer = ProfileSerializer(profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        is_connected = Connection.objects.filter(
+            (
+                Q(sender=request.user, receiver=user)
+                | Q(sender=user, receiver=request.user)
+            ),
+            status="ACCEPTED",
+        ).exists()
+
+        data = serializer.data
+        data["is_connected"] = is_connected
+
+        return Response(data, status=status.HTTP_200_OK)

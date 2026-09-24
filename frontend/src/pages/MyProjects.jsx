@@ -7,12 +7,15 @@ import {
     BarChart3,
     Pencil,
     Trash2,
+    Inbox,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const statusStyles = {
     IN_PROGRESS: {
@@ -113,17 +116,15 @@ export default function MyProjects() {
 
             setmyProjects(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong");
-            }
+            HandleApiError(error, showToast, "Failed to load your projects. Please try again.")
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchmyProjects();
+    }, []);
 
     const deleteProject = async (projectId) => {
         setDeletingId(projectId);
@@ -148,36 +149,16 @@ export default function MyProjects() {
             navigate("/myprojects");
 
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.status === 403) {
-                showToast(
-                    "You do not have permission to delete this project"
-                );
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong while deleting the project"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to delete project. Please try again.")
         } finally {
             setDeleting(false);
         }
     };
 
-    useEffect(() => {
-        fetchmyProjects();
-    }, []);
+
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading projects...
-                </p>
-            </div>
-        );
+        return <Loading />
     }
 
     return (
@@ -197,14 +178,26 @@ export default function MyProjects() {
                         </p>
                     </div>
 
-                    <button
-                        onClick={() => navigate("/project/create")}
-                        type="button"
-                        className="inline-flex h-10 items-center cursor-pointer justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
-                    >
-                        <Plus className="h-4 w-4" />
-                        Create Project
-                    </button>
+                    <div className="flex items-center gap-3">
+                        {/* Requests */}
+                        <Link
+                            to="/projects/request"
+                            className="inline-flex h-10 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                            <Inbox className="h-4 w-4" />
+                            Requests
+                        </Link>
+
+                        <button
+                            onClick={() => navigate("/project/create")}
+                            type="button"
+                            className="inline-flex h-10 items-center cursor-pointer justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
+                        >
+                            <Plus className="h-4 w-4" />
+                            Create Project
+                        </button>
+                    </div>
+
                 </div>
 
                 {/* Statistics */}
@@ -283,56 +276,36 @@ export default function MyProjects() {
                                         ))}
                                     </div>
 
-                                    {/* Actions */}
-                                    <div className="mt-5 grid grid-cols-4 gap-2 border-t border-gray-100 pt-4">
+                                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
 
                                         {/* View */}
                                         <button
-                                            onClick={() =>
-                                                navigate(
-                                                    `/projects/${project.id}`
-                                                )
-                                            }
+                                            onClick={() => navigate(`/projects/${project.id}`)}
                                             type="button"
-                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                                         >
-                                            <Eye className="h-3.5 w-3.5" />
+                                            <Eye className="h-4 w-4" />
                                             View
-                                        </button>
-
-                                        {/* Analytics */}
-                                        <button
-                                            type="button"
-                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                                        >
-                                            <BarChart3 className="h-3.5 w-3.5" />
-                                            Analytics
                                         </button>
 
                                         {/* Edit */}
                                         <button
-                                            onClick={() =>
-                                                navigate(
-                                                    `/myprojects/${project.id}`
-                                                )
-                                            }
+                                            onClick={() => navigate(`/myprojects/${project.id}`)}
                                             type="button"
-                                            className="inline-flex h-9 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-xs font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                                         >
-                                            <Pencil className="h-3.5 w-3.5" />
+                                            <Pencil className="h-4 w-4" />
                                             Edit
                                         </button>
 
                                         {/* Delete */}
                                         <button
                                             disabled={deleting}
-                                            onClick={() =>
-                                                deleteProject(project.id)
-                                            }
+                                            onClick={() => deleteProject(project.id)}
                                             type="button"
-                                            className="inline-flex h-9 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="inline-flex h-10 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
-                                            <Trash2 className="h-3.5 w-3.5" />
+                                            <Trash2 className="h-4 w-4" />
                                             {deleting ? "Deleting..." : "Delete"}
                                         </button>
                                     </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 const RegisterForm = () => {
     const [username, setUsername] = useState("");
@@ -32,16 +33,14 @@ const RegisterForm = () => {
 
         try {
             const url =
-                "http://127.0.0.1:8000/accounts/auth/register/";
+                "accounts/auth/register/";
 
-            const response = await axios.post(url, {
+            await api.post(url, {
                 username: username,
                 email: email,
                 password1: password1,
                 password2: password2,
             });
-
-            console.log(response);
 
             navigate("/login");
 
@@ -54,8 +53,6 @@ const RegisterForm = () => {
             setPassword1("");
             setPassword2("");
         } catch (error) {
-            console.log(error.response?.data);
-
             const data = error.response?.data;
 
             if (data) {

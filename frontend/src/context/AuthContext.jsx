@@ -3,7 +3,9 @@ import { useState, createContext, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
 
+
 export const AuthProvider = ({ children }) => {
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState(null);
@@ -30,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         const confirm = window.confirm("Are u sure want to logout?");
 
         if (!confirm) {
-            return;
+            return false;
         }
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");

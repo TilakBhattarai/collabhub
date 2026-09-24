@@ -5,13 +5,15 @@ import { useToast } from "../context/ToastContext";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
-    const { showToast } = useToast();
     const { isLoggedIn, logout } = useAuth();
+    const { showToast } = useToast();
 
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout();
+        const success = logout();
+        if (!success) return;
+
         showToast("Logged out successfully");
         navigate("/login");
     };

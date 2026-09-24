@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 export default function ProjectDetails() {
     const [project, setProject] = useState(null);
@@ -23,15 +25,8 @@ export default function ProjectDetails() {
                 `projects/${projectId}/`,
             )
             setProject(response.data);
-            // console.log(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong on fetching detail");
-            }
+            HandleApiError(error, showToast, "Failed to load project details. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -40,6 +35,45 @@ export default function ProjectDetails() {
     useEffect(() => {
         projectDetail();
     }, [])
+
+    const fetchRequests = async () => {
+        try {
+            const response = await api.get(
+                `projects/request/`,
+            )
+            setRequests(response.data);
+        } catch (error) {
+            HandleApiError(error, showToast, "Failed to load requests. Please try again.")
+        }
+    };
+
+    useEffect(() => {
+        fetchRequests()
+    }, [])
+
+    const handleRequest = async (projectId) => {
+        setSending(true);
+
+        try {
+            await api.post(
+                "projects/request/",
+                {
+                    project: projectId
+                }
+            )
+            showToast("Request sent successfully!");
+            await fetchRequests();
+        } catch (error) {
+            HandleApiError(error, showToast, "Failed to send request. Please try again.");
+        } finally {
+            setSending(false);
+        }
+    }
+
+    const request = requests.find(
+        (req) =>
+            Number(req?.project) === Number(project?.id)
+    );
 
     const visibilityConfig = {
         PUBLIC: "Public",
@@ -60,68 +94,9 @@ export default function ProjectDetails() {
         },
     };
 
-    const fetchRequests = async () => {
-        try {
-            const response = await api.get(
-                `projects/request/`,
-            )
-            setRequests(response.data);
-            // console.log(response.data);
-        } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong on fetching requests");
-            }
-        }
-    }
-
-    const handleRequest = async (projectId) => {
-        setSending(true);
-
-        try {
-            await api.post(
-                "projects/request/",
-                {
-                    project: projectId
-                }
-            )
-
-            await fetchRequests();
-        } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong on sending request");
-            }
-        } finally {
-            setSending(false);
-        }
-    }
-
-    const request = requests.find(
-        (req) =>
-            Number(req?.project?.id) === Number(project?.id)
-    );
-
-    useEffect(() => {
-        fetchRequests()
-    }, [])
-
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
-
     const isOwner = Number(userId) === Number(project?.owner?.id);
 
 

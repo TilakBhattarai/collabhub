@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 const Discover = () => {
     const [users, setUser] = useState([]);
@@ -33,13 +35,7 @@ const Discover = () => {
 
             setUser(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong on fetching data");
-            }
+            HandleApiError(error, showToast, "Failed to load data. Please refresh or try again.")
         } finally {
             setLoading(false);
         }
@@ -66,13 +62,7 @@ const Discover = () => {
 
             showToast("Connection sent successfully");
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong");
-            }
+            HandleApiError(error, showToast, "Unable to complete request. Please try again.")
         } finally {
             setConnectingId(null);
         }
@@ -84,14 +74,9 @@ const Discover = () => {
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
+
 
     return (
         <div className="min-h-screen bg-gray-50 pt-24 pb-20">
@@ -109,74 +94,77 @@ const Discover = () => {
                 </div>
 
                 {/* Search */}
-                <form onSubmit={handleSearch} className="mb-10">
-                    <div className="flex flex-col gap-3 lg:flex-row">
+                {users.length > 0 && (
+                    <form onSubmit={handleSearch} className="mb-10">
+                        <div className="flex flex-col gap-3 lg:flex-row">
 
-                        <input
-                            type="search"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Search by username"
-                            className="flex-1 rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
-                        />
+                            <input
+                                type="search"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Search by username"
+                                className="flex-1 rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                            />
 
-                        <select
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
-                        >
-                            <option value="">Role</option>
-                            <option value="Full-Stack Developer">Full-Stack Developer</option>
-                            <option value="Frontend Developer">Frontend Developer</option>
-                            <option value="Backend Developer">Backend Developer</option>
-                            <option value="UI/UX Designer">UI/UX Designer</option>
-                        </select>
+                            <select
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                            >
+                                <option value="">Role</option>
+                                <option value="Full-Stack Developer">Full-Stack Developer</option>
+                                <option value="Frontend Developer">Frontend Developer</option>
+                                <option value="Backend Developer">Backend Developer</option>
+                                <option value="UI/UX Designer">UI/UX Designer</option>
+                            </select>
 
-                        <select
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
-                        >
-                            <option value="">Location</option>
-                            <option value="Nepal">Nepal</option>
-                            <option value="United Kingdom">United Kingdom</option>
-                            <option value="India">India</option>
-                            <option value="United States">United States</option>
-                        </select>
+                            <select
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                            >
+                                <option value="">Location</option>
+                                <option value="Nepal">Nepal</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="India">India</option>
+                                <option value="United States">United States</option>
+                            </select>
 
-                        <select
-                            value={skills}
-                            onChange={(e) => setSkills(e.target.value)}
-                            className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
-                        >
-                            <option value="">Skills</option>
-                            <option value="React">React</option>
-                            <option value="Django">Django</option>
-                            <option value="Flutter">Flutter</option>
-                            <option value="Figma">Figma</option>
-                        </select>
+                            <select
+                                value={skills}
+                                onChange={(e) => setSkills(e.target.value)}
+                                className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                            >
+                                <option value="">Skills</option>
+                                <option value="React">React</option>
+                                <option value="Django">Django</option>
+                                <option value="Flutter">Flutter</option>
+                                <option value="Figma">Figma</option>
+                            </select>
 
-                        <select
-                            value={lookingFor}
-                            onChange={(e) => setLookingFor(e.target.value)}
-                            className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
-                        >
-                            <option value="">Looking for</option>
-                            <option value="Frontend Developer">Frontend Developer</option>
-                            <option value="Backend Developer">Backend Developer</option>
-                            <option value="Designer">Designer</option>
-                            <option value="">Any Collaborator</option>
-                        </select>
+                            <select
+                                value={lookingFor}
+                                onChange={(e) => setLookingFor(e.target.value)}
+                                className="rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-600 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                            >
+                                <option value="">Looking for</option>
+                                <option value="Frontend Developer">Frontend Developer</option>
+                                <option value="Backend Developer">Backend Developer</option>
+                                <option value="Designer">Designer</option>
+                                <option value="">Any Collaborator</option>
+                            </select>
 
-                        <button
-                            type="submit"
-                            className="rounded-md bg-violet-600 px-6 py-2.5 cursor-pointer text-sm font-medium text-white hover:bg-violet-700 transition"
-                        >
-                            Search
-                        </button>
+                            <button
+                                type="submit"
+                                className="rounded-md bg-violet-600 px-6 py-2.5 cursor-pointer text-sm font-medium text-white hover:bg-violet-700 transition"
+                            >
+                                Search
+                            </button>
 
-                    </div>
-                </form>
+                        </div>
+                    </form>
+                )}
+
 
                 {/* Users */}
                 {users.length === 0 ? (

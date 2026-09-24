@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 const statusConfig = {
     LOOKING_FOR_CONTRIBUTORS: {
@@ -31,15 +34,8 @@ const Projects = () => {
         try {
             const response = await api.get("projects/");
             setProjects(response.data);
-            console.log(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Something went wrong on fetching projects");
-            }
+            HandleApiError(error, showToast, "Something went wrong on fetching projects")
         } finally {
             setLoading(false);
         }
@@ -50,13 +46,7 @@ const Projects = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading projects...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
 
     return (

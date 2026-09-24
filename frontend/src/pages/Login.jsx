@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Loading from "../components/Loading";
 
 function Login() {
   const { showToast } = useToast();
   const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +18,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await api.post(
@@ -33,7 +36,14 @@ function Login() {
     } catch (error) {
       showToast(error.response?.data?.error || "Login Failed");
     }
+    finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    <Loading />
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 pt-24 pb-20">

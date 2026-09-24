@@ -1,9 +1,11 @@
-import { UserRound, Inbox } from "lucide-react";
+import { UserRound, Inbox, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 
 import api from "../api/axios";
+import HandleApiError from "../utils/HandleApiError";
+import Loading from "../components/Loading";
 
 export default function JoinRequests() {
     const [loading, setLoading] = useState(false);
@@ -20,24 +22,13 @@ export default function JoinRequests() {
                 "projects/request/owner_requests/"
             )
             setRequests(response.data);
-            console.log(response.data);
 
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast(
-                    "Something went wrong on fetching connections requests"
-                );
-            }
+            HandleApiError(error, showToast, "Failed to load requests. Please try again.")
         } finally {
             setLoading(false);
         }
     }
-
-
 
     useEffect(() => {
         fetchRequests();
@@ -54,20 +45,13 @@ export default function JoinRequests() {
             );
             showToast("Request accepted successfully");
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.status === 403) {
-                showToast("You are not authorized to accept this request");
-            } else if (error.response?.status === 400) {
-                showToast(error.response?.data?.error || "This request cannot be accepted");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Failed to accept the request. Please try again.");
-            }
-        }
 
-    };
+            HandleApiError(error, showToast, "Failed to accept the request. Please try again.", {
+                403: "You are not authorized to accept this request",
+                400: error.response?.data?.error || "This request cannot be accepted",
+            });
+        };
+    }
 
     const handleReject = async (requestId) => {
         try {
@@ -79,33 +63,30 @@ export default function JoinRequests() {
             );
             showToast("Request rejected successfully");
         } catch (error) {
-            if (error.response?.status === 401) {
-                showToast("You are not authenticated");
-            } else if (error.response?.status === 403) {
-                showToast("You are not authorized to accept this request");
-            } else if (error.response?.status === 400) {
-                showToast(error.response?.data?.error || "This request cannot be rejected");
-            } else if (error.response?.data?.error) {
-                showToast(error.response.data.error);
-            } else {
-                showToast("Failed to reject the request. Please try again.");
-            }
-        }
+            HandleApiError(error, showToast, "Failed to reject the request. Please try again.", {
+                403: "You are not authorized to reject this request",
+                400: error.response?.data?.error || "This request cannot be accepted"
+            })
+        };
     }
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <p className="text-sm text-gray-500">
-                    Loading...
-                </p>
-            </div>
-        );
+        return <Loading />;
     }
+
 
     return (
         <div className="min-h-screen bg-gray-50/60">
             <div className="mx-auto max-w-5xl px-4 sm:px-8 sm:pb-20 sm:pt-24 pt-24 pb-20">
+                {/* Back */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="mb-7 inline-flex items-center gap-2 text-sm text-gray-500 transition hover:text-gray-900 cursor-pointer"
+                >
+                    <ArrowLeft size={16} />
+                    Back
+                </button>
+
 
                 {/* Header */}
                 <div className="border-b border-gray-200 pb-6 sm:pb-8">
