@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "profiles",
     "connection",
     "projects",
+    "notifications",
 ]
 
 MIDDLEWARE = [

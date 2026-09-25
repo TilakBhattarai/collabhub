@@ -19,6 +19,7 @@ import ProjectDetails from "./pages/ProjectDetails"
 import MyProjects from "./pages/MyProjects"
 import EditProject from "./pages/EditProject"
 import JoinRequests from "./pages/JoinRequests"
+import Notifications from "./pages/Notifications"
 
 function App() {
 
@@ -147,6 +148,15 @@ function App() {
           element={
             <ProtectedRoute>
               <JoinRequests />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
             </ProtectedRoute>
           }
         />

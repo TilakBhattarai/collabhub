@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from notifications.models import Notification
 
 
 class ProjectViewSet(ModelViewSet):
@@ -96,6 +97,13 @@ class JoinRequestViewSet(ModelViewSet):
             )
 
         serializer.save(sender=self.request.user, status="PENDING")
+        Notification.objects.create(
+            recipient=project.owner,
+            actor=self.request.user,
+            notification_type="JOIN_REQUEST",
+            is_read=False,
+            message=f"New join request from {self.request.user.username} for '{project.title}'",
+        )
 
     @action(detail=False, methods=["get"])
     def owner_requests(self, request):
@@ -127,6 +135,14 @@ class JoinRequestViewSet(ModelViewSet):
 
         join_request.status = "ACCEPTED"
         join_request.save()
+
+        Notification.objects.create(
+            actor=join_request.project.owner,
+            recipient=join_request.sender,
+            message=f"{join_request.project.owner.username} accepted your request to join '{join_request.project.title}'!",
+            notification_type="JOIN_ACCEPTED",
+            is_read=False,
+        )
         return Response(
             {"message": "Request accepted successfully."},
             status=status.HTTP_202_ACCEPTED,
@@ -154,6 +170,14 @@ class JoinRequestViewSet(ModelViewSet):
 
         join_request.status = "REJECTED"
         join_request.save()
+
+        Notification.objects.create(
+            actor=join_request.project.owner,
+            recipient=join_request.sender,
+            message=f"{join_request.project.owner.username} rejected your request to join '{join_request.project.title}'!",
+            notification_type="JOIN_REJECTED",
+            is_read=False,
+        )
 
         return Response(
             {"message": "Request rejected successfully."},

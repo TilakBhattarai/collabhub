@@ -9,6 +9,7 @@ from .serializers import ConnectionSerializer, MyConnectionSerializer
 from django.db.models import Q
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
+from notifications.models import Notification
 
 User = get_user_model()
 
@@ -55,6 +56,14 @@ class ConnectionRequestsView(APIView):
         connection = Connection.objects.create(
             sender=request.user,
             receiver=receiver,
+        )
+
+        Notification.objects.create(
+            recipient=receiver,
+            is_read=False,
+            message=f"{request.user.username} sent you a connection request.",
+            notification_type="CONNECTION_REQUEST",
+            actor=request.user,
         )
 
         if existing_connection:
@@ -116,6 +125,14 @@ class AcceptConnectionView(APIView):
         connection = Connection.objects.get(id=connection_id, status="PENDING")
         connection.status = "ACCEPTED"
         connection.save()
+
+        Notification.objects.create(
+            actor=request.user,
+            recipient=connection.sender,
+            message=f"{request.user.username} accepted your connection request.",
+            notification_type="CONNECTION_ACCEPTED",
+            is_read=False,
+        )
         return Response(
             {"message": "Connection accepted successfully"},
             status=status.HTTP_200_OK,
@@ -139,6 +156,14 @@ class RejectConnectionView(APIView):
         connection = Connection.objects.get(id=connection_id, status="PENDING")
         connection.status = "REJECTED"
         connection.save()
+
+        Notification.objects.create(
+            actor=request.user,
+            recipient=connection.sender,
+            message=f"{request.user.username} rejected your connection request.",
+            notification_type="CONNECTION_REJECTED",
+            is_read=False,
+        )
         return Response(
             {"message": "Connection rejected successfully"},
             status=status.HTTP_200_OK,

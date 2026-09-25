@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
+import { Bell } from "lucide-react";
+import HandleApiError from "../utils/HandleApiError";
+import api from "../api/axios";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
     const { isLoggedIn, logout } = useAuth();
     const { showToast } = useToast();
+    const [notifications, setNotifications] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -17,6 +22,30 @@ function Navbar() {
         showToast("Logged out successfully");
         navigate("/login");
     };
+
+    const fetchNotifications = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get(
+                "notifications/",
+            )
+            setNotifications(response.data);
+        } catch (error) {
+            HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchNotifications()
+    }, [])
+
+    const totalUnreadNotifications = notifications.filter((notification) =>
+        notification.is_read === false
+    ).length;
+
+
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white">
@@ -32,6 +61,18 @@ function Navbar() {
                 <div className="hidden md:flex gap-5 items-center">
                     {isLoggedIn ? (
                         <div className="flex items-center gap-5">
+
+                            <Link
+                                to="/notifications"
+                                className="relative text-gray-600 hover:text-violet-700 transition"
+                            >
+                                <Bell size={20} />
+                                {!loading && totalUnreadNotifications > 0 && (
+                                    <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-violet-600 px-1 text-[10px] font-medium text-white">
+                                        {totalUnreadNotifications}
+                                    </span>
+                                )}
+                            </Link>
 
                             <Link
                                 to="/dashboard"

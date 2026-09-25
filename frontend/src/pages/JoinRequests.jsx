@@ -22,6 +22,7 @@ export default function JoinRequests() {
                 "projects/request/owner_requests/"
             )
             setRequests(response.data);
+            console.log(response.data);
 
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load requests. Please try again.")
@@ -155,7 +156,6 @@ export default function JoinRequests() {
                                                 ))}
                                         </div>
 
-                                        {/* Project + date — one plain sentence, no box, no label */}
                                         <p className="mt-3 text-sm text-gray-500">
                                             Wants to join <span className="font-medium">{req.project.title}</span>
                                             <span className="text-gray-300"> · </span>
