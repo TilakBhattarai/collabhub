@@ -171,6 +171,23 @@ The project is being developed incrementally, with each feature built, tested, a
 * Prevent already processed requests from being accepted or rejected
 * Remove processed requests from the pending owner view
 
+### 🔔 Notifications
+
+* Notification model and API
+* Create notifications for join requests
+* Create notifications for connection requests
+* Create notifications for accepted connections
+* Create notifications for rejected connections
+* Create notifications for accepted join requests
+* Create notifications for rejected join requests
+* View user notifications
+* Navbar unread notification count
+* Read / unread notification state
+* Mark individual notifications as read
+* User-specific notification access control
+* Notification loading and empty states
+* Immediate UI update after marking a notification as read
+
 ### 🎨 UI & UX
 
 * Consistent CollabHub design system
@@ -236,6 +253,12 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Reject join requests
 * [x] Owner permission checks for join requests
 * [x] Pending join request handling
+* [x] Notification system
+* [x] Notification API
+* [x] Notification creation for collaboration actions
+* [x] Notification unread count
+* [x] Read / unread notification state
+* [x] Mark notifications as read
 
 ### 🚧 Current / Next
 
@@ -255,7 +278,6 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [ ] Teams
 * [ ] Team management
 * [ ] Tasks
-* [ ] Notifications
 * [ ] Dashboard data and activity
 
 ---
@@ -285,6 +307,7 @@ collabhub/
 │   ├── profiles/
 │   ├── connection/
 │   ├── projects/
+│   ├── notifications/
 │   ├── config/
 │   ├── manage.py
 │   └── ...
@@ -312,11 +335,11 @@ For example:
 ```text
 Developer A
 Python • Django • PostgreSQL
-              │
-              ▼
-          CollabHub
-              ▲
-              │
+             │
+             ▼
+         CollabHub
+             ▲
+             │
 Developer B
 React • JavaScript • Tailwind
 ```
@@ -327,25 +350,27 @@ The long-term collaboration flow is:
 
 ```text
 Profile
-   ↓
+  ↓
 Discover People
-   ↓
+  ↓
 Connect
-   ↓
+  ↓
 Create / Discover Projects
-   ↓
+  ↓
 Project Details
-   ↓
+  ↓
 Join Requests
-   ↓
+  ↓
 Accept / Reject
-   ↓
+  ↓
+Notifications
+  ↓
 Project Members
-   ↓
+  ↓
 Teams
-   ↓
+  ↓
 Tasks
-   ↓
+  ↓
 Collaboration
 ```
 
@@ -355,7 +380,7 @@ Collaboration
 
 CollabHub is currently under active development.
 
-The authentication, profile, discovery, connection, and core project management systems have been implemented.
+The authentication, profile, discovery, connection, project management, join request, and notification systems have been implemented.
 
 Users can currently:
 
@@ -376,11 +401,16 @@ Users can currently:
 * View incoming join requests as project owners
 * Accept join requests
 * Reject join requests
-* Enforce project-owner permissions when processing requests
+* Receive notifications for collaboration activity
+* View unread notification counts
+* Mark notifications as read
+* Enforce user-specific notification access control
 
 The current development stage is focused on **project collaboration**.
 
-The Join Request workflow is now functional from creation through owner-side acceptance or rejection. The next step is connecting accepted requests to actual **Project Members**, followed by teams and task management.
+The Join Request workflow is now functional from creation through owner-side acceptance or rejection, and the Notification system is now integrated with the existing collaboration actions.
+
+The next major step is connecting accepted requests to actual **Project Members**, followed by teams and task management.
 
 ---
 
