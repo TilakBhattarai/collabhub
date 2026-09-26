@@ -73,3 +73,30 @@ class JoinRequest(models.Model):
 
     def __str__(self):
         return f"{self.sender} requested on project {self.project.title}"
+
+
+class ProjectMember(models.Model):
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="members",
+    )
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="project_memberships",
+    )
+    role = models.CharField(
+        max_length=20,
+        default="MEMBER",
+    )
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "project"],
+                name="unique_project_member",
+            )
+        ]

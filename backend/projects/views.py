@@ -1,5 +1,5 @@
 from rest_framework.permissions import IsAuthenticated
-from .models import Project, JoinRequest
+from .models import Project, JoinRequest, ProjectMember
 from .serializers import ProjectSerializer, JoinRequestSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -96,6 +96,14 @@ class JoinRequestViewSet(ModelViewSet):
                 {"error": "You already have a pending request for this project."}
             )
 
+        if ProjectMember.objects.filter(
+            project=project,
+            user=self.request.user,
+        ).exists():
+            raise ValidationError(
+                {"error": "You are already a member of this project"},
+            )
+
         serializer.save(sender=self.request.user, status="PENDING")
         Notification.objects.create(
             recipient=project.owner,
@@ -136,7 +144,11 @@ class JoinRequestViewSet(ModelViewSet):
         join_request.status = "ACCEPTED"
         join_request.save()
 
-        Notification.objects.create(
+        ProjectMember.objects.create(
+            project=join_request.project, user=join_request.sender
+        )
+
+        Notification.objects.get_or_create(
             actor=join_request.project.owner,
             recipient=join_request.sender,
             message=f"{join_request.project.owner.username} accepted your request to join '{join_request.project.title}'!",

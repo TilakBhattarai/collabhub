@@ -38,8 +38,10 @@ function Navbar() {
     }
 
     useEffect(() => {
-        fetchNotifications()
-    }, [])
+        if (isLoggedIn) {
+            fetchNotifications();
+        }
+    }, [isLoggedIn])
 
     const totalUnreadNotifications = notifications.filter((notification) =>
         notification.is_read === false

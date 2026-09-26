@@ -1,4 +1,4 @@
-from .models import Project, JoinRequest
+from .models import Project, JoinRequest, ProjectMember
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from accounts.serializers import ProjectOwnerSerializer
@@ -36,3 +36,10 @@ class JoinRequestSerializer(serializers.ModelSerializer):
         model = JoinRequest
         fields = ["id", "sender", "status", "created_at", "project"]
         read_only_fields = ["id", "sender", "status", "created_at"]
+
+
+class ProjectMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectMember
+        fields = ["id", "project", "user", "role", "joined_at"]
+        read_only_fields = ["id", "joined_at", "role"]
