@@ -130,6 +130,7 @@ The project is being developed incrementally, with each feature built, tested, a
 * Project owner cannot send a join request to their own project
 * Send join request to public projects
 * Join request status handling
+* Project Members access based on project visibility
 
 ### 📂 My Projects
 
@@ -146,6 +147,7 @@ The project is being developed incrementally, with each feature built, tested, a
 * Automatic project list update after deletion
 * My Projects empty state
 * Navigation to My Projects from the main navigation
+* View Project Members
 
 ### 🤝 Project Join Requests
 
@@ -170,6 +172,24 @@ The project is being developed incrementally, with each feature built, tested, a
 * Prevent unauthorized users from accepting or rejecting requests
 * Prevent already processed requests from being accepted or rejected
 * Remove processed requests from the pending owner view
+
+### 👥 Project Members
+
+* Dedicated Project Members page
+* View members of a project
+* Member count
+* Member username and role
+* Member profile picture
+* Avatar fallback
+* Member joined date
+* View member profiles
+* Public project members can be viewed by authenticated users
+* Private project members can only be viewed by the project owner
+* Protected members API
+* Members empty state
+* Responsive member grid
+
+> Connection from the Project Members page is planned as the next small improvement.
 
 ### 🔔 Notifications
 
@@ -259,6 +279,13 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Notification unread count
 * [x] Read / unread notification state
 * [x] Mark notifications as read
+* [x] Project Members
+* [x] Project Members API
+* [x] Project Members page
+* [x] Member visibility and permission rules
+* [x] Member profile display
+* [x] Member joined date
+* [x] Project owner member access
 
 ### 🚧 Current / Next
 
@@ -269,9 +296,9 @@ CollabHub is being developed feature by feature, with each major feature complet
 * [x] Project owner incoming request view
 * [x] Accept join requests
 * [x] Reject join requests
-* [ ] Project Details request status UI
-* [ ] Project members
-* [ ] Accepted member handling
+* [x] Project members
+* [x] Accepted member handling
+* [ ] Connect with members from Project Members page
 
 #### Teams & Work Management
 
@@ -350,27 +377,27 @@ The long-term collaboration flow is:
 
 ```text
 Profile
-  ↓
+   ↓
 Discover People
-  ↓
+   ↓
 Connect
-  ↓
+   ↓
 Create / Discover Projects
-  ↓
+   ↓
 Project Details
-  ↓
+   ↓
 Join Requests
-  ↓
+   ↓
 Accept / Reject
-  ↓
+   ↓
 Notifications
-  ↓
+   ↓
 Project Members
-  ↓
+   ↓
 Teams
-  ↓
+   ↓
 Tasks
-  ↓
+   ↓
 Collaboration
 ```
 
@@ -380,7 +407,7 @@ Collaboration
 
 CollabHub is currently under active development.
 
-The authentication, profile, discovery, connection, project management, join request, and notification systems have been implemented.
+The authentication, profile, discovery, connection, project management, join request, notification, and project member systems have been implemented.
 
 Users can currently:
 
@@ -405,12 +432,17 @@ Users can currently:
 * View unread notification counts
 * Mark notifications as read
 * Enforce user-specific notification access control
+* View project members
+* View member profiles
+* Apply project-specific member visibility rules
 
 The current development stage is focused on **project collaboration**.
 
-The Join Request workflow is now functional from creation through owner-side acceptance or rejection, and the Notification system is now integrated with the existing collaboration actions.
+The Join Request workflow is functional from creation through owner-side acceptance or rejection, and the Notification system is integrated with the existing collaboration actions.
 
-The next major step is connecting accepted requests to actual **Project Members**, followed by teams and task management.
+The **Project Members** workflow is now implemented, including the backend members API, dedicated members page, member information, and project-specific access rules.
+
+The next small improvement is connecting the existing connection workflow directly to the **Project Members** page, followed by the larger Teams and Task Management stages.
 
 ---
 
