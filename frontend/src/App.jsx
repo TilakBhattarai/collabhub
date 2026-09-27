@@ -20,6 +20,7 @@ import MyProjects from "./pages/MyProjects"
 import EditProject from "./pages/EditProject"
 import JoinRequests from "./pages/JoinRequests"
 import Notifications from "./pages/Notifications"
+import ProjectMembers from "./pages/ProjectMembers"
 
 function App() {
 
@@ -157,6 +158,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Notifications />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/projects/:projectId/members"
+          element={
+            <ProtectedRoute>
+              <ProjectMembers />
             </ProtectedRoute>
           }
         />

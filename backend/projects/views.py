@@ -1,6 +1,10 @@
 from rest_framework.permissions import IsAuthenticated
 from .models import Project, JoinRequest, ProjectMember
-from .serializers import ProjectSerializer, JoinRequestSerializer
+from .serializers import (
+    ProjectSerializer,
+    JoinRequestSerializer,
+    ProjectMemberSerializer,
+)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -23,6 +27,20 @@ class ProjectViewSet(ModelViewSet):
     def my_projects(self, request):
         projects = Project.objects.filter(owner=request.user)
         serializer = ProjectSerializer(projects, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
+    def members(self, request, pk=None):
+        project = self.get_object()
+        if project.visibility == "PRIVATE" and project.owner != request.user:
+            return Response(
+                {"error": "You do not have permission to view this project's members."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        members = ProjectMember.objects.filter(project=project)
+
+        serializer = ProjectMemberSerializer(members, many=True)
         return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):

@@ -1,6 +1,6 @@
 import { ChevronRight, ArrowLeft, FolderX } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
@@ -102,8 +102,6 @@ export default function ProjectDetails() {
 
     return (
         <div className="min-h-screen bg-white pt-20 pb-20">
-            {/* Back */}
-
             {/* Breadcrumb */}
             <div className="max-w-6xl mx-auto px-6 pt-6">
 
@@ -115,7 +113,7 @@ export default function ProjectDetails() {
                     Back
                 </button>
                 <div className="flex items-center gap-1.5 text-sm text-gray-400">
-                    <span className="hover:text-violet-600 cursor-pointer transition-colors">Projects</span>
+                    <Link to="/projects" className="hover:text-violet-600 cursor-pointer transition-colors">Projects</Link>
                     <ChevronRight className="w-3.5 h-3.5" />
                     <span className="text-gray-700">Project Details</span>
                 </div>
@@ -267,16 +265,16 @@ export default function ProjectDetails() {
                             {!isOwner && (
                                 <div className="border border-gray-200 rounded-lg p-6">
 
-                                    <>
-                                        <p className="text-sm font-medium text-gray-900 mb-1">
-                                            Interested in contributing to this project?
-                                        </p>
+                                    <p className="text-sm font-medium text-gray-900 mb-1">
+                                        Interested in contributing to this project?
+                                    </p>
 
-                                        <p className="text-xs text-gray-500 mb-4">
-                                            Make sure your skills match the project requirements before
-                                            sending a request.
-                                        </p>
+                                    <p className="text-xs text-gray-500 mb-4">
+                                        Make sure your skills match the project requirements before
+                                        sending a request.
+                                    </p>
 
+                                    <div className="flex flex-col gap-2 mt-2">
                                         {project.visibility === "PRIVATE" ? (
                                             <div className="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-center">
                                                 <p className="text-sm font-medium text-gray-700">
@@ -317,10 +315,30 @@ export default function ProjectDetails() {
                                                 {sending ? "Sending..." : "Request Again"}
                                             </button>
                                         )}
-                                    </>
-
+                                    </div>
                                 </div>
                             )}
+
+                            {/* Project Members */}
+                            {(project.visibility === "PUBLIC" || isOwner) && (
+                                <div className="border border-gray-200 rounded-lg p-6">
+                                    <h2 className="text-sm font-semibold text-gray-900 mb-2">
+                                        Project Members
+                                    </h2>
+
+                                    <p className="text-xs text-gray-500 mb-4">
+                                        View the people currently working on this project.
+                                    </p>
+
+                                    <button
+                                        onClick={() => navigate(`/projects/${project.id}/members/`)}
+                                        className="w-full text-sm font-medium py-2.5 cursor-pointer rounded-md border border-gray-300 text-gray-700 hover:bg-violet-50 hover:text-violet-700 hover:border-violet-200 transition-colors"
+                                    >
+                                        View Members
+                                    </button>
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 </div>
@@ -345,8 +363,7 @@ export default function ProjectDetails() {
             )
             }
 
-
-        </div >
+        </div>
     );
 }
 

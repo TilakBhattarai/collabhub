@@ -4,7 +4,6 @@ import {
     Clock3,
     FolderKanban,
     Eye,
-    BarChart3,
     Pencil,
     Trash2,
     Inbox,
@@ -133,7 +132,7 @@ export default function MyProjects() {
         );
 
         if (!confirmed) {
-            return;
+            return false;
         }
 
         setDeleting(true);
@@ -276,7 +275,7 @@ export default function MyProjects() {
                                         ))}
                                     </div>
 
-                                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
+                                    <div className="mt-5 grid grid-cols-2 gap-2 border-t border-gray-100 pt-4">
 
                                         {/* View */}
                                         <button
@@ -307,6 +306,15 @@ export default function MyProjects() {
                                         >
                                             <Trash2 className="h-4 w-4" />
                                             {deleting ? "Deleting..." : "Delete"}
+                                        </button>
+
+                                        <button
+                                            onClick={() => navigate(`/projects/${project.id}/members/`)}
+                                            type="button"
+                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                                        >
+                                            <Users className="h-4 w-4" />
+                                            View Members
                                         </button>
                                     </div>
                                 </div>
