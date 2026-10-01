@@ -39,6 +39,9 @@ class JoinRequestSerializer(serializers.ModelSerializer):
 
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    project = ProjectSerializer(read_only=True)
+
     class Meta:
         model = ProjectMember
         fields = ["id", "project", "user", "role", "joined_at"]

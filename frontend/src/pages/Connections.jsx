@@ -4,7 +4,6 @@ import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
-import Avatar from "../components/Avatar";
 
 export default function Connections() {
     const [requests, setRequests] = useState([]);

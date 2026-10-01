@@ -5,32 +5,40 @@ import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../context/NotificationContext";
 
 const Notifications = () => {
 
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
-    const [notifications, setNotifications] = useState([]);
     const navigate = useNavigate();
+    const { loading, fetchNotifications, notifications, setNotifications } = useNotification()
 
-    const fetchNotifications = async () => {
-        setLoading(true);
+    // const fetchNotifications = async () => {
+    //     setLoading(true);
 
-        try {
-            const response = await api.get(
-                "notifications/",
-            )
-            setNotifications(response.data);
-            console.log(response.data);
-        } catch (error) {
-            HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
-        } finally {
-            setLoading(false);
-        }
-    }
+    //     try {
+    //         const response = await api.get(
+    //             "notifications/",
+    //         )
+    //         setNotifications(response.data);
+    //         console.log(response.data);
+    //     } catch (error) {
+    //         HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     fetchNotifications()
+    // }, [])
+
+    // fetchNotifications();
+
 
     useEffect(() => {
-        fetchNotifications()
+        fetchNotifications();
     }, [])
 
     const formatTime = (createdAt) => {

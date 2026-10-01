@@ -3,6 +3,7 @@ import {
     CalendarDays,
     UserRound,
     UserPlus,
+    Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ import { useToast } from "../context/ToastContext";
 import HandleApiError from "../utils/HandleApiError";
 import api from "../api/axios";
 import Loading from "../components/Loading";
-const [connectingId, setConnectingId] = useState(null);
+import { useAuth } from "../context/AuthContext";
 
 const ProjectMembers = () => {
     const navigate = useNavigate();
@@ -19,6 +20,9 @@ const ProjectMembers = () => {
     const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
     const [members, setMembers] = useState([]);
+    const [connectingId, setConnectingId] = useState("");
+    const { userId } = useAuth();
+
 
     const fetchMembers = async () => {
         setLoading(true);
@@ -26,8 +30,8 @@ const ProjectMembers = () => {
             const response = await api.get(
                 `projects/${projectId}/members/`,
             )
-            setMembers(response.data);
             console.log(response.data);
+            setMembers(response.data);
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load members.");
         } finally {
@@ -38,6 +42,64 @@ const ProjectMembers = () => {
     useEffect(() => {
         fetchMembers();
     }, [projectId])
+
+    const handleConnect = async (receiver_id) => {
+        setConnectingId(receiver_id);
+
+        try {
+            await api.post(
+                "connection/",
+                {
+                    receiver: receiver_id
+                }
+            );
+            showToast("Connection sent successfully");
+
+            setMembers((prev) =>
+                prev.map((m) =>
+                    m.user.id === receiver_id
+                        ? { ...m, request_sent: true }
+                        : m
+                )
+            );
+        } catch (error) {
+            HandleApiError(error, showToast, "Unable to complete request. Please try again.")
+        } finally {
+            setConnectingId(null);
+        }
+    };
+
+
+    const handleDelete = async (project_id, member_id) => {
+
+        const shouldDelete = window.confirm("Are you sure want to selete the member? ");
+
+        if (!shouldDelete) {
+            return false;
+        }
+
+        setLoading(true);
+
+        try {
+            await api.delete(
+                `projects/${project_id}/remove_member/${member_id}/`
+            )
+
+            showToast("Member deleted successfully");
+
+            setMembers((prev) =>
+                prev.filter((m) => m.user.id !== member_id)
+            )
+
+
+        } catch (error) {
+            HandleApiError(error, showToast, "Unable to delete member. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
 
 
     if (loading) {
@@ -90,32 +152,58 @@ const ProjectMembers = () => {
                                 className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                             >
                                 {/* Profile */}
-                                <div className="flex items-center gap-4">
-                                    {member.profile_picture ? (
-                                        <img
-                                            src={member.profile_picture}
-                                            alt={member.username}
-                                            className="h-14 w-14 rounded-full object-cover"
-                                        />
-                                    ) : (
-                                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-100 text-violet-700">
-                                            <UserRound size={24} />
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4 ">
+                                        {member.profile_picture ? (
+                                            <img
+                                                src={member.profile_picture}
+                                                alt={member.username}
+                                                className="h-14 w-14 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-100 text-violet-700">
+                                                <UserRound size={24} />
+                                            </div>
+                                        )}
+
+                                        <div className="min-w-0">
+                                            <h2 className="truncate font-semibold text-gray-900">
+                                                {member.user.username}
+                                            </h2>
+
+                                            <p className="text-sm text-violet-600">
+                                                {member.role}
+                                            </p>
                                         </div>
-                                    )}
 
-                                    <div className="min-w-0">
-                                        <h2 className="truncate font-semibold text-gray-900">
-                                            {member.username}
-                                        </h2>
 
-                                        <p className="text-sm text-violet-600">
-                                            {member.role}
-                                        </p>
+
                                     </div>
+                                    <div className="flex shrink-0 items-center gap-2">
+                                        {Number(member.user.id) === Number(userId) && (
+                                            <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
+                                                You
+                                            </span>
+                                        )}
+
+                                        {Number(userId) === Number(member.project.owner.id) && (
+                                            <button
+                                                onClick={() => handleDelete(member.project.id, member.user.id)}
+                                                type="button"
+                                                title="Remove member"
+                                                className="flex items-center justify-center cursor-pointer rounded-lg p-2 text-red-400 transition duration-300 hover:bg-red-50 hover:text-red-600"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
+
+
+                                    </div>
+
                                 </div>
 
                                 {/* Joined date */}
-                                <div className="mt-5 flex items-center gap-2 text-sm text-gray-500">
+                                < div className="mt-5 flex items-center gap-2 text-sm text-gray-500" >
                                     <CalendarDays size={16} />
                                     <span>
                                         Joined{" "}
@@ -130,17 +218,32 @@ const ProjectMembers = () => {
                                 {/* Actions */}
                                 <div className="mt-5 flex gap-3">
                                     <button
+                                        onClick={() => navigate(`/profile/${member.user.id}`)}
                                         className="flex-1 rounded-lg border cursor-pointer border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
                                     >
                                         View Profile
                                     </button>
+                                    {Number(member.user.id) !== Number(userId) && (
+                                        member.request_sent ? (
+                                            <span className="flex items-center justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-500">
+                                                Pending
+                                            </span>
+                                        ) : member.connection_exists ? (
+                                            <span className="flex items-center justify-center rounded-lg bg-green-50 px-4 py-2 text-sm font-medium text-green-700">
+                                                Connected
+                                            </span>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleConnect(member.user.id)}
+                                                disabled={connectingId === member.user.id}
+                                                className="flex items-center justify-center cursor-pointer gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                            >
+                                                <UserPlus size={16} />
+                                                {connectingId === member.user.id ? "Sending..." : "Connect"}
+                                            </button>
+                                        )
+                                    )}
 
-                                    <button
-                                        className="flex items-center justify-center cursor-pointer gap-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
-                                    >
-                                        <UserPlus size={16} />
-                                        Connect
-                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -160,9 +263,10 @@ const ProjectMembers = () => {
                             This project does not have any members yet.
                         </p>
                     </div>
-                )}
-            </div>
-        </div>
+                )
+                }
+            </div >
+        </div >
     );
 };
 

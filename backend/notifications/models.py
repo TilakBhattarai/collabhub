@@ -12,6 +12,7 @@ class Notification(models.Model):
         ("CONNECTION_REQUEST", "Connection Request"),
         ("CONNECTION_ACCEPTED", "Connection Accepted"),
         ("CONNECTION_REJECTED", "Connection Rejected"),
+        ("PROJECT_REMOVED", "Project Removed"),
     ]
     recipient = models.ForeignKey(
         User,

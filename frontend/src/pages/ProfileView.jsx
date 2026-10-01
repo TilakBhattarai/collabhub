@@ -5,6 +5,8 @@ import { useToast } from "../context/ToastContext";
 import { ArrowLeft } from "lucide-react";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
+import { useAuth } from "../context/AuthContext";
+
 
 const ProfileView = () => {
     const [connectionProfile, setConnectionProfile] = useState(null);
@@ -12,6 +14,7 @@ const ProfileView = () => {
 
     const { showToast } = useToast();
     const { userId } = useParams();
+    const { userId: loggedInUserId } = useAuth();
     const navigate = useNavigate();
 
     const fetchProfile = async () => {
@@ -23,6 +26,7 @@ const ProfileView = () => {
             );
 
             setConnectionProfile(response.data);
+            console.log(response.data)
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load profile. Please try again.")
         } finally {
@@ -34,7 +38,7 @@ const ProfileView = () => {
         fetchProfile();
     }, [userId]);
 
-
+    const isSelf = Number(loggedInUserId) === Number(userId);
 
     if (loading || !connectionProfile) {
         return <Loading />;
@@ -89,27 +93,29 @@ const ProfileView = () => {
                             </div>
                         </div>
 
-                        {connectionProfile.is_connected ? (
-
-                            <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
-                                <span className="h-2 w-2 rounded-full bg-violet-600" />
-                                Connected
-                            </div>
-
-                        ) : (
-                            <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
-                                <span className="h-2 w-2 rounded-full bg-violet-600" />
-                                Not Connected
-                            </div>
+                        {!isSelf && (
+                            connectionProfile.is_connected ? (
+                                <div className="mt-6 flex items-center gap-2 text-sm text-violet-700">
+                                    <span className="h-2 w-2 rounded-full bg-violet-600" />
+                                    Connected
+                                </div>
+                            ) : (
+                                <div className="mt-6 flex items-center gap-2 text-sm text-gray-500">
+                                    <span className="h-2 w-2 rounded-full bg-gray-400" />
+                                    Not Connected
+                                </div>
+                            )
                         )}
 
+                        {!isSelf && (
+                            <button
+                                type="button"
+                                className="mt-5 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                Message
+                            </button>
+                        )}
 
-                        <button
-                            type="button"
-                            className="mt-5 w-full rounded-md border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
-                        >
-                            Message
-                        </button>
                     </div>
 
                     {/* Details */}

@@ -5,12 +5,15 @@ from .serializers import (
     JoinRequestSerializer,
     ProjectMemberSerializer,
 )
+from django.db.models import Q
+from connection.models import Connection
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from notifications.models import Notification
+from django.shortcuts import get_object_or_404
 
 
 class ProjectViewSet(ModelViewSet):
@@ -41,7 +44,65 @@ class ProjectViewSet(ModelViewSet):
         members = ProjectMember.objects.filter(project=project)
 
         serializer = ProjectMemberSerializer(members, many=True)
-        return Response(serializer.data)
+
+        data = serializer.data
+
+        for member_data in data:
+            member_id = member_data["user"]["id"]
+            connection_exisits = Connection.objects.filter(
+                Q(sender=request.user, receiver_id=member_id)
+                | Q(sender_id=member_id, receiver=request.user),
+            ).exists()
+
+            request_sent = Connection.objects.filter(
+                sender=request.user,
+                receiver_id=member_id,
+                status="PENDING",
+            ).exists()
+
+            member_data["connection_exists"] = connection_exisits
+            member_data["request_sent"] = request_sent
+
+        return Response(data)
+
+    @action(
+        detail=True, methods=["delete"], url_path=r"remove_member/(?P<member_id>\d+)"
+    )
+    def remove_member(self, request, pk=None, member_id=None):
+        project = self.get_object()  # Project.objects.get(pk=.., member_id=..)
+
+        if project.owner != request.user:
+            return Response(
+                {"error": "You do not have permission to perform this action."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        member = get_object_or_404(
+            ProjectMember,
+            project=project,
+            user_id=member_id,
+        )
+
+        member.delete()
+        JoinRequest.objects.filter(
+            project=project,
+            sender_id=member_id,
+        ).delete()
+
+        Notification.objects.create(
+            recipient_id=member_id,
+            message=f"You have been removed from the project {project.title}",
+            actor_id=project.owner.id,
+            notification_type="PROJECT_REMOVED",
+            is_read=False,
+        )
+
+        return Response(
+            {
+                "message": "Member deleted successfully",
+            },
+            status=status.HTTP_200_OK,
+        )
 
     def partial_update(self, request, *args, **kwargs):
         project = self.get_object()
@@ -89,6 +150,14 @@ class JoinRequestViewSet(ModelViewSet):
     queryset = JoinRequest.objects.all()
     serializer_class = JoinRequestSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if self.action == "list":
+            return JoinRequest.objects.filter(sender=user)
+
+        return JoinRequest.objects.filter(Q(sender=user) | Q(project__owner=user))
 
     def perform_create(self, serializer):
         project = serializer.validated_data["project"]

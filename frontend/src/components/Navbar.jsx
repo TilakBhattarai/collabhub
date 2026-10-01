@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { Bell } from "lucide-react";
-import HandleApiError from "../utils/HandleApiError";
-import api from "../api/axios";
+// import HandleApiError from "../utils/HandleApiError";
+// import api from "../api/axios";
+import { useNotification } from "../context/NotificationContext";
+import Loading from "./Loading";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
     const { isLoggedIn, logout } = useAuth();
     const { showToast } = useToast();
-    const [notifications, setNotifications] = useState([]);
-    const [loading, setLoading] = useState(false);
+    // const [notifications, setNotifications] = useState([]);
+    // const [loading, setLoading] = useState(false);
+    const { totalUnreadNotifications, loading } = useNotification();
 
     const navigate = useNavigate();
 
@@ -23,29 +26,33 @@ function Navbar() {
         navigate("/login");
     };
 
-    const fetchNotifications = async () => {
-        setLoading(true);
-        try {
-            const response = await api.get(
-                "notifications/",
-            )
-            setNotifications(response.data);
-        } catch (error) {
-            HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
-        } finally {
-            setLoading(false);
-        }
+    // const fetchNotifications = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await api.get(
+    //             "notifications/",
+    //         )
+    //         setNotifications(response.data);
+    //     } catch (error) {
+    //         HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if (isLoggedIn) {
+    //         fetchNotifications();
+    //     }
+    // }, [isLoggedIn])
+
+    // const totalUnreadNotifications = notifications.filter((notification) =>
+    //     notification.is_read === false
+    // ).length;
+
+    if (loading) {
+        return <Loading />
     }
-
-    useEffect(() => {
-        if (isLoggedIn) {
-            fetchNotifications();
-        }
-    }, [isLoggedIn])
-
-    const totalUnreadNotifications = notifications.filter((notification) =>
-        notification.is_read === false
-    ).length;
 
 
 

@@ -13,9 +13,14 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
-            const decoded = jwtDecode(token);
-            setUserId(decoded.user_id);
-            setIsLoggedIn(true);
+            try {
+                const decoded = jwtDecode(token);
+                setUserId(decoded.user_id);
+                setIsLoggedIn(true);
+            } catch (error) {
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+            }
         }
         setLoading(false);
     }, [])
@@ -37,6 +42,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setIsLoggedIn(false);
+        setUserId(null);
     }
 
     return (
