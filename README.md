@@ -10,29 +10,29 @@ The project is being developed incrementally, with each feature built, tested, a
 
 ### Frontend
 
-* React
-* Vite
-* Tailwind CSS
-* Axios
-* React Router
-* Lucide React
+- React
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
+- Lucide React
 
 ### Backend
 
-* Python
-* Django
-* Django REST Framework
-* JWT Authentication
-* Django Filters
+- Python
+- Django
+- Django REST Framework
+- JWT Authentication
+- Django Filters
 
 ### Database
 
-* PostgreSQL
+- PostgreSQL
 
 ### Tools
 
-* Git & GitHub
-* Postman
+- Git & GitHub
+- Postman
 
 ---
 
@@ -40,186 +40,199 @@ The project is being developed incrementally, with each feature built, tested, a
 
 ### 🔐 Authentication
 
-* User registration
-* User login
-* JWT access and refresh tokens
-* Protected routes
-* Automatic access-token refresh
-* Logout
+- User registration
+- User login
+- JWT access and refresh tokens
+- Protected routes
+- Automatic access-token refresh
+- Logout
+- Invalid JWT token handling
+- Automatic cleanup of invalid authentication tokens
 
 ### 👤 User Profiles
 
-* Create and manage user profiles
-* Profile picture upload
-* Profile picture preview
-* Role
-* Skills
-* Bio
-* Location
-* Experience
-* GitHub
-* Portfolio
-* Availability
-* What the user is looking for
-* Edit profile functionality
-* View other users' profiles
+- Create and manage user profiles
+- Profile picture upload
+- Profile picture preview
+- Role
+- Skills
+- Bio
+- Location
+- Experience
+- GitHub
+- Portfolio
+- Availability
+- What the user is looking for
+- Edit profile functionality
+- View other users' profiles
+- Self-profile detection
+- Hide connection actions on own profile
 
 ### 🔎 Discover
 
-* Discover other users
-* Search users by username
-* Filter by role
-* Filter by location
-* Filter by skills
-* Filter by what users are looking for
-* View user profiles
-* Connect with potential collaborators
-* Hide users who are already connected or have pending requests
+- Discover other users
+- Search users by username
+- Filter by role
+- Filter by location
+- Filter by skills
+- Filter by what users are looking for
+- View user profiles
+- Connect with potential collaborators
+- Hide users who are already connected or have pending requests
 
 ### 🤝 Connections
 
-* Send connection requests
-* Accept connection requests
-* Reject connection requests
-* Prevent self-connections
-* Prevent duplicate connection requests
-* Prevent reverse-direction duplicate requests
-* View pending connection requests
-* View accepted connections
-* Remove connections
-* View connected users' profiles
-* Connection status handling
-* Protected connection APIs
+- Send connection requests
+- Accept connection requests
+- Reject connection requests
+- Prevent self-connections
+- Prevent duplicate connection requests
+- Prevent reverse-direction duplicate requests
+- View pending connection requests
+- View accepted connections
+- Remove connections
+- View connected users' profiles
+- Connection status handling
+- Protected connection APIs
 
 ### 📁 Projects
 
-* Create projects
-* Project title and description
-* Required skills
-* Public / private visibility
-* Project status
-* Browse available projects
-* Project listing page
-* Project cards with owner information
-* Project owner profile picture
-* Project creation date
-* Project status display
-* Required skills display
-* Project empty states
-* Project loading and error handling
-* Dashboard → Create Project flow
+- Create projects
+- Project title and description
+- Required skills
+- Public / private visibility
+- Project status
+- Browse available projects
+- Project listing page
+- Project cards with owner information
+- Project owner profile picture
+- Project creation date
+- Project status display
+- Required skills display
+- Project empty states
+- Project loading and error handling
+- Dashboard → Create Project flow
 
 ### 📄 Project Details
 
-* Dedicated project details page
-* Dynamic project information
-* Project title
-* Project description
-* Required skills
-* Project visibility
-* Project status
-* Created date
-* Updated date
-* Project owner information
-* Project owner profile picture
-* Avatar fallback when no profile picture exists
-* View Project Owner Profile
-* Public project behavior
-* Private project behavior
-* Private projects do not currently allow join requests
-* Project owner cannot send a join request to their own project
-* Send join request to public projects
-* Join request status handling
-* Project Members access based on project visibility
+- Dedicated project details page
+- Dynamic project information
+- Project title
+- Project description
+- Required skills
+- Project visibility
+- Project status
+- Created date
+- Updated date
+- Project owner information
+- Project owner profile picture
+- Avatar fallback when no profile picture exists
+- View Project Owner Profile
+- Public project behavior
+- Private project behavior
+- Private projects do not currently allow join requests
+- Project owner cannot send a join request to their own project
+- Send join request to public projects
+- Join request status handling
+- Project Members access based on project visibility
 
 ### 📂 My Projects
 
-* Dedicated My Projects page
-* View projects owned by the authenticated user
-* Project statistics
-* View project details
-* Edit projects
-* Delete projects
-* Project owner permissions
-* Delete confirmation
-* Delete loading state
-* Delete error handling
-* Automatic project list update after deletion
-* My Projects empty state
-* Navigation to My Projects from the main navigation
-* View Project Members
+- Dedicated My Projects page
+- View projects owned by the authenticated user
+- Project statistics
+- View project details
+- Edit projects
+- Delete projects
+- Project owner permissions
+- Delete confirmation
+- Delete loading state
+- Delete error handling
+- Automatic project list update after deletion
+- My Projects empty state
+- Navigation to My Projects from the main navigation
+- View Project Members
 
 ### 🤝 Project Join Requests
 
-* Send join requests to public projects
-* Prevent project owners from requesting their own projects
-* Prevent duplicate pending requests
-* Automatically assign the authenticated user as the sender
-* Automatically set new requests to `PENDING`
-* Public / private project validation
-* View the authenticated user's join requests
-* Display pending request status
-* Display accepted request status
-* Request again after rejection
-* Backend permission and validation checks
-* Project owners can view incoming join requests for their projects
-* Display requester profile information
-* Display requester role and skills
-* Display requested project information
-* Display request status and request date
-* Accept join requests
-* Reject join requests
-* Prevent unauthorized users from accepting or rejecting requests
-* Prevent already processed requests from being accepted or rejected
-* Remove processed requests from the pending owner view
+- Send join requests to public projects
+- Prevent project owners from requesting their own projects
+- Prevent duplicate pending requests
+- Automatically assign the authenticated user as the sender
+- Automatically set new requests to `PENDING`
+- Public / private project validation
+- View the authenticated user's join requests
+- Display pending request status
+- Display accepted request status
+- Request again after rejection
+- Backend permission and validation checks
+- Project owners can view incoming join requests for their projects
+- Display requester profile information
+- Display requester role and skills
+- Display requested project information
+- Display request status and request date
+- Accept join requests
+- Reject join requests
+- Prevent unauthorized users from accepting or rejecting requests
+- Prevent already processed requests from being accepted or rejected
+- Remove processed requests from the pending owner view
 
 ### 👥 Project Members
 
-* Dedicated Project Members page
-* View members of a project
-* Member count
-* Member username and role
-* Member profile picture
-* Avatar fallback
-* Member joined date
-* View member profiles
-* Public project members can be viewed by authenticated users
-* Private project members can only be viewed by the project owner
-* Protected members API
-* Members empty state
-* Responsive member grid
-
-> Connection from the Project Members page is planned as the next small improvement.
+- Dedicated Project Members page
+- View members of a project
+- Member count
+- Member username and role
+- Member profile picture
+- Avatar fallback
+- Member joined date
+- View member profiles
+- Public project members can be viewed by authenticated users
+- Private project members can only be viewed by the project owner
+- Protected members API
+- Members empty state
+- Responsive member grid
+- Connect with project members
+- Display member connection status
+- Display pending connection status
+- Prevent connecting with yourself
+- Project owner can remove members
+- Member removal permission checks
+- Automatic member removal from the UI
+- Remove associated join requests when a member is removed
 
 ### 🔔 Notifications
 
-* Notification model and API
-* Create notifications for join requests
-* Create notifications for connection requests
-* Create notifications for accepted connections
-* Create notifications for rejected connections
-* Create notifications for accepted join requests
-* Create notifications for rejected join requests
-* View user notifications
-* Navbar unread notification count
-* Read / unread notification state
-* Mark individual notifications as read
-* User-specific notification access control
-* Notification loading and empty states
-* Immediate UI update after marking a notification as read
+- Notification model and API
+- Create notifications for join requests
+- Create notifications for connection requests
+- Create notifications for accepted connections
+- Create notifications for rejected connections
+- Create notifications for accepted join requests
+- Create notifications for rejected join requests
+- View user notifications
+- Navbar unread notification count
+- Read / unread notification state
+- Mark individual notifications as read
+- User-specific notification access control
+- Notification loading and empty states
+- Immediate UI update after marking a notification as read
+- Centralized notification state management
+- Shared notification data across components
+- Global unread notification count
 
 ### 🎨 UI & UX
 
-* Consistent CollabHub design system
-* Violet-based primary color system
-* Responsive navigation
-* Mobile navigation menu
-* Professional form layouts
-* Consistent loading states
-* Empty states
-* Toast notifications
-* Automatic toast dismissal
-* Consistent spacing, typography, borders, and buttons across the application
+- Consistent CollabHub design system
+- Violet-based primary color system
+- Responsive navigation
+- Mobile navigation menu
+- Professional form layouts
+- Consistent loading states
+- Empty states
+- Toast notifications
+- Automatic toast dismissal
+- Consistent spacing, typography, borders, and buttons across the application
 
 ---
 
@@ -229,83 +242,94 @@ CollabHub is being developed feature by feature, with each major feature complet
 
 ### ✅ Completed
 
-* [x] Authentication
-* [x] JWT authentication
-* [x] User registration and login
-* [x] Protected routes
-* [x] User profiles
-* [x] Profile editing
-* [x] Profile picture upload
-* [x] Discover users
-* [x] User search and filters
-* [x] Connection requests
-* [x] Accept / reject connections
-* [x] My Connections
-* [x] Remove connections
-* [x] Connected user profiles
-* [x] Project model and API
-* [x] Project creation
-* [x] Project browsing / listing
-* [x] Project visibility and status
-* [x] Required project skills
-* [x] Dashboard → Create Project
-* [x] Project Details page
-* [x] Project owner information
-* [x] Project owner profile picture
-* [x] View Project Owner Profile
-* [x] Public / private project behavior
-* [x] My Projects page
-* [x] View projects from My Projects
-* [x] Edit projects
-* [x] Delete projects
-* [x] Project owner permissions
-* [x] Delete confirmation and handling
-* [x] My Projects empty state
-* [x] My Projects navigation
-* [x] Professional UI system
-* [x] Toast notification system
-* [x] Automatic toast dismissal
-* [x] Join request creation
-* [x] Join request validation
-* [x] Join request status handling
-* [x] Project owner incoming request view
-* [x] Accept join requests
-* [x] Reject join requests
-* [x] Owner permission checks for join requests
-* [x] Pending join request handling
-* [x] Notification system
-* [x] Notification API
-* [x] Notification creation for collaboration actions
-* [x] Notification unread count
-* [x] Read / unread notification state
-* [x] Mark notifications as read
-* [x] Project Members
-* [x] Project Members API
-* [x] Project Members page
-* [x] Member visibility and permission rules
-* [x] Member profile display
-* [x] Member joined date
-* [x] Project owner member access
+- [x] Authentication
+- [x] JWT authentication
+- [x] User registration and login
+- [x] Protected routes
+- [x] Invalid JWT handling
+- [x] User profiles
+- [x] Profile editing
+- [x] Profile picture upload
+- [x] Self-profile handling
+- [x] Discover users
+- [x] User search and filters
+- [x] Connection requests
+- [x] Accept / reject connections
+- [x] My Connections
+- [x] Remove connections
+- [x] Connected user profiles
+- [x] Project model and API
+- [x] Project creation
+- [x] Project browsing / listing
+- [x] Project visibility and status
+- [x] Required project skills
+- [x] Dashboard → Create Project
+- [x] Project Details page
+- [x] Project owner information
+- [x] Project owner profile picture
+- [x] View Project Owner Profile
+- [x] Public / private project behavior
+- [x] My Projects page
+- [x] View projects from My Projects
+- [x] Edit projects
+- [x] Delete projects
+- [x] Project owner permissions
+- [x] Delete confirmation and handling
+- [x] My Projects empty state
+- [x] My Projects navigation
+- [x] Professional UI system
+- [x] Toast notification system
+- [x] Automatic toast dismissal
+- [x] Join request creation
+- [x] Join request validation
+- [x] Join request status handling
+- [x] Project owner incoming request view
+- [x] Accept join requests
+- [x] Reject join requests
+- [x] Owner permission checks for join requests
+- [x] Pending join request handling
+- [x] Notification system
+- [x] Notification API
+- [x] Notification creation for collaboration actions
+- [x] Notification unread count
+- [x] Read / unread notification state
+- [x] Mark notifications as read
+- [x] Centralized notification state
+- [x] Project Members
+- [x] Project Members API
+- [x] Project Members page
+- [x] Member visibility and permission rules
+- [x] Member profile display
+- [x] Member joined date
+- [x] Project owner member access
+- [x] Connect with members from Project Members page
+- [x] Member connection status handling
+- [x] Project owner member removal
+- [x] Member removal permission checks
+- [x] Member removal UI update
 
-### 🚧 Current / Next
+---
 
-#### Project Collaboration
+## 🚧 Current / Next
 
-* [x] Send join request
-* [x] Join request status
-* [x] Project owner incoming request view
-* [x] Accept join requests
-* [x] Reject join requests
-* [x] Project members
-* [x] Accepted member handling
-* [ ] Connect with members from Project Members page
+### 🤝 Project Collaboration
 
-#### Teams & Work Management
+- [x] Send join request
+- [x] Join request status
+- [x] Project owner incoming request view
+- [x] Accept join requests
+- [x] Reject join requests
+- [x] Project members
+- [x] Accepted member handling
+- [x] Connect with members from Project Members page
+- [x] Remove project members
 
-* [ ] Teams
-* [ ] Team management
-* [ ] Tasks
-* [ ] Dashboard data and activity
+### 👥 Teams & Work Management
+
+- [ ] Teams
+- [ ] Team management
+- [ ] Tasks
+- [ ] Dashboard data and activity
 
 ---
 
@@ -313,14 +337,14 @@ CollabHub is being developed feature by feature, with each major feature complet
 
 These features will be considered after the core collaboration workflow is stable.
 
-* [ ] Milestones
-* [ ] Real-time chat
-* [ ] File sharing
-* [ ] WebSockets
-* [ ] Redis
-* [ ] Celery
-* [ ] Reputation system
-* [ ] AI-powered collaborator matching
+- [ ] Milestones
+- [ ] Real-time chat
+- [ ] File sharing
+- [ ] WebSockets
+- [ ] Redis
+- [ ] Celery
+- [ ] Reputation system
+- [ ] AI-powered collaborator matching
 
 ---
 
@@ -377,27 +401,27 @@ The long-term collaboration flow is:
 
 ```text
 Profile
-   ↓
+  ↓
 Discover People
-   ↓
+  ↓
 Connect
-   ↓
+  ↓
 Create / Discover Projects
-   ↓
+  ↓
 Project Details
-   ↓
+  ↓
 Join Requests
-   ↓
+  ↓
 Accept / Reject
-   ↓
+  ↓
 Notifications
-   ↓
+  ↓
 Project Members
-   ↓
+  ↓
 Teams
-   ↓
+  ↓
 Tasks
-   ↓
+  ↓
 Collaboration
 ```
 
@@ -411,38 +435,41 @@ The authentication, profile, discovery, connection, project management, join req
 
 Users can currently:
 
-* Create and manage profiles
-* Discover other users
-* Connect with potential collaborators
-* Create projects
-* Browse projects
-* View detailed project information
-* View project owners
-* Explore public and private project behavior
-* View and manage their own projects
-* Edit their projects
-* Delete their projects with owner-level permission checks
-* Send join requests to public projects
-* Track join request status
-* Request again after rejection
-* View incoming join requests as project owners
-* Accept join requests
-* Reject join requests
-* Receive notifications for collaboration activity
-* View unread notification counts
-* Mark notifications as read
-* Enforce user-specific notification access control
-* View project members
-* View member profiles
-* Apply project-specific member visibility rules
+- Create and manage profiles
+- Discover other users
+- Connect with potential collaborators
+- Create projects
+- Browse projects
+- View detailed project information
+- View project owners
+- Explore public and private project behavior
+- View and manage their own projects
+- Edit their projects
+- Delete their projects with owner-level permission checks
+- Send join requests to public projects
+- Track join request status
+- Request again after rejection
+- View incoming join requests as project owners
+- Accept join requests
+- Reject join requests
+- Receive notifications for collaboration activity
+- View unread notification counts
+- Mark notifications as read
+- Enforce user-specific notification access control
+- View project members
+- View member profiles
+- Connect with project members
+- View member connection status
+- Remove project members as project owners
+- Apply project-specific member visibility rules
 
 The current development stage is focused on **project collaboration**.
 
 The Join Request workflow is functional from creation through owner-side acceptance or rejection, and the Notification system is integrated with the existing collaboration actions.
 
-The **Project Members** workflow is now implemented, including the backend members API, dedicated members page, member information, and project-specific access rules.
+The **Project Members** workflow is implemented with the backend members API, dedicated members page, member information, project-specific access rules, member connections, connection status handling, and project-owner member removal.
 
-The next small improvement is connecting the existing connection workflow directly to the **Project Members** page, followed by the larger Teams and Task Management stages.
+The next major development stage is **Teams & Work Management**, starting with teams and team management, followed by tasks and dashboard activity.
 
 ---
 
