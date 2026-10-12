@@ -1,15 +1,18 @@
 # CollabHub 🚀
 
-**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover people with complementary skills, connect with them, create projects, and eventually work together as teams.
+**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover potential collaborators, connect through shared skills and interests, create projects, and build teams.
 
-The project is being developed incrementally, with each feature built, tested, and improved before moving to the next stage.
+The project is being developed incrementally, with a focus on practical features, secure APIs, and a responsive user experience.
+
+**Project status:** Actively under development
+
+🔗 **Repository:** [GitHub](https://github.com/TilakBhattarai/collabhub)
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-
+**Frontend**
 - React
 - Vite
 - Tailwind CSS
@@ -17,332 +20,163 @@ The project is being developed incrementally, with each feature built, tested, a
 - React Router
 - Lucide React
 
-### Backend
-
+**Backend**
 - Python
 - Django
 - Django REST Framework
 - JWT Authentication
 - Django Filters
 
-### Database
-
+**Database and Tools**
 - PostgreSQL
-
-### Tools
-
-- Git & GitHub
+- Git and GitHub
 - Postman
 
 ---
 
-## ✨ Current Features
+## ✨ Features Implemented
 
 ### 🔐 Authentication
-
-- User registration
-- User login
+- User registration and login
 - JWT access and refresh tokens
 - Protected routes
 - Automatic access-token refresh
-- Logout
-- Invalid JWT token handling
-- Automatic cleanup of invalid authentication tokens
+- Logout and invalid-token handling
 
 ### 👤 User Profiles
-
-- Create and manage user profiles
-- Profile picture upload
-- Profile picture preview
-- Role
-- Skills
-- Bio
-- Location
-- Experience
-- GitHub
-- Portfolio
-- Availability
-- What the user is looking for
-- Edit profile functionality
-- View other users' profiles
-- Self-profile detection
-- Hide connection actions on own profile
+- Create, view, and update profiles
+- Profile picture upload and preview
+- Role, skills, bio, location, and experience
+- GitHub and portfolio links
+- Availability and collaboration preferences
+- Self-profile detection and appropriate connection-action handling
 
 ### 🔎 Discover
-
 - Discover other users
-- Search users by username
-- Filter by role
-- Filter by location
-- Filter by skills
-- Filter by what users are looking for
+- Search by username
+- Filter by role, location, skills, and collaboration preferences
 - View user profiles
-- Connect with potential collaborators
-- Hide users who are already connected or have pending requests
+- Identify potential collaborators
+- Handle existing connections and pending requests
 
 ### 🤝 Connections
-
-- Send connection requests
-- Accept connection requests
-- Reject connection requests
-- Prevent self-connections
-- Prevent duplicate connection requests
-- Prevent reverse-direction duplicate requests
-- View pending connection requests
-- View accepted connections
-- Remove connections
-- View connected users' profiles
-- Connection status handling
-- Protected connection APIs
+- Send, accept, and reject connection requests
+- Prevent self-connections and duplicate requests
+- Handle requests in either direction
+- View pending requests and accepted connections
+- Remove existing connections
+- Access connected users' profiles
 
 ### 📁 Projects
-
-- Create projects
-- Project title and description
-- Required skills
-- Public / private visibility
-- Project status
-- Browse available projects
-- Project listing page
-- Project cards with owner information
-- Project owner profile picture
-- Project creation date
-- Project status display
-- Required skills display
-- Project empty states
-- Project loading and error handling
-- Dashboard → Create Project flow
+- Create and browse projects
+- Set project title, description, required skills, visibility, and status
+- Support public and private projects
+- View project owners and their profile pictures
+- Display project creation and update dates
+- Handle loading, errors, and empty states
 
 ### 📄 Project Details
-
 - Dedicated project details page
-- Dynamic project information
-- Project title
-- Project description
-- Required skills
-- Project visibility
-- Project status
-- Created date
-- Updated date
-- Project owner information
-- Project owner profile picture
-- Avatar fallback when no profile picture exists
-- View Project Owner Profile
-- Public project behavior
-- Private project behavior
-- Private projects do not currently allow join requests
-- Project owner cannot send a join request to their own project
-- Send join request to public projects
-- Join request status handling
-- Project Members access based on project visibility
+- Display project information and owner details
+- Navigate to the owner's profile
+- Enforce project-specific visibility rules
+- Send join requests to eligible public projects
+- Prevent owners from requesting to join their own projects
 
 ### 📂 My Projects
-
-- Dedicated My Projects page
 - View projects owned by the authenticated user
-- Project statistics
 - View project details
-- Edit projects
-- Delete projects
-- Project owner permissions
-- Delete confirmation
-- Delete loading state
-- Delete error handling
-- Automatic project list update after deletion
-- My Projects empty state
-- Navigation to My Projects from the main navigation
-- View Project Members
+- Edit and delete projects
+- Enforce owner permissions
+- Confirm project deletion
+- Handle deletion loading and errors
+- Update the project list after deletion
+- Navigate to project members
 
 ### 🤝 Project Join Requests
-
 - Send join requests to public projects
-- Prevent project owners from requesting their own projects
 - Prevent duplicate pending requests
-- Automatically assign the authenticated user as the sender
-- Automatically set new requests to `PENDING`
-- Public / private project validation
-- View the authenticated user's join requests
-- Display pending request status
-- Display accepted request status
-- Request again after rejection
-- Backend permission and validation checks
-- Project owners can view incoming join requests for their projects
-- Display requester profile information
-- Display requester role and skills
-- Display requested project information
-- Display request status and request date
-- Accept join requests
-- Reject join requests
-- Prevent unauthorized users from accepting or rejecting requests
-- Prevent already processed requests from being accepted or rejected
-- Remove processed requests from the pending owner view
+- Track pending and accepted request statuses
+- Allow users to request again after rejection
+- Display incoming requests to project owners
+- Show requester and project information
+- Accept or reject requests
+- Enforce owner permissions and prevent processing requests that are no longer pending
+- Remove processed requests from the pending list
 
 ### 👥 Project Members
-
-- Dedicated Project Members page
-- View members of a project
-- Member count
-- Member username and role
-- Member profile picture
-- Avatar fallback
-- Member joined date
+- Dedicated project members page
+- Display member usernames, roles, profile pictures, and join dates
+- Show project member counts
 - View member profiles
-- Public project members can be viewed by authenticated users
-- Private project members can only be viewed by the project owner
-- Protected members API
-- Members empty state
-- Responsive member grid
 - Connect with project members
-- Display member connection status
-- Display pending connection status
-- Prevent connecting with yourself
-- Project owner can remove members
-- Member removal permission checks
-- Automatic member removal from the UI
-- Remove associated join requests when a member is removed
+- Display connection and pending-request status
+- Allow project owners to remove members
+- Enforce member-removal permissions
+- Remove associated join requests when applicable
+- Apply access rules to public and private project members
 
 ### 🔔 Notifications
+- Notifications for collaboration-related actions
+- View notifications and their timestamps
+- Read and unread notification states
+- Mark notifications as read
+- Display the unread count in the navigation bar
+- Share notification state across components
+- Handle notification loading and empty states
+- Restrict notification access to the appropriate user
 
-- Notification model and API
-- Create notifications for join requests
-- Create notifications for connection requests
-- Create notifications for accepted connections
-- Create notifications for rejected connections
-- Create notifications for accepted join requests
-- Create notifications for rejected join requests
-- View user notifications
-- Navbar unread notification count
-- Read / unread notification state
-- Mark individual notifications as read
-- User-specific notification access control
-- Notification loading and empty states
-- Immediate UI update after marking a notification as read
-- Centralized notification state management
-- Shared notification data across components
-- Global unread notification count
+### 📊 Dashboard
+- Overview of projects, connections, and pending join requests
+- Incoming project join requests with accept/reject actions
+- Connection request management
+- Recent activity and notifications
+- Quick navigation to project creation and other sections
+- Responsive dashboard layout
 
 ### 🎨 UI & UX
-
-- Consistent CollabHub design system
-- Violet-based primary color system
-- Responsive navigation
-- Mobile navigation menu
-- Professional form layouts
-- Consistent loading states
-- Empty states
-- Toast notifications
-- Automatic toast dismissal
-- Consistent spacing, typography, borders, and buttons across the application
+- Consistent violet-based design system
+- Responsive navigation and mobile menu
+- Reusable loading and empty states
+- Toast notifications with automatic dismissal
+- Consistent layouts, spacing, typography, and buttons
 
 ---
 
-## 🏗️ Project Roadmap
+## 🏗️ Development Roadmap
 
-CollabHub is being developed feature by feature, with each major feature completed before moving to the next stage.
+### ✅ Implemented
 
-### ✅ Completed
+- [x] Authentication and JWT handling
+- [x] User profiles and profile editing
+- [x] User discovery and filtering
+- [x] Connection management
+- [x] Project creation and browsing
+- [x] Project details
+- [x] My Projects management
+- [x] Project join requests
+- [x] Project member management
+- [x] Notifications
+- [x] Dashboard
+- [x] Responsive UI and shared notification state
 
-- [x] Authentication
-- [x] JWT authentication
-- [x] User registration and login
-- [x] Protected routes
-- [x] Invalid JWT handling
-- [x] User profiles
-- [x] Profile editing
-- [x] Profile picture upload
-- [x] Self-profile handling
-- [x] Discover users
-- [x] User search and filters
-- [x] Connection requests
-- [x] Accept / reject connections
-- [x] My Connections
-- [x] Remove connections
-- [x] Connected user profiles
-- [x] Project model and API
-- [x] Project creation
-- [x] Project browsing / listing
-- [x] Project visibility and status
-- [x] Required project skills
-- [x] Dashboard → Create Project
-- [x] Project Details page
-- [x] Project owner information
-- [x] Project owner profile picture
-- [x] View Project Owner Profile
-- [x] Public / private project behavior
-- [x] My Projects page
-- [x] View projects from My Projects
-- [x] Edit projects
-- [x] Delete projects
-- [x] Project owner permissions
-- [x] Delete confirmation and handling
-- [x] My Projects empty state
-- [x] My Projects navigation
-- [x] Professional UI system
-- [x] Toast notification system
-- [x] Automatic toast dismissal
-- [x] Join request creation
-- [x] Join request validation
-- [x] Join request status handling
-- [x] Project owner incoming request view
-- [x] Accept join requests
-- [x] Reject join requests
-- [x] Owner permission checks for join requests
-- [x] Pending join request handling
-- [x] Notification system
-- [x] Notification API
-- [x] Notification creation for collaboration actions
-- [x] Notification unread count
-- [x] Read / unread notification state
-- [x] Mark notifications as read
-- [x] Centralized notification state
-- [x] Project Members
-- [x] Project Members API
-- [x] Project Members page
-- [x] Member visibility and permission rules
-- [x] Member profile display
-- [x] Member joined date
-- [x] Project owner member access
-- [x] Connect with members from Project Members page
-- [x] Member connection status handling
-- [x] Project owner member removal
-- [x] Member removal permission checks
-- [x] Member removal UI update
+### 🚧 Current and Next
 
----
-
-## 🚧 Current / Next
-
-### 🤝 Project Collaboration
-
-- [x] Send join request
-- [x] Join request status
-- [x] Project owner incoming request view
-- [x] Accept join requests
-- [x] Reject join requests
-- [x] Project members
-- [x] Accepted member handling
-- [x] Connect with members from Project Members page
-- [x] Remove project members
-
-### 👥 Teams & Work Management
-
+**Teams & Work Management**
 - [ ] Teams
-- [ ] Team management
-- [ ] Tasks
-- [ ] Dashboard data and activity
+- [ ] Team creation and management
+- [ ] Task creation and assignment
+- [ ] Dashboard activity backed by additional collaboration data
 
----
-
-## 🔮 Future / Stretch Features
+### 🔮 Future Enhancements
 
 These features will be considered after the core collaboration workflow is stable.
 
-- [ ] Milestones
+- [ ] Project milestones
 - [ ] Real-time chat
 - [ ] File sharing
 - [ ] WebSockets
-- [ ] Redis
-- [ ] Celery
+- [ ] Redis and Celery where needed
 - [ ] Reputation system
 - [ ] AI-powered collaborator matching
 
@@ -352,7 +186,6 @@ These features will be considered after the core collaboration workflow is stabl
 
 ```text
 collabhub/
-│
 ├── backend/
 │   ├── accounts/
 │   ├── profiles/
@@ -360,116 +193,64 @@ collabhub/
 │   ├── projects/
 │   ├── notifications/
 │   ├── config/
-│   ├── manage.py
-│   └── ...
-│
+│   └── manage.py
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
 │   │   ├── context/
 │   │   └── ...
-│   ├── package.json
-│   └── ...
-│
+│   └── package.json
 └── README.md
 ```
 
 ---
 
-## 🎯 Vision
+## 🔄 Collaboration Workflow
 
-CollabHub aims to make it easier for people with different technical skills to find each other and work together on meaningful projects.
-
-For example:
+The current platform supports the core workflow from discovering collaborators to managing project membership.
 
 ```text
-Developer A
-Python • Django • PostgreSQL
-             │
-             ▼
-         CollabHub
-             ▲
-             │
-Developer B
-React • JavaScript • Tailwind
-```
-
-Instead of searching randomly for teammates, users can build profiles around their skills and interests, discover potential collaborators, explore projects, connect with other builders, and eventually form teams to work together.
-
-The long-term collaboration flow is:
-
-```text
-Profile
-  ↓
+Create a Profile
+      ↓
 Discover People
-  ↓
-Connect
-  ↓
-Create / Discover Projects
-  ↓
-Project Details
-  ↓
-Join Requests
-  ↓
-Accept / Reject
-  ↓
+      ↓
+Send Connection Requests
+      ↓
+Create or Discover Projects
+      ↓
+View Project Details
+      ↓
+Send Join Requests
+      ↓
+Project Owner Accepts or Rejects
+      ↓
 Notifications
-  ↓
+      ↓
 Project Members
-  ↓
-Teams
-  ↓
-Tasks
-  ↓
-Collaboration
+      ↓
+Future: Teams and Tasks
 ```
+
+---
+
+## 🎯 Project Vision
+
+CollabHub aims to make it easier for people with complementary technical skills to find each other and work on meaningful projects.
+
+For example, a Python/Django developer could discover a React developer, connect with them, and collaborate on a project that combines their skills.
+
+Rather than relying entirely on random networking, users can showcase their abilities, discover relevant projects, and build connections around shared interests.
+
+The long-term goal is to evolve CollabHub from a project-discovery platform into a broader collaboration platform with teams, tasks, and potentially AI-powered collaborator matching.
 
 ---
 
 ## 🚧 Development Status
 
-CollabHub is currently under active development.
+CollabHub is an active development project. Its authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, and dashboard have been implemented progressively.
 
-The authentication, profile, discovery, connection, project management, join request, notification, and project member systems have been implemented.
-
-Users can currently:
-
-- Create and manage profiles
-- Discover other users
-- Connect with potential collaborators
-- Create projects
-- Browse projects
-- View detailed project information
-- View project owners
-- Explore public and private project behavior
-- View and manage their own projects
-- Edit their projects
-- Delete their projects with owner-level permission checks
-- Send join requests to public projects
-- Track join request status
-- Request again after rejection
-- View incoming join requests as project owners
-- Accept join requests
-- Reject join requests
-- Receive notifications for collaboration activity
-- View unread notification counts
-- Mark notifications as read
-- Enforce user-specific notification access control
-- View project members
-- View member profiles
-- Connect with project members
-- View member connection status
-- Remove project members as project owners
-- Apply project-specific member visibility rules
-
-The current development stage is focused on **project collaboration**.
-
-The Join Request workflow is functional from creation through owner-side acceptance or rejection, and the Notification system is integrated with the existing collaboration actions.
-
-The **Project Members** workflow is implemented with the backend members API, dedicated members page, member information, project-specific access rules, member connections, connection status handling, and project-owner member removal.
-
-The next major development stage is **Teams & Work Management**, starting with teams and team management, followed by tasks and dashboard activity.
+The current focus is strengthening the project collaboration workflow. **Teams and task management have not been implemented yet** and remain planned features.
 
 ---
 
@@ -477,8 +258,8 @@ The next major development stage is **Teams & Work Management**, starting with t
 
 **Tilak Bhattarai**
 
-GitHub: [TilakBhattarai](https://github.com/TilakBhattarai)
+- GitHub: [TilakBhattarai](https://github.com/TilakBhattarai)
 
 ---
 
-⭐ This project is being built as a hands-on full-stack development project, with features added progressively as the application evolves.
+⭐ If you find this project interesting, consider exploring the repository as it continues to evolve.
