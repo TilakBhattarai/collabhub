@@ -30,11 +30,12 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class JoinRequestSerializer(serializers.ModelSerializer):
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    project_details = ProjectSerializer(source="project", read_only=True)
     sender = UserSerializer(read_only=True)
 
     class Meta:
         model = JoinRequest
-        fields = ["id", "sender", "status", "created_at", "project"]
+        fields = ["id", "sender", "status", "created_at", "project", "project_details"]
         read_only_fields = ["id", "sender", "status", "created_at"]
 
 

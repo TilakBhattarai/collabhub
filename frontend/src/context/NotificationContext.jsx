@@ -2,6 +2,7 @@ import { useContext, createContext, useEffect, useState } from "react";
 import { useToast } from "./ToastContext";
 import HandleApiError from "../utils/HandleApiError";
 import api from "../api/axios";
+import { useAuth } from "./AuthContext";
 
 
 const NotificationContext = createContext();
@@ -11,6 +12,7 @@ export const NotificationProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
     const [notifications, setNotifications] = useState([]);
+    const { isLoggedIn } = useAuth()
 
 
     const fetchNotifications = async () => {
@@ -33,7 +35,9 @@ export const NotificationProvider = ({ children }) => {
     ).length;
 
     useEffect(() => {
-        fetchNotifications()
+        if (isLoggedIn) {
+            fetchNotifications()
+        }
     }, [])
 
     return (

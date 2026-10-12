@@ -91,7 +91,7 @@ export default function Connections() {
         setInitialLoading(true);
 
         try {
-            const response = await api.post(
+            await api.post(
                 "connection/requests/reject",
                 {
                     connection_id: connection_id,

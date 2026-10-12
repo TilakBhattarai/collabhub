@@ -305,7 +305,7 @@ export default function MyProjects() {
                                             className="inline-flex h-10 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             <Trash2 className="h-4 w-4" />
-                                            {deleting ? "Deleting..." : "Delete"}
+                                            {deleting && deletingId === project.id ? "Deleting..." : "Delete"}
                                         </button>
 
                                         <button

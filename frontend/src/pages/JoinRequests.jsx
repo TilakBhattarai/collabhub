@@ -137,27 +137,31 @@ export default function JoinRequests() {
 
                                         {/* Role */}
                                         <p className="mt-0.5 text-sm text-gray-500">
-                                            {req.sender.profile.role}
+                                            {req.sender.profile.role || "Role not set"}
                                         </p>
 
                                         {/* Skills */}
                                         <div className="mt-2.5 flex flex-wrap gap-1.5">
-                                            {(req.sender.profile.skills || "")
-                                                .split(",")
-                                                .map((skill) => skill.trim())
-                                                .filter(Boolean)
-                                                .map((skill) => (
-                                                    <span
-                                                        key={skill}
-                                                        className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
-                                                    >
-                                                        {skill}
-                                                    </span>
-                                                ))}
+                                            {req.sender.profile?.skills ? (
+                                                req.sender.profile.skills
+                                                    .split(",")
+                                                    .map((skill) => skill.trim())
+                                                    .filter(Boolean)
+                                                    .map((skill) => (
+                                                        <span
+                                                            key={skill}
+                                                            className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+                                                        >
+                                                            {skill}
+                                                        </span>
+                                                    ))
+                                            ) : (
+                                                <span className="text-xs text-gray-400">No skills added</span>
+                                            )}
                                         </div>
 
                                         <p className="mt-3 text-sm text-gray-500">
-                                            Wants to join <span className="font-medium">{req.project.title}</span>
+                                            Wants to join <span className="font-medium">{req.project_details.title}</span>
                                             <span className="text-gray-300"> · </span>
                                             {new Date(req.created_at).toLocaleDateString("en-US", {
                                                 year: "numeric",

@@ -6,13 +6,14 @@ import api from "../api/axios";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
 import { useNotification } from "../context/NotificationContext";
+import { formatTime } from "../utils/formatTime";
 
 const Notifications = () => {
 
     // const [loading, setLoading] = useState(false);
     const { showToast } = useToast();
     const navigate = useNavigate();
-    const { loading, fetchNotifications, notifications, setNotifications } = useNotification()
+    const { loading, fetchNotifications, notifications, setNotifications } = useNotification();
 
     // const fetchNotifications = async () => {
     //     setLoading(true);
@@ -40,37 +41,6 @@ const Notifications = () => {
     useEffect(() => {
         fetchNotifications();
     }, [])
-
-    const formatTime = (createdAt) => {
-        const now = new Date();
-        const created = new Date(createdAt);
-
-        const diffInSeconds = Math.floor((now - created) / 1000);
-
-        if (diffInSeconds < 60) {
-            return "Just now";
-        }
-
-        const diffInMinutes = Math.floor(diffInSeconds / 60);
-
-        if (diffInMinutes < 60) {
-            return `${diffInMinutes} minute${diffInMinutes !== 1 ? "s" : ""} ago`;
-        }
-
-        const diffInHours = Math.floor(diffInMinutes / 60);
-
-        if (diffInHours < 24) {
-            return `${diffInHours} hour${diffInHours !== 1 ? "s" : ""} ago`;
-        }
-
-        const diffInDays = Math.floor(diffInHours / 24);
-
-        if (diffInDays === 1) {
-            return "Yesterday";
-        }
-
-        return `${diffInDays} days ago`;
-    };
 
     const handleRead = async (notificationId) => {
         try {
