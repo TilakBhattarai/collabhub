@@ -18,7 +18,7 @@ class Profile(models.Model):
     )
     skills = models.TextField(blank=True)
     bio = models.TextField(blank=True)
-    role = models.CharField(max_length=100)
+    role = models.CharField(max_length=100, blank=True)
     profile_picture = models.ImageField(
         upload_to="profile_picture/",
         blank=True,

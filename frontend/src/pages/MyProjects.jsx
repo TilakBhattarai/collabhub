@@ -7,6 +7,7 @@ import {
     Pencil,
     Trash2,
     Inbox,
+    LayoutDashboard,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -225,96 +226,112 @@ export default function MyProjects() {
                     <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
                         {myProjects.map((project) => {
-                            const status =
-                                statusStyles[project.status];
+                            const status = statusStyles[project.status];
+                            const skills = (project.required_skills || "")
+                                .split(",")
+                                .map((skill) => skill.trim())
+                                .filter(Boolean);
 
                             return (
                                 <div
                                     key={project.id}
-                                    className="group flex flex-col rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
+                                    className="flex flex-col rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
                                 >
                                     {/* Top row */}
-                                    <div className="flex items-start justify-between gap-4">
+                                    <div className="flex items-center justify-between gap-3">
                                         <div
                                             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${status.background} ${status.color}`}
                                         >
                                             <span
                                                 className={`h-1.5 w-1.5 rounded-full ${status.dot}`}
                                             />
-
                                             {status.text}
                                         </div>
 
-                                        <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-600">
-                                            {visibilityStyles[
-                                                project.visibility
-                                            ]}
+                                        <span className="text-xs text-gray-500">
+                                            {visibilityStyles[project.visibility]}
                                         </span>
                                     </div>
 
                                     {/* Project info */}
-                                    <div className="mt-4">
-                                        <h3 className="text-base font-semibold text-gray-900">
+                                    <div className="mt-4 flex-1">
+                                        <h3 className="line-clamp-1 text-base font-semibold text-gray-900">
                                             {project.title}
                                         </h3>
 
-                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
+                                        <p className="mt-1.5 line-clamp-2 text-sm leading-6 text-gray-600">
                                             {project.description}
                                         </p>
+
+                                        {skills.length > 0 && (
+                                            <div className="mt-4 flex flex-wrap gap-1.5">
+                                                {skills.slice(0, 3).map((skill) => (
+                                                    <span
+                                                        key={skill}
+                                                        className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                                {skills.length > 3 && (
+                                                    <span className="rounded-md px-1.5 py-1 text-xs text-gray-500">
+                                                        +{skills.length - 3}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Skills */}
-                                    <div className="mt-4 flex min-h-7 flex-wrap gap-2">
-                                        {(project.required_skills || "").split(",").filter(Boolean).map((skill) => (
-                                            <span
-                                                key={skill}
-                                                className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
+                                    {/* Primary action */}
+                                    <button
+                                        onClick={() => navigate(`/project/${project.id}/workspace`)}
+                                        type="button"
+                                        className="mt-5 inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 text-sm font-semibold text-white transition-colors hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
+                                    >
+                                        <LayoutDashboard className="h-4 w-4" />
+                                        Open Workspace
+                                    </button>
+
+                                    {/* Secondary actions */}
+                                    <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+                                        <div className="flex items-center gap-4">
+                                            <button
+                                                onClick={() => navigate(`/projects/${project.id}`)}
+                                                type="button"
+                                                className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-violet-700"
                                             >
-                                                {skill.trim()}
-                                            </span>
-                                        ))}
-                                    </div>
+                                                <Eye className="h-3.5 w-3.5" />
+                                                View
+                                            </button>
 
-                                    <div className="mt-5 grid grid-cols-2 gap-2 border-t border-gray-100 pt-4">
+                                            <button
+                                                onClick={() => navigate(`/projects/${project.id}/members/`)}
+                                                type="button"
+                                                className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-violet-700"
+                                            >
+                                                <Users className="h-3.5 w-3.5" />
+                                                Members
+                                            </button>
 
-                                        {/* View */}
-                                        <button
-                                            onClick={() => navigate(`/projects/${project.id}`)}
-                                            type="button"
-                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                            View
-                                        </button>
+                                            <button
+                                                onClick={() => navigate(`/myprojects/${project.id}`)}
+                                                type="button"
+                                                className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-violet-700"
+                                            >
+                                                <Pencil className="h-3.5 w-3.5" />
+                                                Edit
+                                            </button>
+                                        </div>
 
-                                        {/* Edit */}
-                                        <button
-                                            onClick={() => navigate(`/myprojects/${project.id}`)}
-                                            type="button"
-                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                            Edit
-                                        </button>
-
-                                        {/* Delete */}
                                         <button
                                             disabled={deleting}
                                             onClick={() => deleteProject(project.id)}
                                             type="button"
-                                            className="inline-flex h-10 items-center justify-center cursor-pointer gap-1.5 rounded-lg border border-red-100 bg-white px-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                            aria-label="Delete project"
+                                            className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-red-600 transition-colors hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
-                                            <Trash2 className="h-4 w-4" />
+                                            <Trash2 className="h-3.5 w-3.5" />
                                             {deleting && deletingId === project.id ? "Deleting..." : "Delete"}
-                                        </button>
-
-                                        <button
-                                            onClick={() => navigate(`/projects/${project.id}/members/`)}
-                                            type="button"
-                                            className="inline-flex h-10 items-center justify-center gap-1.5 cursor-pointer rounded-lg border border-gray-200 bg-white px-2 text-sm font-medium text-gray-600 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
-                                        >
-                                            <Users className="h-4 w-4" />
-                                            View Members
                                         </button>
                                     </div>
                                 </div>

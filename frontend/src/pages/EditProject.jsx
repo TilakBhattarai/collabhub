@@ -48,7 +48,7 @@ const EditProject = () => {
         setSaving(true);
 
         try {
-            const response = await api.patch(
+            await api.patch(
                 `projects/${projectId}/`,
                 {
                     title,
@@ -73,7 +73,7 @@ const EditProject = () => {
         fetchProject();
     }, [projectId]);
 
-    if(loading) {
+    if (loading) {
         return <Loading />;
     }
 

@@ -21,6 +21,7 @@ import EditProject from "./pages/EditProject"
 import JoinRequests from "./pages/JoinRequests"
 import Notifications from "./pages/Notifications"
 import ProjectMembers from "./pages/ProjectMembers"
+import ProjectWorkspace from "./pages/ProjectWorkspace"
 
 function App() {
 
@@ -171,6 +172,14 @@ function App() {
           }
         />
 
+        <Route
+          path="/project/:projectId/workspace"
+          element={
+            <ProtectedRoute>
+              <ProjectWorkspace />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes >
     </>

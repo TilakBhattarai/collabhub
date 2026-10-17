@@ -15,21 +15,51 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bio', models.TextField(blank=True)),
-                ('role', models.CharField(max_length=100)),
-                ('profile_picture', models.ImageField(blank=True, upload_to='profile_picture/')),
-                ('location', models.CharField(blank=True, max_length=100)),
-                ('experience', models.CharField(blank=True, max_length=255)),
-                ('github', models.URLField(blank=True)),
-                ('portfolio', models.URLField(blank=True)),
-                ('availability', models.CharField(blank=True, choices=[('0-5', '0-5 hrs/week'), ('5-10', '5-10 hrs/week'), ('10-20', '10-20 hrs/week'), ('20+', '20+ hrs/week')], max_length=15)),
-                ('looking_for', models.CharField(blank=True, max_length=255)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("bio", models.TextField(blank=True)),
+                ("role", models.CharField(max_length=100)),
+                (
+                    "profile_picture",
+                    models.ImageField(blank=True, upload_to="profile_picture/"),
+                ),
+                ("location", models.CharField(blank=True, max_length=100)),
+                ("experience", models.CharField(blank=True, max_length=255)),
+                ("github", models.URLField(blank=True)),
+                ("portfolio", models.URLField(blank=True)),
+                (
+                    "availability",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("0-5", "0-5 hrs/week"),
+                            ("5-10", "5-10 hrs/week"),
+                            ("10-20", "10-20 hrs/week"),
+                            ("20+", "20+ hrs/week"),
+                        ],
+                        max_length=15,
+                    ),
+                ),
+                ("looking_for", models.CharField(blank=True, max_length=255)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
