@@ -100,3 +100,81 @@ class ProjectMember(models.Model):
                 name="unique_project_member",
             )
         ]
+
+
+class Task(models.Model):
+
+    STATUS_CHOICES = [
+        ("TODO", "To Do"),
+        ("IN_PROGRESS", "In Progress"),
+        ("COMPLETED", "Completed"),
+    ]
+
+    CATEGORY_CHOICES = [
+        ("BACKEND", "Backend"),
+        ("FRONTEND", "Frontend"),
+        ("DESIGN", "Design"),
+        ("SETUP", "Setup"),
+        ("OTHER", "Other"),
+    ]
+
+    PRIOTITY_CHOICES = [
+        ("LOW", "Low"),
+        ("MEDIUM", "Medium"),
+        ("HIGH", "High"),
+    ]
+
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="tasks",
+    )
+
+    assigned_to = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_tasks",
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="created_tasks",
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="TODO",
+    )
+
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default="OTHER",
+    )
+
+    priority = models.CharField(
+        max_length=20,
+        default="MEDIUM",
+        choices=PRIOTITY_CHOICES,
+    )
+
+    due_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} - {self.project.title}"

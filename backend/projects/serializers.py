@@ -1,4 +1,4 @@
-from .models import Project, JoinRequest, ProjectMember
+from .models import Project, JoinRequest, ProjectMember, Task
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from accounts.serializers import ProjectOwnerSerializer
@@ -47,3 +47,29 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
         model = ProjectMember
         fields = ["id", "project", "user", "role", "joined_at"]
         read_only_fields = ["id", "joined_at", "role"]
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    project_details = ProjectSerializer(source="project", read_only=True)
+    assigned_to = UserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Task
+        fields = [
+            "id",
+            "title",
+            "description",
+            "project",
+            "assigned_to",
+            "created_by",
+            "status",
+            "category",
+            "priority",
+            "due_date",
+            "created_at",
+            "updated_at",
+            "project_details",
+        ]
+        read_only_fields = ["id", "created_at", "created_by", "project"]

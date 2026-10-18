@@ -1,9 +1,10 @@
 from rest_framework.permissions import IsAuthenticated
-from .models import Project, JoinRequest, ProjectMember
+from .models import Project, JoinRequest, ProjectMember, Task
 from .serializers import (
     ProjectSerializer,
     JoinRequestSerializer,
     ProjectMemberSerializer,
+    TaskSerializer,
 )
 from django.db.models import Q
 from connection.models import Connection
@@ -282,3 +283,23 @@ class JoinRequestViewSet(ModelViewSet):
             {"message": "Request rejected successfully."},
             status=status.HTTP_200_OK,
         )
+
+
+class TaskViewSet(ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        project_id = self.kwargs.get("project_id")
+
+        return (
+            Task.objects.filter(project_id=project_id)
+            .filter(Q(project__owner=user) | Q(project__members__user=user))
+            .select_related("assigned_to", "created_by")
+            .distinct()
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
