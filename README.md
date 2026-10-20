@@ -116,6 +116,27 @@ The project is being developed incrementally, with a focus on practical features
 - Remove associated join requests when applicable
 - Apply access rules to public and private project members
 
+### 🗂️ Project Workspace
+- Dedicated workspace page for each project
+- Overview, Tasks, and Team tabs, with the active tab kept in the URL
+- Project header with status, visibility, owner, and creation date
+- Overview stats: total tasks, in progress, completed, and member count
+- Live progress bar based on completed tasks
+- Upcoming tasks list with assignee and status
+- Team panel with the owner and project members
+- Tech stack display from the project's required skills
+
+### ✅ Tasks
+- Kanban task board with To Do, In Progress, and Completed columns
+- Summary cards showing task counts per status
+- Task cards with category, description, due date, and assignee avatar
+- Create tasks with title, description, assignee, category, priority, and due date
+- Assignee selection limited to the project owner and members
+- Backend permission checks: only the owner or members can create tasks
+- Backend validation that the assignee belongs to the project
+- Support for unassigned tasks
+- Success and error feedback through toast notifications
+
 ### 🔔 Notifications
 - Notifications for collaboration-related actions
 - View notifications and their timestamps
@@ -156,6 +177,9 @@ The project is being developed incrementally, with a focus on practical features
 - [x] My Projects management
 - [x] Project join requests
 - [x] Project member management
+- [x] Project workspace with overview, progress, and team panels
+- [x] Task creation and assignment
+- [x] Kanban task board
 - [x] Notifications
 - [x] Dashboard
 - [x] Responsive UI and shared notification state
@@ -163,9 +187,12 @@ The project is being developed incrementally, with a focus on practical features
 ### 🚧 Current and Next
 
 **Teams & Work Management**
+- [ ] Task status updates (moving tasks between columns)
+- [ ] Task editing and deletion
+- [ ] Task search and filters
+- [ ] Real activity feed in the project workspace
 - [ ] Teams
 - [ ] Team creation and management
-- [ ] Task creation and assignment
 - [ ] Dashboard activity backed by additional collaboration data
 
 ### 🔮 Future Enhancements
@@ -208,7 +235,7 @@ collabhub/
 
 ## 🔄 Collaboration Workflow
 
-The current platform supports the core workflow from discovering collaborators to managing project membership.
+The current platform supports the core workflow from discovering collaborators to assigning tasks inside a project workspace.
 
 ```text
 Create a Profile
@@ -229,7 +256,11 @@ Notifications
       ↓
 Project Members
       ↓
-Future: Teams and Tasks
+Project Workspace
+      ↓
+Create and Assign Tasks
+      ↓
+Future: Task Status Updates and Teams
 ```
 
 ---
@@ -248,9 +279,9 @@ The long-term goal is to evolve CollabHub from a project-discovery platform into
 
 ## 🚧 Development Status
 
-CollabHub is an active development project. Its authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, and dashboard have been implemented progressively.
+CollabHub is an active development project. Its authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, dashboard, project workspace, and task creation have been implemented progressively.
 
-The current focus is strengthening the project collaboration workflow. **Teams and task management have not been implemented yet** and remain planned features.
+The current focus is task management inside project workspaces. Tasks can be created, assigned, and viewed on a kanban board. **Task status updates, editing, deletion, and Teams have not been implemented yet** and remain planned features.
 
 ---
 
