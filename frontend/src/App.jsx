@@ -173,7 +173,7 @@ function App() {
         />
 
         <Route
-          path="/project/:projectId/workspace"
+          path="/projects/:projectId/workspace"
           element={
             <ProtectedRoute>
               <ProjectWorkspace />

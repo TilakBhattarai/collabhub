@@ -1,4 +1,3 @@
-
 import {
     Plus,
     Search,
@@ -9,116 +8,20 @@ import {
     CheckCircle2,
     ClipboardList,
 } from "lucide-react";
+import { useState } from "react";
+import CreateTaskModal from "./CreateTaskModal";
 
-const taskColumns = [
-    {
-        title: "To Do",
-        count: 4,
-        color: "bg-gray-400",
-        tasks: [
-            {
-                title: "Set up database models",
-                description: "Create the initial project schema",
-                category: "Backend",
-                dueDate: "Oct 20",
-                assignee: "Aarav Sharma",
-                initials: "AS",
-                avatar: "bg-violet-100 text-violet-700",
-            },
-            {
-                title: "Design login page",
-                description: "Finalize the authentication UI",
-                category: "Frontend",
-                dueDate: "Oct 22",
-                assignee: "Sita Gurung",
-                initials: "SG",
-                avatar: "bg-pink-100 text-pink-700",
-            },
-            {
-                title: "Write API documentation",
-                description: "Document the main endpoints",
-                category: "Backend",
-                dueDate: "Oct 24",
-                assignee: "Rohan Thapa",
-                initials: "RT",
-                avatar: "bg-amber-100 text-amber-700",
-            },
-        ],
-    },
-    {
-        title: "In Progress",
-        count: 3,
-        color: "bg-violet-500",
-        tasks: [
-            {
-                title: "Build product CRUD endpoints",
-                description: "Implement create, read, update and delete",
-                category: "Backend",
-                dueDate: "Oct 22",
-                assignee: "Rohan Thapa",
-                initials: "RT",
-                avatar: "bg-amber-100 text-amber-700",
-            },
-            {
-                title: "Create project dashboard",
-                description: "Build the main workspace overview",
-                category: "Frontend",
-                dueDate: "Oct 24",
-                assignee: "Aarav Sharma",
-                initials: "AS",
-                avatar: "bg-violet-100 text-violet-700",
-            },
-            {
-                title: "Implement JWT refresh",
-                description: "Handle expired access tokens",
-                category: "Backend",
-                dueDate: "Oct 25",
-                assignee: "You",
-                initials: "TB",
-                avatar: "bg-emerald-100 text-emerald-700",
-            },
-        ],
-    },
-    {
-        title: "Completed",
-        count: 5,
-        color: "bg-green-500",
-        tasks: [
-            {
-                title: "Set up repository",
-                description: "Initialize Git and project structure",
-                category: "Setup",
-                dueDate: "Oct 16",
-                assignee: "You",
-                initials: "TB",
-                avatar: "bg-emerald-100 text-emerald-700",
-            },
-            {
-                title: "Create base layouts",
-                description: "Set up reusable page layouts",
-                category: "Frontend",
-                dueDate: "Oct 17",
-                assignee: "Sita Gurung",
-                initials: "SG",
-                avatar: "bg-pink-100 text-pink-700",
-            },
-            {
-                title: "Configure authentication",
-                description: "Set up login and registration",
-                category: "Backend",
-                dueDate: "Oct 18",
-                assignee: "You",
-                initials: "TB",
-                avatar: "bg-emerald-100 text-emerald-700",
-            },
-        ],
-    },
+const columns = [
+    { status: "TODO", title: "To Do", dot: "bg-gray-400" },
+    { status: "IN_PROGRESS", title: "In Progress", dot: "bg-violet-500" },
+    { status: "COMPLETED", title: "Completed", dot: "bg-green-500" },
 ];
 
-export default function TasksBoard({ tasks, members, project, fetchTasks, progressTasksLength, completedTasksLength }) {
-    const todoTasksLength = tasks.map((task) =>
-        task.status === 'TODO'
-    ).length
+const getInitials = (username) => username?.charAt(0).toUpperCase() || "?";
+
+export default function TasksBoard({ tasks, progressTasksLength, completedTasksLength, members, project, fetchTasks, projectId }) {
+    const todoTasksLength = tasks.filter((task) => task.status === "TODO").length;
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     return (
         <div className="mt-6 space-y-6">
@@ -177,8 +80,9 @@ export default function TasksBoard({ tasks, members, project, fetchTasks, progre
                 </div>
 
                 <button
+                    onClick={() => setIsCreateOpen(true)}
                     type="button"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
+                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
                 >
                     <Plus className="h-4 w-4" />
                     Create Task
@@ -204,84 +108,112 @@ export default function TasksBoard({ tasks, members, project, fetchTasks, progre
             </div>
 
             {/* Kanban Board */}
-            <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {taskColumns.map((column) => (
-                    <div
-                        key={column.title}
-                        className="min-w-0 rounded-xl border border-gray-200 bg-gray-50/70 p-3"
-                    >
-                        {/* Column Header */}
-                        <div className="flex items-center justify-between px-1 py-2">
-                            <div className="flex items-center gap-2">
-                                <span
-                                    className={`h-2.5 w-2.5 rounded-full ${column.color}`}
-                                />
-                                <h3 className="text-sm font-semibold text-gray-800">
-                                    {column.title}
-                                </h3>
-                                <span className="rounded-md bg-gray-200/70 px-2 py-0.5 text-xs font-medium text-gray-600">
-                                    {column.count}
-                                </span>
+            <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
+                {columns.map((column) => {
+                    const columnTasks = tasks.filter(
+                        (task) => task.status === column.status
+                    );
+
+                    return (
+                        <div
+                            key={column.status}
+                            className="min-w-0 rounded-xl border border-gray-200 bg-gray-50/70 p-3"
+                        >
+                            {/* Column Header */}
+                            <div className="flex items-center justify-between px-1 py-2">
+                                <div className="flex items-center gap-2">
+                                    <span className={`h-2.5 w-2.5 rounded-full ${column.dot}`} />
+                                    <h3 className="text-sm font-semibold text-gray-800">
+                                        {column.title}
+                                    </h3>
+                                    <span className="rounded-md bg-gray-200/70 px-2 py-0.5 text-xs font-medium text-gray-600">
+                                        {columnTasks.length}
+                                    </span>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200"
+                                >
+                                    <MoreHorizontal className="h-5 w-5" />
+                                </button>
                             </div>
 
-                            <button
-                                type="button"
-                                className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200"
-                            >
-                                <MoreHorizontal className="h-5 w-5" />
-                            </button>
-                        </div>
+                            {/* Task Cards */}
+                            <div className="mt-3 space-y-3">
+                                {columnTasks.map((task) => (
+                                    <div
+                                        key={task.id}
+                                        className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md"
+                                    >
+                                        <div className="flex items-start justify-between gap-2">
+                                            <span className="rounded-md bg-violet-50 px-2 py-1 text-[11px] font-medium text-violet-700">
+                                                {task.category}
+                                            </span>
 
-                        {/* Task Cards */}
-                        <div className="mt-3 space-y-3">
-                            {column.tasks.map((task) => (
-                                <div
-                                    key={task.title}
-                                    className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md"
-                                >
-                                    <div className="flex items-start justify-between gap-2">
-                                        <span className="rounded-md bg-violet-50 px-2 py-1 text-[11px] font-medium text-violet-700">
-                                            {task.category}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100"
-                                        >
-                                            <MoreHorizontal className="h-4 w-4" />
-                                        </button>
-                                    </div>
-
-                                    <h4 className="mt-3 text-sm font-semibold leading-5 text-gray-900">
-                                        {task.title}
-                                    </h4>
-
-                                    <p className="mt-1.5 text-xs leading-5 text-gray-500">
-                                        {task.description}
-                                    </p>
-
-                                    <div className="mt-4 flex items-center gap-1.5 text-xs text-gray-500">
-                                        <CalendarDays className="h-3.5 w-3.5" />
-                                        <span>Due {task.dueDate}</span>
-                                    </div>
-
-                                    <div className="mt-4 flex items-center gap-2 border-t border-gray-100 pt-3">
-                                        <div
-                                            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${task.avatar}`}
-                                        >
-                                            {task.initials}
+                                            <button
+                                                type="button"
+                                                className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100"
+                                            >
+                                                <MoreHorizontal className="h-4 w-4" />
+                                            </button>
                                         </div>
 
-                                        <span className="truncate text-xs font-medium text-gray-600">
-                                            {task.assignee}
-                                        </span>
+                                        <h4 className="mt-3 text-sm font-semibold leading-5 text-gray-900">
+                                            {task.title}
+                                        </h4>
+
+                                        <p className="mt-1.5 text-xs leading-5 text-gray-500">
+                                            {task.description}
+                                        </p>
+
+                                        <div className="mt-4 flex items-center gap-1.5 text-xs text-gray-500">
+                                            <CalendarDays className="h-3.5 w-3.5" />
+                                            <span>Due {task.due_date}</span>
+                                        </div>
+
+                                        <div className="mt-4 flex items-center gap-2 border-t border-gray-100 pt-3">
+                                            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-100 text-[10px] font-semibold text-violet-700">
+                                                {task.assigned_to?.profile?.profile_picture ? (
+                                                    <img
+                                                        draggable={false}
+                                                        src={task.assigned_to.profile.profile_picture}
+                                                        alt={task.assigned_to.username}
+                                                        className="h-full w-full rounded-full object-cover"
+                                                    />
+                                                ) : (
+                                                    getInitials(task.assigned_to?.username)
+                                                )}
+                                            </div>
+
+                                            <span className="truncate text-xs font-medium text-gray-600">
+                                                {task.assigned_to?.username ?? "Unassigned"}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+
+                                {columnTasks.length === 0 && (
+                                    <p className="py-6 text-center text-xs text-gray-400">
+                                        No tasks here
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
+
+            {isCreateOpen && (
+                <CreateTaskModal
+                    members={members}
+                    project={project}
+                    fetchTasks={fetchTasks}
+                    projectId={projectId}
+                    onClose={() => setIsCreateOpen(false)}
+                />
+            )}
+
         </div>
     );
 }

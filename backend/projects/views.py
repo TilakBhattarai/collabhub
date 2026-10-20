@@ -12,7 +12,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from notifications.models import Notification
 from django.shortcuts import get_object_or_404
 
@@ -302,4 +302,31 @@ class TaskViewSet(ModelViewSet):
         )
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        project_id = self.kwargs.get("project_id")
+        user = self.request.user
+
+        project = get_object_or_404(Project, id=project_id)
+        is_member = ProjectMember.objects.filter(project=project, user=user).exists()
+
+        if user != project.owner and not is_member:
+            raise ValidationError(
+                {
+                    "error": "You donot have permission to create the task for this project"
+                }
+            )
+
+        assigned_to = serializer.validated_data.get("assigned_to")
+
+        if assigned_to:
+            is_assignee_member = ProjectMember.objects.filter(
+                project=project,
+                user=assigned_to,
+            ).exists()
+
+            if assigned_to != project.owner and not is_assignee_member:
+                raise PermissionDenied(
+                    {
+                        "error": "The selected user is not the member of this project",
+                    }
+                )
+        serializer.save(project=project, created_by=self.request.user)

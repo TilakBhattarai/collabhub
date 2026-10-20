@@ -16,9 +16,7 @@ import { useToast } from "../context/ToastContext";
 import api from "../api/axios";
 import { formatTime } from "../utils/formatTime";
 import TasksBoard from "../components/TasksBoard";
-
-// const taskGridCols =
-//     "md:grid-cols-[minmax(0,2.6fr)_minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1.2fr)]";
+import { useSearchParams } from "react-router-dom";
 
 function ProjectWorkspace() {
     const navigate = useNavigate();
@@ -26,9 +24,11 @@ function ProjectWorkspace() {
     const [project, setProject] = useState(null);
     const [members, setMembers] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const [activeTab, setActiveTab] = useState("Overview");
+    const [searchParams, setSearchParams] = useSearchParams();
     const { showToast } = useToast();
     const { projectId } = useParams();
+    const activeTab = searchParams.get("tab") || "Overview";
+    const setActiveTab = (tab) => setSearchParams({ tab }, { replace: true });
 
     const tasksLength = tasks.length;
     const progressTasksLength = tasks.filter((task) =>
@@ -36,6 +36,9 @@ function ProjectWorkspace() {
     ).length;
     const completedTasksLength = tasks.filter((task) =>
         task.status === 'COMPLETED'
+    ).length;
+    const todoTasksLength = tasks.filter((task) =>
+        task.status === "TODO"
     ).length;
 
 
@@ -230,10 +233,13 @@ function ProjectWorkspace() {
             {activeTab === "Tasks" && (
                 <TasksBoard
                     tasks={tasks}
-                    project={project} members={members}
+                    project={project}
+                    members={members}
                     fetchTasks={fetchTasks}
                     progressTasksLength={progressTasksLength}
                     completedTasksLength={completedTasksLength}
+                    todoTasksLength={todoTasksLength}
+                    projectId={projectId}
                 />
             )}
             {activeTab === 'Overview' && (
@@ -321,14 +327,14 @@ function ProjectWorkspace() {
                                 {tasks.map((task) => (
                                     <li key={task.id} className="flex items-center gap-3 px-4 py-4 sm:px-5">
                                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700">
-                                            {task.assigned_to.username.charAt(0).toUpperCase()}
+                                            {task.assigned_to?.username?.charAt(0).toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-900">
                                                 {task.title}
                                             </p>
                                             <p className="mt-0.5 truncate text-xs text-gray-500">
-                                                {task.assigned_to.username} · Due {task.due_date}
+                                                {task.assigned_to?.username ?? "Unassigned"} · Due {task.due_date ?? "—"}
                                             </p>
                                         </div>
                                         <span className={`

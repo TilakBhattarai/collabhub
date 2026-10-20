@@ -9,7 +9,12 @@ router.register("request", JoinRequestViewSet, basename="request")
 urlpatterns = [
     path(
         "<int:project_id>/tasks/",
-        TaskViewSet.as_view({"get": "list"}),
+        TaskViewSet.as_view(
+            {
+                "get": "list",
+                "post": "create",
+            },
+        ),
         name="project_tasks",
     )
 ] + router.urls

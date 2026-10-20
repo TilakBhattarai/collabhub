@@ -50,9 +50,18 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    project = serializers.PrimaryKeyRelatedField(read_only=True)
+
     project_details = ProjectSerializer(source="project", read_only=True)
+
     assigned_to = UserSerializer(read_only=True)
+    assigned_to_id = serializers.PrimaryKeyRelatedField(
+        source="assigned_to",
+        queryset=User.objects.all(),
+        write_only=True,
+        allow_null=True,
+        required=False,
+    )
     created_by = UserSerializer(read_only=True)
 
     class Meta:
@@ -63,6 +72,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "description",
             "project",
             "assigned_to",
+            "assigned_to_id",
             "created_by",
             "status",
             "category",
@@ -72,4 +82,4 @@ class TaskSerializer(serializers.ModelSerializer):
             "updated_at",
             "project_details",
         ]
-        read_only_fields = ["id", "created_at", "created_by", "project"]
+        read_only_fields = ["id", "created_at", "created_by"]

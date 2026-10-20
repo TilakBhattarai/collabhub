@@ -284,7 +284,7 @@ export default function MyProjects() {
 
                                     {/* Primary action */}
                                     <button
-                                        onClick={() => navigate(`/project/${project.id}/workspace`)}
+                                        onClick={() => navigate(`/projects/${project.id}/workspace`)}
                                         type="button"
                                         className="mt-5 inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 text-sm font-semibold text-white transition-colors hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2"
                                     >
