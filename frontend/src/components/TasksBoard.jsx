@@ -7,9 +7,12 @@ import {
     Clock3,
     CheckCircle2,
     ClipboardList,
+    Pencil,
+    Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import CreateTaskModal from "./CreateTaskModal";
+import DeleteTaskModal from "./DeleteTaskModel";
 
 const columns = [
     { status: "TODO", title: "To Do", dot: "bg-gray-400" },
@@ -22,6 +25,7 @@ const getInitials = (username) => username?.charAt(0).toUpperCase() || "?";
 export default function TasksBoard({ tasks, progressTasksLength, completedTasksLength, members, project, fetchTasks, projectId }) {
     const todoTasksLength = tasks.filter((task) => task.status === "TODO").length;
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [deletingTask, setDeletingTask] = useState(null);
 
     return (
         <div className="mt-6 space-y-6">
@@ -151,12 +155,23 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                                 {task.category}
                                             </span>
 
-                                            <button
-                                                type="button"
-                                                className="shrink-0 rounded p-1 text-gray-400 hover:bg-gray-100"
-                                            >
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </button>
+                                            <div className="flex items-center gap-1">
+                                                <button
+                                                    type="button"
+                                                    className="shrink-0 cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </button>
+                                                {task.can_delete && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setDeletingTask(task)}
+                                                        className="shrink-0 cursor-pointer rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <h4 className="mt-3 text-sm font-semibold leading-5 text-gray-900">
@@ -211,6 +226,15 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                     fetchTasks={fetchTasks}
                     projectId={projectId}
                     onClose={() => setIsCreateOpen(false)}
+                />
+            )}
+
+            {deletingTask && (
+                <DeleteTaskModal
+                    task={deletingTask}
+                    projectId={projectId}
+                    fetchTasks={fetchTasks}
+                    onClose={() => setDeletingTask(null)}
                 />
             )}
 

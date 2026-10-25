@@ -4,9 +4,10 @@ import api from "../api/axios";
 import HandleApiError from "../utils/HandleApiError";
 import { useToast } from "../context/ToastContext";
 import Loading from "./Loading";
+import useEscapeKey from "../hooks/useEscapeKey";
 
 export default function CreateTaskModal({ onClose, members, project, fetchTasks }) {
-    const [title, setTitle] = useState("")
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [assignedTo, setAssignedTo] = useState(project.owner.id);
     const [category, setCategory] = useState("BACKEND");
@@ -19,7 +20,7 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
         { value: "LOW", label: "Low" },
         { value: "MEDIUM", label: "Medium" },
         { value: "HIGH", label: "High" }
-    ]
+    ];
 
     const categories = [
         { value: "BACKEND", label: "Backend" },
@@ -28,7 +29,7 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
         { value: "SETUP", label: "Setup" },
         { value: "OTHER", label: "Other" },
     ];
-
+    useEscapeKey(onClose);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -44,29 +45,25 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                     priority,
                     due_date: dueDate || null
                 }
-
-
-            )
+            );
             showToast("Task created successfully", "Success");
             await fetchTasks();
-            onclose();
+            onClose();
         } catch (error) {
             HandleApiError(error, showToast, "Failed to create task. Please try again.");
         } finally {
             setCreating(false);
         }
-    }
+    };
 
-
-
-    const assignee = [project.owner, ...members.map((member) => member.user)]
+    const assignee = [project.owner, ...members.map((member) => member.user)];
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
             <form onSubmit={onSubmit} className="w-full max-w-lg rounded-xl bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-                    <h2 className="text-lg font-semibold cursor-pointer text-gray-900">Add Task</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">Add Task</h2>
                     <button
                         onClick={onClose}
                         type="button"
@@ -85,6 +82,7 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="e.g. Add stock history chart"
+                            className="h-10 w-full rounded-md border border-gray-300 px-3 text-sm outline-none focus:border-violet-500"
                         />
                     </div>
 
@@ -96,7 +94,7 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             rows={3}
-                            className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-violet-500"
+                            className="w-full resize-none rounded-md border border-gray-300 p-3 text-sm outline-none focus:border-violet-500"
                         />
                     </div>
 
@@ -106,12 +104,12 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                             <select
                                 value={assignedTo}
                                 onChange={(e) => setAssignedTo(e.target.value)}
-                                className="h-10 w-full rounded-md border border-gray-300 bg-white px-2 text-sm outline-none focus:border-violet-500">
+                                className="h-10 w-full rounded-md border border-gray-300 bg-white px-2 text-sm outline-none focus:border-violet-500"
+                            >
                                 {assignee.map((user) => (
                                     <option key={user.id} value={user.id}>
                                         {user.username}
                                     </option>
-
                                 ))}
                             </select>
                         </div>
@@ -121,7 +119,8 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                className="h-10 w-full rounded-md border border-gray-300 bg-white px-2 text-sm outline-none focus:border-violet-500">
+                                className="h-10 w-full rounded-md border border-gray-300 bg-white px-2 text-sm outline-none focus:border-violet-500"
+                            >
                                 {categories.map((c) => (
                                     <option key={c.value} value={c.value}>{c.label}</option>
                                 ))}
@@ -134,13 +133,14 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                         <div className="grid grid-cols-3 gap-2">
                             {priorities.map((p) => (
                                 <button
-                                    value={p.value}
-                                    onClick={(e) => setPriority(e.target.value)}
-                                    key={p.value} type="button"
-                                    className={`h-10 cursor-pointer rounded-md border text-sm font-medium ${priority === p.value
+                                    type="button"
+                                    key={p.value}
+                                    onClick={() => setPriority(p.value)} // Fixed state updating logic
+                                    className={`h-10 cursor-pointer rounded-md border text-sm font-medium transition-colors ${priority === p.value
                                         ? "border-violet-600 bg-violet-50 text-violet-700"
-                                        : "border-gray-300 bg-white text-gray-600"
-                                        }`}>
+                                        : "border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                >
                                     {p.label}
                                 </button>
                             ))}
@@ -172,9 +172,16 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                     <button
                         disabled={creating}
                         type="submit"
-                        className="h-10 cursor-pointer rounded-md bg-violet-600 px-4 text-sm font-medium text-white hover:bg-violet-700"
+                        className="flex h-10 items-center justify-center cursor-pointer rounded-md bg-violet-600 px-4 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
                     >
-                        {creating ? "Creating..." : "Create Task"}
+                        {creating ? (
+                            <span className="flex items-center gap-2">
+                                <Loading /> {/* Utilizing your imported Loading component */}
+                                Creating...
+                            </span>
+                        ) : (
+                            "Create Task"
+                        )}
                     </button>
                 </div>
             </form>

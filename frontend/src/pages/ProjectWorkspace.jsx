@@ -194,6 +194,7 @@ function ProjectWorkspace() {
                 </button>
             </div>
 
+
             {/* Tabs (visual only) */}
             <div className="mt-6 border-b border-gray-200">
                 <nav className="flex min-w-max gap-6">
@@ -235,6 +236,7 @@ function ProjectWorkspace() {
                     tasks={tasks}
                     project={project}
                     members={members}
+                    showToast={showToast}
                     fetchTasks={fetchTasks}
                     progressTasksLength={progressTasksLength}
                     completedTasksLength={completedTasksLength}

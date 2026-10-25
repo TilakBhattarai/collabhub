@@ -63,6 +63,16 @@ class TaskSerializer(serializers.ModelSerializer):
         required=False,
     )
     created_by = UserSerializer(read_only=True)
+    can_delete = serializers.SerializerMethodField()
+
+    def get_can_delete(self, obj):
+        request = self.context.get("request")
+        user = request.user
+
+        is_project_owner = obj.project.owner == user
+        is_task_creator = obj.created_by == user
+
+        return is_project_owner or is_task_creator
 
     class Meta:
         model = Task
@@ -81,5 +91,6 @@ class TaskSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "project_details",
+            "can_delete",
         ]
         read_only_fields = ["id", "created_at", "created_by"]

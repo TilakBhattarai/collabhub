@@ -329,4 +329,35 @@ class TaskViewSet(ModelViewSet):
                         "error": "The selected user is not the member of this project",
                     }
                 )
-        serializer.save(project=project, created_by=self.request.user)
+        task = serializer.save(project=project, created_by=self.request.user)
+
+        if task.assigned_to and task.assigned_to != user:
+            Notification.objects.create(
+                is_read=False,
+                actor=self.request.user,
+                message=f"📌 {self.request.user.username} assigned a new task to you: {task.title}",
+                recipient=task.assigned_to,
+                notification_type="TASK_ASSIGNED",
+            )
+        return task
+
+    def destroy(self, request, *args, **kwargs):
+        task = self.get_object()
+        user = request.user
+
+        is_project_owner = task.project.owner == user
+        is_task_creator = task.created_by == user
+
+        if not is_project_owner and not is_task_creator:
+            return Response(
+                {
+                    "error": "You donot have permission to delete the task",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        task.delete()
+        return Response(
+            {"message": "Task deleted successfully"},
+            status=status.HTTP_200_OK,
+        )
