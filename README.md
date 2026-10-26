@@ -131,14 +131,23 @@ The project is being developed incrementally, with a focus on practical features
 - Summary cards showing task counts per status
 - Task cards with category, description, due date, and assignee avatar
 - Create tasks with title, description, assignee, category, priority, and due date
+- Edit existing task details through a prefilled task modal
+- Update task details through the Django REST Framework `PUT` endpoint
+- Restrict full task updates to the project owner or task creator
+- Validate that an assignee is the project owner or a member of the same project
+- Delete tasks through a confirmation modal
+- Enforce backend delete permissions for the project owner or task creator
+- Expose `can_update` and `can_delete` serializer fields to control which editing actions appear in the UI
 - Assignee selection limited to the project owner and members
-- Backend permission checks: only the owner or members can create tasks
-- Backend validation that the assignee belongs to the project
+- Backend permission checks: only the owner or project members can create tasks
 - Support for unassigned tasks
+- Notify an assignee when a task is assigned to them, but avoid sending a self-assignment notification
 - Success and error feedback through toast notifications
 
+**Task status updates are still in progress.** Assigned members will get a separate status-only update flow; full task editing and status changes will use different permission rules.
+
 ### 🔔 Notifications
-- Notifications for collaboration-related actions
+- Notifications for collaboration-related actions, including task assignment
 - View notifications and their timestamps
 - Read and unread notification states
 - Mark notifications as read
@@ -160,6 +169,7 @@ The project is being developed incrementally, with a focus on practical features
 - Responsive navigation and mobile menu
 - Reusable loading and empty states
 - Toast notifications with automatic dismissal
+- Reusable modal behavior, including closing with Escape, the close button, or Cancel
 - Consistent layouts, spacing, typography, and buttons
 
 ---
@@ -179,6 +189,9 @@ The project is being developed incrementally, with a focus on practical features
 - [x] Project member management
 - [x] Project workspace with overview, progress, and team panels
 - [x] Task creation and assignment
+- [x] Task editing with backend authorization and assignee validation
+- [x] Task deletion with backend authorization and confirmation UI
+- [x] Task assignment notifications
 - [x] Kanban task board
 - [x] Notifications
 - [x] Dashboard
@@ -187,8 +200,7 @@ The project is being developed incrementally, with a focus on practical features
 ### 🚧 Current and Next
 
 **Teams & Work Management**
-- [ ] Task status updates (moving tasks between columns)
-- [ ] Task editing and deletion
+- [ ] Status-only task updates with role-based permissions
 - [ ] Task search and filters
 - [ ] Real activity feed in the project workspace
 - [ ] Teams
@@ -235,7 +247,7 @@ collabhub/
 
 ## 🔄 Collaboration Workflow
 
-The current platform supports the core workflow from discovering collaborators to assigning tasks inside a project workspace.
+The current platform supports the core workflow from discovering collaborators to creating projects and managing tasks inside a project workspace.
 
 ```text
 Create a Profile
@@ -258,9 +270,9 @@ Project Members
       ↓
 Project Workspace
       ↓
-Create and Assign Tasks
+Create, Assign, Edit, and Delete Tasks
       ↓
-Future: Task Status Updates and Teams
+Upcoming: Status-Only Task Updates and Teams
 ```
 
 ---
@@ -279,9 +291,9 @@ The long-term goal is to evolve CollabHub from a project-discovery platform into
 
 ## 🚧 Development Status
 
-CollabHub is an active development project. Its authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, dashboard, project workspace, and task creation have been implemented progressively.
+CollabHub is an active development project. Authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, the dashboard, and the project workspace have been implemented progressively.
 
-The current focus is task management inside project workspaces. Tasks can be created, assigned, and viewed on a kanban board. **Task status updates, editing, deletion, and Teams have not been implemented yet** and remain planned features.
+Task management currently supports creating, assigning, editing, and deleting tasks on the project Kanban board. Full task updates and deletion have backend authorization checks, and assignment validation limits assignees to the project owner or members. **Status-only task updates, task search and filters, and Teams are still planned.**
 
 ---
 
