@@ -6,15 +6,19 @@ import { useToast } from "../context/ToastContext";
 import Loading from "./Loading";
 import useEscapeKey from "../hooks/useEscapeKey";
 
-export default function CreateTaskModal({ onClose, members, project, fetchTasks }) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [assignedTo, setAssignedTo] = useState(project.owner.id);
-    const [category, setCategory] = useState("BACKEND");
-    const [priority, setPriority] = useState("MEDIUM");
-    const [dueDate, setDueDate] = useState("");
+export default function CreateTaskModal({ onClose, members, project, fetchTasks, task }) {
+    const [title, setTitle] = useState(task ? task.title : "");
+    const [description, setDescription] = useState(task ? task.description : "");
+    const [assignedTo, setAssignedTo] = useState(
+        task ? (task.assigned_to?.id ?? "") : project.owner.id
+    );
+    const [category, setCategory] = useState(task ? task.category : "BACKEND");
+    const [priority, setPriority] = useState(task ? task.priority : "MEDIUM");
+    const [dueDate, setDueDate] = useState(task ? task.due_date : "");
     const [creating, setCreating] = useState(false);
     const { showToast } = useToast();
+
+    console.log(task);
 
     const priorities = [
         { value: "LOW", label: "Low" },
@@ -56,14 +60,49 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
         }
     };
 
+    const handleUpdate = async () => {
+        setCreating(true);
+        try {
+            await api.put(
+                `projects/${project.id}/tasks/${task.id}/`,
+                {
+                    title: title.trim(),
+                    description,
+                    assigned_to_id: assignedTo,
+                    category,
+                    priority,
+                    due_date: dueDate || null,
+                    status: task.status
+                }
+            )
+            showToast("Task updated successfully", "Success");
+            await fetchTasks();
+            onClose();
+        } catch (error) {
+            HandleApiError(error, showToast, "Unable to update task");
+        } finally {
+            setCreating(false);
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (task) {
+            handleUpdate();
+        } else {
+            onSubmit(e);
+        }
+    }
+
     const assignee = [project.owner, ...members.map((member) => member.user)];
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-            <form onSubmit={onSubmit} className="w-full max-w-lg rounded-xl bg-white shadow-xl">
+            <form onSubmit={handleSubmit} className="w-full max-w-lg rounded-xl bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Add Task</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">{task ? "Update Task" : "Add Task"}</h2>
                     <button
                         onClick={onClose}
                         type="button"
@@ -174,14 +213,9 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks 
                         type="submit"
                         className="flex h-10 items-center justify-center cursor-pointer rounded-md bg-violet-600 px-4 text-sm font-medium text-white hover:bg-violet-700 disabled:opacity-50"
                     >
-                        {creating ? (
-                            <span className="flex items-center gap-2">
-                                <Loading /> {/* Utilizing your imported Loading component */}
-                                Creating...
-                            </span>
-                        ) : (
-                            "Create Task"
-                        )}
+                        {creating
+                            ? (task ? "Updating..." : "Creating...")
+                            : (task ? "Update Task" : "Create Task")}
                     </button>
                 </div>
             </form>

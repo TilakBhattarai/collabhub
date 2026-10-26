@@ -361,3 +361,34 @@ class TaskViewSet(ModelViewSet):
             {"message": "Task deleted successfully"},
             status=status.HTTP_200_OK,
         )
+
+    def perform_update(self, serializer):
+        task = serializer.instance
+        project_id = self.kwargs.get("project_id")
+
+        project = get_object_or_404(Project, id=project_id)
+        user = self.request.user
+
+        is_project_owner = task.project.owner == user
+        is_task_creator = task.created_by == user
+
+        if not is_project_owner and not is_task_creator:
+            raise PermissionDenied(
+                {"error": "You donot have permission to update the task"}
+            )
+
+        assigned_to = serializer.validated_data.get("assigned_to", task.assigned_to)
+
+        if assigned_to:
+            is_assignee_member = ProjectMember.objects.filter(
+                project=project, user=assigned_to
+            ).exists()
+
+            if assigned_to != project.owner and not is_assignee_member:
+                raise PermissionDenied(
+                    {
+                        "error": "The selected user is not the member of the project",
+                    }
+                )
+
+        serializer.save()

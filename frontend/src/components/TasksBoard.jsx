@@ -3,7 +3,7 @@ import {
     Search,
     SlidersHorizontal,
     CalendarDays,
-    MoreHorizontal,
+    // MoreHorizontal,
     Clock3,
     CheckCircle2,
     ClipboardList,
@@ -26,6 +26,7 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
     const todoTasksLength = tasks.filter((task) => task.status === "TODO").length;
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [deletingTask, setDeletingTask] = useState(null);
+    const [selectedTask, setSelectedTask] = useState(null);
 
     return (
         <div className="mt-6 space-y-6">
@@ -84,7 +85,10 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                 </div>
 
                 <button
-                    onClick={() => setIsCreateOpen(true)}
+                    onClick={() => {
+                        setIsCreateOpen(true);
+                        setSelectedTask(null);
+                    }}
                     type="button"
                     className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
                 >
@@ -135,12 +139,12 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                     </span>
                                 </div>
 
-                                <button
+                                {/* <button
                                     type="button"
                                     className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200"
                                 >
                                     <MoreHorizontal className="h-5 w-5" />
-                                </button>
+                                </button> */}
                             </div>
 
                             {/* Task Cards */}
@@ -156,12 +160,19 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                             </span>
 
                                             <div className="flex items-center gap-1">
-                                                <button
-                                                    type="button"
-                                                    className="shrink-0 cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-                                                >
-                                                    <Pencil className="h-4 w-4" />
-                                                </button>
+                                                {task.can_update && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedTask(task);
+                                                            setIsCreateOpen(true);
+                                                        }}
+
+                                                        type="button"
+                                                        className="shrink-0 cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </button>
+                                                )}
                                                 {task.can_delete && (
                                                     <button
                                                         type="button"
@@ -225,7 +236,11 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                     project={project}
                     fetchTasks={fetchTasks}
                     projectId={projectId}
-                    onClose={() => setIsCreateOpen(false)}
+                    task={selectedTask}
+                    onClose={() => {
+                        setIsCreateOpen(false);
+                        setSelectedTask(null);
+                    }}
                 />
             )}
 
