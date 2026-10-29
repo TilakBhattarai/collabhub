@@ -10,6 +10,10 @@ User = get_user_model()
 class ProjectSerializer(serializers.ModelSerializer):
 
     owner = ProjectOwnerSerializer(read_only=True)
+    member_count = serializers.SerializerMethodField()
+
+    def get_member_count(self, obj):
+        return obj.members.count()
 
     class Meta:
         model = Project
@@ -23,6 +27,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "owner",
             "created_at",
             "updated_at",
+            "member_count",
         ]
 
         read_only_fields = ["owner", "created_at", "updated_at", "owner"]

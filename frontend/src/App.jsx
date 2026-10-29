@@ -22,6 +22,7 @@ import JoinRequests from "./pages/JoinRequests"
 import Notifications from "./pages/Notifications"
 import ProjectMembers from "./pages/ProjectMembers"
 import ProjectWorkspace from "./pages/ProjectWorkspace"
+import MyCollaborations from "./pages/MyCollaborations"
 
 function App() {
 
@@ -177,6 +178,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ProjectWorkspace />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-collaborations"
+          element={
+            <ProtectedRoute>
+              <MyCollaborations />
             </ProtectedRoute>
           }
         />

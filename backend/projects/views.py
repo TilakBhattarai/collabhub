@@ -69,6 +69,17 @@ class ProjectViewSet(ModelViewSet):
     @action(
         detail=True, methods=["delete"], url_path=r"remove_member/(?P<member_id>\d+)"
     )
+    @action(detail=False, methods=["get"], url_path="joined")
+    def joined_projects(self, request):
+        projects = (
+            Project.objects.filter(members__user=request.user)
+            .exclude(owner=request.user)
+            .select_related("owner")
+            .distinct()
+        )
+        serializer = self.get_serializer(projects, many=True)
+        return Response(serializer.data)
+
     def remove_member(self, request, pk=None, member_id=None):
         project = self.get_object()  # Project.objects.get(pk=.., member_id=..)
 

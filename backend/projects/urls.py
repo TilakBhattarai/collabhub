@@ -8,6 +8,13 @@ router.register("request", JoinRequestViewSet, basename="request")
 
 urlpatterns = [
     path(
+        "joined/",
+        ProjectViewSet.as_view(
+            {"get": "joined_projects"},
+        ),
+        name="joined_projects",
+    ),
+    path(
         "<int:project_id>/tasks/",
         TaskViewSet.as_view(
             {"get": "list", "post": "create"},

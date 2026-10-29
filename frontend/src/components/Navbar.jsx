@@ -26,30 +26,6 @@ function Navbar() {
         navigate("/login");
     };
 
-    // const fetchNotifications = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await api.get(
-    //             "notifications/",
-    //         )
-    //         setNotifications(response.data);
-    //     } catch (error) {
-    //         HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (isLoggedIn) {
-    //         fetchNotifications();
-    //     }
-    // }, [isLoggedIn])
-
-    // const totalUnreadNotifications = notifications.filter((notification) =>
-    //     notification.is_read === false
-    // ).length;
-
     if (loading) {
         return <Loading />
     }
@@ -109,6 +85,13 @@ function Navbar() {
                                 className="text-sm text-gray-600 hover:text-violet-700 transition"
                             >
                                 My Projects
+                            </Link>
+
+                            <Link
+                                to="/my-collaborations"
+                                className="text-sm text-gray-600 hover:text-violet-700 transition"
+                            >
+                                My Collaborations
                             </Link>
 
                             <Link
@@ -211,6 +194,14 @@ function Navbar() {
                                 className="px-4 py-3 text-sm text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition"
                             >
                                 My Projects
+                            </Link>
+
+                            <Link
+                                to="/my-collaborations"
+                                onClick={() => setOpen(false)}
+                                className="px-4 py-3 text-sm text-gray-600 hover:bg-violet-50 hover:text-violet-700 transition"
+                            >
+                                My Collaborations
                             </Link>
 
                             <Link
