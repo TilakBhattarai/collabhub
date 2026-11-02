@@ -48,7 +48,6 @@ function Profile() {
 
     const username = profile.user?.username || "User";
     const email = profile.user?.email || "No email";
-    const firstChar = username.charAt(0).toUpperCase();
 
     return (
         <div className="min-h-screen bg-gray-50 pt-24 pb-20">

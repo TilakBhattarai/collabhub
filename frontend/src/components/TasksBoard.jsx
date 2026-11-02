@@ -13,6 +13,10 @@ import {
 import { useState } from "react";
 import CreateTaskModal from "./CreateTaskModal";
 import DeleteTaskModal from "./DeleteTaskModel";
+import HandleApiError from "../utils/HandleApiError";
+import { useToast } from "../context/ToastContext";
+import api from "../api/axios";
+import ConfirmCompleteModel from "./ConfirmCompleteModel";
 
 const columns = [
     { status: "TODO", title: "To Do", dot: "bg-gray-400" },
@@ -20,13 +24,75 @@ const columns = [
     { status: "COMPLETED", title: "Completed", dot: "bg-green-500" },
 ];
 
+const taskStatusStyles = {
+    TODO: {
+        label: "To Do",
+        style: "bg-gray-100 text-gray-700",
+    },
+
+    IN_PROGRESS: {
+        label: "In Progress",
+        style: "bg-violet-100 text-violet-700",
+    },
+
+    COMPLETED: {
+        label: "Completed",
+        style: 'bg-green-100 text-green-700',
+    }
+}
+
+const statusAction = {
+    TODO: {
+        label: "Start task",
+        next: "IN_PROGRESS",
+        style: "bg-violet-600 text-white hover:bg-violet-700",
+    },
+    IN_PROGRESS: {
+        label: "Mark as done",
+        next: "COMPLETED",
+        style: "bg-green-600 text-white hover:bg-green-700",
+    },
+};
+
 const getInitials = (username) => username?.charAt(0).toUpperCase() || "?";
+
 
 export default function TasksBoard({ tasks, progressTasksLength, completedTasksLength, members, project, fetchTasks, projectId }) {
     const todoTasksLength = tasks.filter((task) => task.status === "TODO").length;
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [deletingTask, setDeletingTask] = useState(null);
     const [selectedTask, setSelectedTask] = useState(null);
+    const [activeTab, setActiveTab] = useState('all_tasks');
+    const { showToast } = useToast();
+    const [updating, setUpdating] = useState(false);
+    const [completingTask, setCompletingTask] = useState(null);
+
+    const visibleTasks = activeTab === 'my_tasks' ? tasks.filter((task) => task.can_update_status) : tasks;
+
+    const update_status = async (task) => {
+        setUpdating(true);
+        try {
+            await api.patch(`projects/${projectId}/tasks/${task.id}/`, {
+                status: statusAction[task.status].next,
+            });
+            showToast("Task updated successfully");
+            await fetchTasks();
+
+        } catch (error) {
+            HandleApiError(error, showToast, "Unable to update the task");
+        } finally {
+            setUpdating(false);
+        }
+    }
+
+    const handleActionClick = (task) => {
+        if (task.status === 'IN_PROGRESS') {
+            setCompletingTask(task);
+            return;
+        }
+
+        update_status(task);
+    }
 
     return (
         <div className="mt-6 space-y-6">
@@ -84,17 +150,41 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                     </p>
                 </div>
 
-                <button
-                    onClick={() => {
-                        setIsCreateOpen(true);
-                        setSelectedTask(null);
-                    }}
-                    type="button"
-                    className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
-                >
-                    <Plus className="h-4 w-4" />
-                    Create Task
-                </button>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    {/* View toggle (static UI) */}
+                    <div className="inline-flex rounded-lg border border-gray-200 bg-white p-1">
+                        <button
+                            onClick={() => setActiveTab('all_tasks')}
+                            type="button"
+                            className=
+                            {`${activeTab === 'all_tasks' ? `bg-violet-600 text-white` : `text-gray-600 hover:bg-gray-50`}
+                            flex-1 cursor-pointer rounded-md  px-4 py-1.5 text-sm font-medium  sm:flex-none`}
+                        >
+                            All Tasks
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('my_tasks')}
+                            type="button"
+                            className=
+                            {`${activeTab === 'my_tasks' ? `bg-violet-600 text-white` : `text-gray-600 hover:bg-gray-50`}
+                            flex-1 cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium transition sm:flex-none`}
+                        >
+                            My Tasks
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => {
+                            setIsCreateOpen(true);
+                            setSelectedTask(null);
+                        }}
+                        type="button"
+                        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Create Task
+                    </button>
+                </div>
             </div>
 
             {/* Search and filters: visual only */}
@@ -118,7 +208,7 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
             {/* Kanban Board */}
             <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
                 {columns.map((column) => {
-                    const columnTasks = tasks.filter(
+                    const columnTasks = visibleTasks.filter(
                         (task) => task.status === column.status
                     );
 
@@ -138,13 +228,6 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                         {columnTasks.length}
                                     </span>
                                 </div>
-
-                                {/* <button
-                                    type="button"
-                                    className="rounded-md p-1.5 text-gray-400 hover:bg-gray-200"
-                                >
-                                    <MoreHorizontal className="h-5 w-5" />
-                                </button> */}
                             </div>
 
                             {/* Task Cards */}
@@ -166,7 +249,6 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                                             setSelectedTask(task);
                                                             setIsCreateOpen(true);
                                                         }}
-
                                                         type="button"
                                                         className="shrink-0 cursor-pointer rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                                                     >
@@ -216,6 +298,29 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                                                 {task.assigned_to?.username ?? "Unassigned"}
                                             </span>
                                         </div>
+
+                                        {/* Task Status / Action */}
+                                        <div className="mt-3 border-t border-gray-100 pt-3">
+                                            {activeTab === "all_tasks" || task.status === "COMPLETED" ? (
+                                                <span
+                                                    className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold ${taskStatusStyles[task.status]?.style ||
+                                                        "bg-gray-100 text-gray-700"
+                                                        }`}
+                                                >
+                                                    {taskStatusStyles[task.status]?.label || task.status}
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    disabled={updating}
+                                                    onClick={() => handleActionClick(task)}
+                                                    className={`w-full cursor-pointer rounded-lg py-2 text-xs font-semibold transition ${statusAction[task.status]?.style || ""
+                                                        }`}
+                                                >
+                                                    {updating ? "Updating..." : statusAction[task.status]?.label}
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 ))}
 
@@ -230,29 +335,45 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                 })}
             </div>
 
-            {isCreateOpen && (
-                <CreateTaskModal
-                    members={members}
-                    project={project}
-                    fetchTasks={fetchTasks}
-                    projectId={projectId}
-                    task={selectedTask}
-                    onClose={() => {
-                        setIsCreateOpen(false);
-                        setSelectedTask(null);
+            {
+                isCreateOpen && (
+                    <CreateTaskModal
+                        members={members}
+                        project={project}
+                        fetchTasks={fetchTasks}
+                        projectId={projectId}
+                        task={selectedTask}
+                        onClose={() => {
+                            setIsCreateOpen(false);
+                            setSelectedTask(null);
+                        }}
+                    />
+                )
+            }
+
+            {
+                deletingTask && (
+                    <DeleteTaskModal
+                        task={deletingTask}
+                        projectId={projectId}
+                        fetchTasks={fetchTasks}
+                        onClose={() => setDeletingTask(null)}
+                    />
+                )
+            }
+
+            {completingTask && (
+                <ConfirmCompleteModel
+                    task={completingTask}
+                    updating={updating}
+                    onClose={() => setCompletingTask(null)}
+                    onConfirm={async () => {
+                        await update_status(completingTask);
+                        setCompletingTask(null);
                     }}
                 />
             )}
 
-            {deletingTask && (
-                <DeleteTaskModal
-                    task={deletingTask}
-                    projectId={projectId}
-                    fetchTasks={fetchTasks}
-                    onClose={() => setDeletingTask(null)}
-                />
-            )}
-
-        </div>
+        </div >
     );
 }

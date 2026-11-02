@@ -23,7 +23,9 @@ urlpatterns = [
     ),
     path(
         "<int:project_id>/tasks/<int:pk>/",
-        TaskViewSet.as_view({"delete": "destroy", "put": "update"}),
+        TaskViewSet.as_view(
+            {"delete": "destroy", "put": "update", "patch": "update_status"}
+        ),
         name="project_task_detail",
     ),
 ] + router.urls

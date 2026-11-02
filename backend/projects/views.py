@@ -66,9 +66,6 @@ class ProjectViewSet(ModelViewSet):
 
         return Response(data)
 
-    @action(
-        detail=True, methods=["delete"], url_path=r"remove_member/(?P<member_id>\d+)"
-    )
     @action(detail=False, methods=["get"], url_path="joined")
     def joined_projects(self, request):
         projects = (
@@ -80,6 +77,9 @@ class ProjectViewSet(ModelViewSet):
         serializer = self.get_serializer(projects, many=True)
         return Response(serializer.data)
 
+    @action(
+        detail=True, methods=["delete"], url_path=r"remove_member/(?P<member_id>\d+)"
+    )
     def remove_member(self, request, pk=None, member_id=None):
         project = self.get_object()  # Project.objects.get(pk=.., member_id=..)
 
@@ -403,3 +403,21 @@ class TaskViewSet(ModelViewSet):
                 )
 
         serializer.save()
+
+    def update_status(self, request, *args, **kwargs):
+        task = self.get_object()
+
+        if task.assigned_to_id != request.user.id:
+            raise PermissionDenied(
+                {"error": "Only the assigned user can update the task status"}
+            )
+        new_status = request.data.get("status")
+        valid_statuses = ["TODO", "IN_PROGRESS", "COMPLETED"]
+
+        if new_status not in valid_statuses:
+            raise ValidationError({"status": "Invalid status"})
+
+        task.status = new_status
+        task.save(update_fields=["status"])
+
+        return Response(self.get_serializer(task).data)

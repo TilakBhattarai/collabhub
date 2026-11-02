@@ -17,6 +17,7 @@ import api from "../api/axios";
 import { formatTime } from "../utils/formatTime";
 import TasksBoard from "../components/TasksBoard";
 import { useSearchParams } from "react-router-dom";
+import TeamTab from "../components/TeamTab";
 
 function ProjectWorkspace() {
     const navigate = useNavigate();
@@ -476,6 +477,9 @@ function ProjectWorkspace() {
                 </div>
             )}
 
+            {activeTab === "Team" && (
+                <TeamTab project={project} members={members} tasks={tasks} />
+            )}
 
         </div>
     );
