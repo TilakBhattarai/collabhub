@@ -1,18 +1,18 @@
 # CollabHub 🚀
 
-**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover potential collaborators, connect through shared skills and interests, create projects, and build teams.
+**CollabHub** is a full-stack collaboration platform designed to help developers, students, and builders discover potential collaborators, connect through shared skills and interests, create projects, build teams, and manage collaborative work.
 
-The project is being developed incrementally, with a focus on practical features, secure APIs, and a responsive user experience.
+The platform brings developer discovery, social connections, project collaboration, team management, and task management together in one place.
 
-**Project status:** Actively under development
+**Project Status: MVP Achieved 🎉**
 
-🔗 **Repository:** [GitHub](https://github.com/TilakBhattarai/collabhub)
+🔗 **Repository:** [GitHub – CollabHub](https://github.com/TilakBhattarai/collabhub)
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend**
+### Frontend
 - React
 - Vite
 - Tailwind CSS
@@ -20,14 +20,14 @@ The project is being developed incrementally, with a focus on practical features
 - React Router
 - Lucide React
 
-**Backend**
+### Backend
 - Python
 - Django
 - Django REST Framework
 - JWT Authentication
 - Django Filters
 
-**Database and Tools**
+### Database and Tools
 - PostgreSQL
 - Git and GitHub
 - Postman
@@ -51,7 +51,7 @@ The project is being developed incrementally, with a focus on practical features
 - Availability and collaboration preferences
 - Self-profile detection and appropriate connection-action handling
 
-### 🔎 Discover
+### 🔎 Developer Discovery
 - Discover other users
 - Search by username
 - Filter by role, location, skills, and collaboration preferences
@@ -68,18 +68,18 @@ The project is being developed incrementally, with a focus on practical features
 - Access connected users' profiles
 
 ### 📁 Projects
-- Create and browse projects
-- Set project title, description, required skills, visibility, and status
+- Create, browse, update, and delete projects
+- Configure project title, description, required skills, visibility, and status
 - Support public and private projects
 - View project owners and their profile pictures
 - Display project creation and update dates
-- Handle loading, errors, and empty states
+- Enforce project-specific permissions
 
 ### 📄 Project Details
 - Dedicated project details page
 - Display project information and owner details
 - Navigate to the owner's profile
-- Enforce project-specific visibility rules
+- Enforce project visibility rules
 - Send join requests to eligible public projects
 - Prevent owners from requesting to join their own projects
 
@@ -87,22 +87,21 @@ The project is being developed incrementally, with a focus on practical features
 - View projects owned by the authenticated user
 - View project details
 - Edit and delete projects
-- Enforce owner permissions
 - Confirm project deletion
-- Handle deletion loading and errors
-- Update the project list after deletion
-- Navigate to project members
+- Enforce owner permissions
+- Handle deletion loading, errors, and empty states
+- Navigate to project members and workspace
 
 ### 🤝 Project Join Requests
 - Send join requests to public projects
 - Prevent duplicate pending requests
-- Track pending and accepted request statuses
+- Track pending, accepted, and rejected request statuses
 - Allow users to request again after rejection
 - Display incoming requests to project owners
 - Show requester and project information
 - Accept or reject requests
-- Enforce owner permissions and prevent processing requests that are no longer pending
-- Remove processed requests from the pending list
+- Enforce owner permissions
+- Prevent processing requests that are no longer pending
 
 ### 👥 Project Members
 - Dedicated project members page
@@ -116,44 +115,76 @@ The project is being developed incrementally, with a focus on practical features
 - Remove associated join requests when applicable
 - Apply access rules to public and private project members
 
-### 🗂️ Project Workspace
-- Dedicated workspace page for each project
-- Overview, Tasks, and Team tabs, with the active tab kept in the URL
-- Project header with status, visibility, owner, and creation date
-- Overview stats: total tasks, in progress, completed, and member count
-- Live progress bar based on completed tasks
-- Upcoming tasks list with assignee and status
-- Team panel with the owner and project members
-- Tech stack display from the project's required skills
+### 🔗 My Collaborations
+- View projects joined by the authenticated user
+- Separate joined projects from owned projects
+- Display project information and member counts
+- Navigate to the shared project workspace
+- Give accepted project members access to their collaborative workspace
 
-### ✅ Tasks
-- Kanban task board with To Do, In Progress, and Completed columns
+### 🗂️ Project Workspace
+- Dedicated workspace for each project
+- Overview, Tasks, and Team tabs
+- Keep the active tab in the URL
+- Project header with status, visibility, owner, and creation date
+- Overview statistics for total tasks, in-progress tasks, completed tasks, and members
+- Progress bar based on completed tasks
+- Upcoming tasks list with assignee and status
+- Team panel displaying the owner and project members
+- Display required project skills
+
+### ✅ Task Management
+- Kanban board with To Do, In Progress, and Completed columns
 - Summary cards showing task counts per status
 - Task cards with category, description, due date, and assignee avatar
 - Create tasks with title, description, assignee, category, priority, and due date
-- Edit existing task details through a prefilled task modal
-- Update task details through the Django REST Framework `PUT` endpoint
+- Edit existing task details through a prefilled modal
+- Update task details through the Django REST Framework PUT endpoint
 - Restrict full task updates to the project owner or task creator
-- Validate that an assignee is the project owner or a member of the same project
+- Validate that an assignee belongs to the project or is its owner
 - Delete tasks through a confirmation modal
-- Enforce backend delete permissions for the project owner or task creator
-- Expose `can_update` and `can_delete` serializer fields to control which editing actions appear in the UI
-- Assignee selection limited to the project owner and members
-- Backend permission checks: only the owner or project members can create tasks
-- Support for unassigned tasks
-- Notify an assignee when a task is assigned to them, but avoid sending a self-assignment notification
-- Success and error feedback through toast notifications
+- Enforce backend deletion permissions
+- Expose `can_update` and `can_delete` serializer fields
+- Assignee selection limited to eligible project users
+- Support unassigned tasks
+- Notify assignees when tasks are assigned to them
+- Provide success and error feedback through toast notifications
 
-**Task status updates are still in progress.** Assigned members will get a separate status-only update flow; full task editing and status changes will use different permission rules.
+### 🔄 Task Status and Personal Task Management
+- All Tasks view for project-wide task visibility
+- My Tasks view for tasks assigned to the authenticated user
+- Reuse the existing project task data for both views
+- Display task status badges in All Tasks
+- Provide contextual status actions in My Tasks
+- Start Task action for tasks in To Do
+- Mark Complete action for tasks in progress
+- Confirmation modal to prevent accidental task completion
+- Display completed tasks without further status actions
+- Refresh the Kanban board after successful status updates
+- Assignee-based status-update permissions
+- Separate full task editing from status updates
+
+### 👥 Team Workspace
+- Dedicated Team tab inside the project workspace
+- Display project owner and accepted project members
+- Show owner and member labels
+- Display profile pictures with initials fallback
+- Show assigned task counts for each team member
+- Navigate to individual member profiles
+- Navigate to team management
 
 ### 🔔 Notifications
-- Notifications for collaboration-related actions, including task assignment
-- View notifications and their timestamps
+- Notifications for collaboration-related actions
+- Join request notifications
+- Accepted and rejected request notifications
+- Task assignment notifications
+- Project member removal notifications
+- View notifications and timestamps
 - Read and unread notification states
 - Mark notifications as read
-- Display the unread count in the navigation bar
+- Display unread count in the navigation bar
 - Share notification state across components
-- Handle notification loading and empty states
+- Handle loading and empty states
 - Restrict notification access to the appropriate user
 
 ### 📊 Dashboard
@@ -164,19 +195,19 @@ The project is being developed incrementally, with a focus on practical features
 - Quick navigation to project creation and other sections
 - Responsive dashboard layout
 
-### 🎨 UI & UX
+### 🎨 UI and UX
 - Consistent violet-based design system
 - Responsive navigation and mobile menu
 - Reusable loading and empty states
 - Toast notifications with automatic dismissal
-- Reusable modal behavior, including closing with Escape, the close button, or Cancel
+- Reusable modal behavior, including Escape, close button, and Cancel handling
 - Consistent layouts, spacing, typography, and buttons
 
 ---
 
 ## 🏗️ Development Roadmap
 
-### ✅ Implemented
+### ✅ MVP Core Features Achieved
 
 - [x] Authentication and JWT handling
 - [x] User profiles and profile editing
@@ -187,29 +218,40 @@ The project is being developed incrementally, with a focus on practical features
 - [x] My Projects management
 - [x] Project join requests
 - [x] Project member management
-- [x] Project workspace with overview, progress, and team panels
+- [x] My Collaborations
+- [x] Shared Project Workspace
+- [x] Overview, Tasks, and Team tabs
 - [x] Task creation and assignment
 - [x] Task editing with backend authorization and assignee validation
 - [x] Task deletion with backend authorization and confirmation UI
 - [x] Task assignment notifications
 - [x] Kanban task board
+- [x] All Tasks and My Tasks views
+- [x] Task status workflow and completion confirmation
+- [x] Assignee-based status permissions
+- [x] Team directory and member information
 - [x] Notifications
 - [x] Dashboard
 - [x] Responsive UI and shared notification state
 
-### 🚧 Current and Next
+### 🔧 Post-MVP Stabilization
 
-**Teams & Work Management**
-- [ ] Status-only task updates with role-based permissions
-- [ ] Task search and filters
-- [ ] Real activity feed in the project workspace
-- [ ] Teams
-- [ ] Team creation and management
-- [ ] Dashboard activity backed by additional collaboration data
+The MVP feature milestone has been reached. The next phase focuses on improving reliability and preparing the application for release.
 
-### 🔮 Future Enhancements
+- [ ] Code cleanup and refactoring where necessary
+- [ ] Review authentication, security, and permissions
+- [ ] Regression and end-to-end testing
+- [ ] Debugging and edge-case fixes
+- [ ] Improve global profile image handling
+- [ ] Responsive UI verification
+- [ ] Production configuration and deployment
+- [ ] Final live application verification
 
-These features will be considered after the core collaboration workflow is stable.
+**Target release date: November 10, 2026**
+
+### 🔮 Potential Future Enhancements
+
+These are optional ideas for future development, not requirements for the current MVP.
 
 - [ ] Project milestones
 - [ ] Real-time chat
@@ -247,12 +289,10 @@ collabhub/
 
 ## 🔄 Collaboration Workflow
 
-The current platform supports the core workflow from discovering collaborators to creating projects and managing tasks inside a project workspace.
-
 ```text
 Create a Profile
       ↓
-Discover People
+Discover Developers
       ↓
 Send Connection Requests
       ↓
@@ -268,11 +308,15 @@ Notifications
       ↓
 Project Members
       ↓
-Project Workspace
+My Collaborations
+      ↓
+Shared Project Workspace
+      ↓
+Manage Team and Project Tasks
       ↓
 Create, Assign, Edit, and Delete Tasks
       ↓
-Upcoming: Status-Only Task Updates and Teams
+Track Project-wide and Personal Progress
 ```
 
 ---
@@ -281,19 +325,23 @@ Upcoming: Status-Only Task Updates and Teams
 
 CollabHub aims to make it easier for people with complementary technical skills to find each other and work on meaningful projects.
 
-For example, a Python/Django developer could discover a React developer, connect with them, and collaborate on a project that combines their skills.
+For example, a Python/Django developer can discover a React developer, connect with them, and collaborate on a project that combines their skills.
 
 Rather than relying entirely on random networking, users can showcase their abilities, discover relevant projects, and build connections around shared interests.
 
-The long-term goal is to evolve CollabHub from a project-discovery platform into a broader collaboration platform with teams, tasks, and potentially AI-powered collaborator matching.
+The goal is to provide a practical environment where developers and students can move from discovering collaborators to actually building projects together.
 
 ---
 
-## 🚧 Development Status
+## 🚀 Development Status
 
-CollabHub is an active development project. Authentication, profiles, user discovery, connections, project management, join requests, notifications, project members, the dashboard, and the project workspace have been implemented progressively.
+**CollabHub has achieved its MVP feature milestone.**
 
-Task management currently supports creating, assigning, editing, and deleting tasks on the project Kanban board. Full task updates and deletion have backend authorization checks, and assignment validation limits assignees to the project owner or members. **Status-only task updates, task search and filters, and Teams are still planned.**
+The core collaboration workflow—including authentication, developer discovery, connections, project management, join requests, notifications, project membership, shared workspaces, team management, and Kanban-based task management—has been implemented.
+
+The project is now entering its stabilization phase, focusing on security and permission reviews, debugging, testing, code cleanup, UI improvements, and production readiness.
+
+**Target release date: November 10, 2026.**
 
 ---
 
@@ -302,7 +350,8 @@ Task management currently supports creating, assigning, editing, and deleting ta
 **Tilak Bhattarai**
 
 - GitHub: [TilakBhattarai](https://github.com/TilakBhattarai)
+- Repository: [CollabHub](https://github.com/TilakBhattarai/collabhub)
 
 ---
 
-⭐ If you find this project interesting, consider exploring the repository as it continues to evolve.
+⭐ If you find this project interesting, feel free to explore the repository.
