@@ -23,6 +23,8 @@ const ProjectMembers = () => {
     const [connectingId, setConnectingId] = useState("");
     const { userId } = useAuth();
 
+    console.log(members);
+
 
     const fetchMembers = async () => {
         setLoading(true);
@@ -186,7 +188,7 @@ const ProjectMembers = () => {
                                             </span>
                                         )}
 
-                                        {Number(userId) === Number(member.project.owner.id) && (
+                                        {Number(userId) === Number(member.project.owner.id) && !member.is_owner && (
                                             <button
                                                 onClick={() => handleDelete(member.project.id, member.user.id)}
                                                 type="button"

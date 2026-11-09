@@ -6,6 +6,7 @@ from .serializers import (
     ProjectMemberSerializer,
     TaskSerializer,
 )
+from profiles.serializers import UserSerializer
 from django.db.models import Q
 from connection.models import Connection
 from rest_framework.viewsets import ModelViewSet
@@ -24,8 +25,26 @@ class ProjectViewSet(ModelViewSet):
 
     lookup_value_regex = r"\d+"
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Project.objects.all()
+
+        if self.action in ("list", "retrieve"):
+            queryset = queryset.filter(
+                Q(visibility="PUBLIC") | Q(owner=user) | Q(members__user=user)
+            ).distinct()
+
+        return queryset
+
+    def perform_update(self, serializer):
+        if serializer.instance.owner != self.request.user:
+            raise PermissionDenied(
+                {"error": "You do not have the permission to update this project"}
+            )
+        serializer.save()
+
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user, role="admin")
 
     @action(detail=False, methods=["get"])
     def my_projects(self, request):
@@ -36,21 +55,41 @@ class ProjectViewSet(ModelViewSet):
     @action(detail=True, methods=["get"])
     def members(self, request, pk=None):
         project = self.get_object()
-        if project.visibility == "PRIVATE" and project.owner != request.user:
+
+        is_member = ProjectMember.objects.filter(
+            project=project, user=request.user
+        ).exists()
+
+        if (
+            project.visibility == "PRIVATE"
+            and project.owner != request.user
+            and not is_member
+        ):
             return Response(
                 {"error": "You do not have permission to view this project's members."},
                 status=status.HTTP_403_FORBIDDEN,
             )
 
         members = ProjectMember.objects.filter(project=project)
-
         serializer = ProjectMemberSerializer(members, many=True)
-
         data = serializer.data
 
+        # Add project owner as Admin
+        owner_data = {
+            "id": f"owner-{project.id}",
+            "project": ProjectSerializer(project).data,
+            "user": UserSerializer(project.owner).data,
+            "role": "ADMIN",
+            "is_owner": True,
+        }
+
+        data.insert(0, owner_data)
+
+        # Connection information
         for member_data in data:
             member_id = member_data["user"]["id"]
-            connection_exisits = Connection.objects.filter(
+
+            connection_exists = Connection.objects.filter(
                 Q(sender=request.user, receiver_id=member_id)
                 | Q(sender_id=member_id, receiver=request.user),
             ).exists()
@@ -61,7 +100,7 @@ class ProjectViewSet(ModelViewSet):
                 status="PENDING",
             ).exists()
 
-            member_data["connection_exists"] = connection_exisits
+            member_data["connection_exists"] = connection_exists
             member_data["request_sent"] = request_sent
 
         return Response(data)
@@ -78,7 +117,9 @@ class ProjectViewSet(ModelViewSet):
         return Response(serializer.data)
 
     @action(
-        detail=True, methods=["delete"], url_path=r"remove_member/(?P<member_id>\d+)"
+        detail=True,
+        methods=["delete"],
+        url_path=r"remove_member/(?P<member_id>\d+)",
     )
     def remove_member(self, request, pk=None, member_id=None):
         project = self.get_object()  # Project.objects.get(pk=.., member_id=..)
@@ -162,6 +203,7 @@ class JoinRequestViewSet(ModelViewSet):
     queryset = JoinRequest.objects.all()
     serializer_class = JoinRequestSerializer
     permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "post", "head", "options"]
 
     def get_queryset(self):
         user = self.request.user
@@ -402,7 +444,7 @@ class TaskViewSet(ModelViewSet):
                     }
                 )
 
-        serializer.save()
+        serializer.save(status=task.status)
 
     def update_status(self, request, *args, **kwargs):
         task = self.get_object()
@@ -414,8 +456,19 @@ class TaskViewSet(ModelViewSet):
         new_status = request.data.get("status")
         valid_statuses = ["TODO", "IN_PROGRESS", "COMPLETED"]
 
+        allowed_transitions = {
+            "TODO": "IN_PROGRESS",
+            "IN_PROGRESS": "COMPLETED",
+            "COMPLETED": None,
+        }
+
         if new_status not in valid_statuses:
             raise ValidationError({"status": "Invalid status"})
+
+        if new_status != task.status and new_status != allowed_transitions.get(
+            task.status
+        ):
+            raise ValidationError({"status": "Invalid status transition"})
 
         task.status = new_status
         task.save(update_fields=["status"])

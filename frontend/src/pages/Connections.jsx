@@ -4,6 +4,7 @@ import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 export default function Connections() {
     const [requests, setRequests] = useState([]);
@@ -46,6 +47,7 @@ export default function Connections() {
             );
 
             setMyConnections(response.data);
+            console.log(response.data)
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load connections. Please try again.");
         } finally {
@@ -204,19 +206,10 @@ export default function Connections() {
 
                                             {/* Avatar */}
                                             <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-violet-100">
-                                                {request.sender.profile.profile_picture ? (
-                                                    <img
-                                                        src={`http://127.0.0.1:8000${request.sender.profile.profile_picture}`}
-                                                        alt={request.sender.username}
-                                                        className="h-full w-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-violet-700">
-                                                        {request.sender.username
-                                                            .charAt(0)
-                                                            .toUpperCase()}
-                                                    </div>
-                                                )}
+                                                <Avatar
+                                                    src={request.sender.profile.profile_picture}
+                                                    name={request.sender.username}
+                                                    size="h-12 w-12" />
                                             </div>
 
                                             {/* Details */}
@@ -272,7 +265,7 @@ export default function Connections() {
                                             <button
                                                 onClick={() =>
                                                     navigate(
-                                                        `/profile/${request.sender.id}`
+                                                        `/ profile / ${request.sender.id}`
                                                     )
                                                 }
                                                 type="button"
@@ -367,20 +360,12 @@ export default function Connections() {
                                     {/* User */}
                                     <div className="flex min-w-0 items-center gap-3">
 
-                                        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-violet-100">
-                                            {connection.user.profile.profile_picture ? (
-                                                <img
-                                                    src={`http://127.0.0.1:8000${connection.user.profile.profile_picture}`}
-                                                    alt={connection.user.username}
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-violet-700">
-                                                    {connection.user.username
-                                                        .charAt(0)
-                                                        .toUpperCase()}
-                                                </div>
-                                            )}
+                                        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-violet-100">
+                                            <Avatar
+                                                src={connection.user.profile.profile_picture}
+                                                name={connection.user.username}
+                                                size="h-14 w-14"
+                                            />
                                         </div>
 
                                         <div className="min-w-0">

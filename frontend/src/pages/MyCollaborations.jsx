@@ -3,8 +3,6 @@ import {
     BriefcaseBusiness,
     Code2,
     FolderKanban,
-    Search,
-    SlidersHorizontal,
     Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -40,6 +38,8 @@ export default function MyCollaborations() {
         (total, project) => total + (Number(project.member_count) || 0),
         0
     );
+
+    console.log(projects)
 
     const fetchJoinedProjects = async () => {
 
@@ -158,32 +158,6 @@ export default function MyCollaborations() {
                         <p className="mt-2 text-xs text-gray-400">
                             Across your collaborations
                         </p>
-                    </div>
-                </section>
-
-                {/* Search and Filter - Static UI */}
-                <section className="flex flex-col gap-3 sm:flex-row">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-
-                        <input
-                            placeholder="Search your collaborations..."
-                            className="h-11 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm outline-none placeholder:text-gray-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-                        />
-                    </div>
-
-                    <div className="relative sm:w-52">
-                        <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-
-                        <select
-                            defaultValue="ALL"
-                            className="h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-                        >
-                            <option value="ALL">All statuses</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="LOOKING_FOR_CONTRIBUTORS">Looking For Contributors</option>
-                            <option value="COMPLETED">Completed</option>
-                        </select>
                     </div>
                 </section>
 

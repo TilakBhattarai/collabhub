@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
 import { useAuth } from "../context/AuthContext";
+import Avatar from "../components/Avatar";
 
 
 const ProfileView = () => {
@@ -62,21 +63,11 @@ const ProfileView = () => {
                     {/* Profile intro */}
                     <div>
                         <div className="flex items-center gap-4 lg:block">
-
-                            {connectionProfile.profile_picture ? (
-                                <img
-                                    src={`http://127.0.0.1:8000${connectionProfile.profile_picture}`}
-                                    alt={connectionProfile.user.username}
-                                    className="w-20 h-20 rounded-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-20 h-20 rounded-full bg-violet-100 flex items-center justify-center text-2xl font-semibold text-violet-700">
-                                    {connectionProfile.user.username
-                                        .charAt(0)
-                                        .toUpperCase()}
-                                </div>
-                            )}
-
+                            <Avatar
+                                src={connectionProfile.profile_picture}
+                                name={connectionProfile.user.username}
+                                size="h-12 w-12"
+                            />
                             <div className="mt-0 lg:mt-5">
                                 <h1 className="text-xl font-semibold text-gray-900">
                                     {connectionProfile.user.username}

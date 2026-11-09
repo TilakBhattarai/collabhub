@@ -185,14 +185,6 @@ function ProjectWorkspace() {
                         </p>
                     </div>
                 </div>
-
-                <button
-                    type="button"
-                    className="flex w-full shrink-0 items-center justify-center gap-2 rounded-md bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700 sm:w-auto"
-                >
-                    <UserPlus className="h-4 w-4" />
-                    Invite Member
-                </button>
             </div>
 
 
@@ -395,19 +387,6 @@ function ProjectWorkspace() {
                             </div>
 
                             <ul className="divide-y divide-gray-100">
-                                <li className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700">
-                                        {project.owner.username.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="truncate text-sm font-medium text-gray-900">
-                                            {project.owner.username}
-                                        </p>
-                                        <p className="truncate text-xs text-gray-500">
-                                            owner
-                                        </p>
-                                    </div>
-                                </li>
                                 {members.map((member) => (
                                     <li key={member.id} className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5">
                                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700">

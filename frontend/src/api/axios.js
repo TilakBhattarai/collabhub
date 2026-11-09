@@ -1,9 +1,13 @@
+
 import axios from "axios";
 
-const api = axios.create({
-    baseURL: "http://127.0.0.1:8000/",
-});
+export const API_BASE_URL =
+    (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000")
+        .replace(/\/+$/, "") + "/";
 
+const api = axios.create({
+    baseURL: API_BASE_URL,
+});
 
 // ================================
 // REQUEST INTERCEPTOR
@@ -11,7 +15,6 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-
         const accessToken = localStorage.getItem("accessToken");
 
         if (accessToken) {
@@ -20,29 +23,22 @@ api.interceptors.request.use(
 
         return config;
     },
-
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
-
 
 // ================================
 // RESPONSE INTERCEPTOR
 // ================================
 
 api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
 
     async (error) => {
-
         const originalRequest = error.config;
 
-        // Access token expired / unauthorized
         if (
             error.response?.status === 401 &&
+            originalRequest &&
             !originalRequest._retry
         ) {
             originalRequest._retry = true;
@@ -54,12 +50,7 @@ api.interceptors.response.use(
             }
 
             try {
-                const response = await axios.post(
-                    "http://127.0.0.1:8000/accounts/api/token/refresh/",
-                    {
-                        refresh: refreshToken,
-                    }
-                );
+                const response = await axios.post(`${API_BASE_URL}accounts/api/token/refresh/`, { refresh: refreshToken })
 
                 const newAccessToken = response.data.access;
 
@@ -84,6 +75,5 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 
 export default api;

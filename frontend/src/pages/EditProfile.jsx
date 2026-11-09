@@ -5,6 +5,7 @@ import { useToast } from "../context/ToastContext";
 import { ArrowLeft } from "lucide-react";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 const EditProfile = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const EditProfile = () => {
     const [portfolioLink, setPortfolioLink] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
     const [profilePicturePreview, setProfilePicturePreview] = useState("");
+    const [profile, setProfile] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -31,6 +33,8 @@ const EditProfile = () => {
                 const response = await api.get("profile/");
 
                 const data = response.data;
+                setProfile(data);
+                console.log(data)
 
                 setRole(data.role || "");
                 setBio(data.bio || "");
@@ -168,20 +172,12 @@ const EditProfile = () => {
 
                                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
 
-                                    {profilePicturePreview ? (
-                                        <img
-                                            src={
-                                                profilePicturePreview.startsWith("blob:")
-                                                    ? profilePicturePreview
-                                                    : `http://127.0.0.1:8000${profilePicturePreview}`
-                                            }
-                                            alt="Profile preview"
-                                            className="h-20 w-20 rounded-full border border-gray-200 object-cover"
+                                    {profilePicturePreview && (
+                                        <Avatar
+                                            src={profile.profile_picture}
+                                            name={profile.user.username}
+                                            size="h-20 w-20"
                                         />
-                                    ) : (
-                                        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-violet-100 text-2xl font-semibold text-violet-700">
-                                            ?
-                                        </div>
                                     )}
 
                                     <div>

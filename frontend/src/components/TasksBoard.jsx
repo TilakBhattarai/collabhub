@@ -1,9 +1,5 @@
 import {
     Plus,
-    Search,
-    SlidersHorizontal,
-    CalendarDays,
-    // MoreHorizontal,
     Clock3,
     CheckCircle2,
     ClipboardList,
@@ -185,24 +181,6 @@ export default function TasksBoard({ tasks, progressTasksLength, completedTasksL
                         Create Task
                     </button>
                 </div>
-            </div>
-
-            {/* Search and filters: visual only */}
-            <div className="flex flex-col gap-3 sm:flex-row">
-                <div className="flex flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2.5">
-                    <Search className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-400">
-                        Search tasks...
-                    </span>
-                </div>
-
-                <button
-                    type="button"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-600"
-                >
-                    <SlidersHorizontal className="h-4 w-4" />
-                    Filters
-                </button>
             </div>
 
             {/* Kanban Board */}

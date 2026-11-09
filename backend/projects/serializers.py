@@ -13,7 +13,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     member_count = serializers.SerializerMethodField()
 
     def get_member_count(self, obj):
-        return obj.members.count()
+        return obj.members.count() + 1
 
     class Meta:
         model = Project

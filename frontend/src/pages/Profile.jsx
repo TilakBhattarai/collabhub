@@ -4,12 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 function Profile() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -42,6 +44,9 @@ function Profile() {
         fetchProfile();
     }, []);
 
+    const firstChar = profile?.user.username.charAt(0).toUpperCase()
+    console.log(profile)
+
     if (loading) {
         return <Loading />;
     }
@@ -57,17 +62,11 @@ function Profile() {
                 <div className="flex flex-col gap-6 border-b border-gray-200 pb-8 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-5">
 
-                        {profile.profile_picture ? (
-                            <img
-                                src={`http://127.0.0.1:8000${profile.profile_picture}`}
-                                alt="Profile"
-                                className="h-20 w-20 rounded-full object-cover"
-                            />
-                        ) : (
-                            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-violet-100 text-2xl font-semibold text-violet-700">
-                                {firstChar}
-                            </div>
-                        )}
+                        <Avatar
+                            src={profile?.profile_picture}
+                            name={profile?.user.username}
+                            size="h-20 w-20"
+                        />
 
                         <div>
                             <h1 className="text-2xl font-semibold text-gray-900">
@@ -75,11 +74,11 @@ function Profile() {
                             </h1>
 
                             <p className="mt-1 text-sm text-gray-500">
-                                {profile.role || "No role set"}
+                                {profile?.role || "No role set"}
                             </p>
 
                             <p className="mt-2 text-sm text-gray-500">
-                                {profile.location || "Location not set"}
+                                {profile?.location || "Location not set"}
                             </p>
                         </div>
                     </div>

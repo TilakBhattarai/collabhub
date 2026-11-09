@@ -266,16 +266,33 @@ function Dashboard() {
 
                         <ul className="divide-y divide-gray-100">
                             {joinRequests.length === 0 && (
-                                <li className="px-4 py-10 text-center sm:px-5">
-                                    <p className="text-sm font-medium text-gray-900">
-                                        No join requests
-                                    </p>
-                                    <p className="mt-1 text-sm text-gray-500">
-                                        When someone asks to join your projects, it will show up here.
+                                <li className="flex flex-col items-center px-4 py-12 text-center sm:px-5">
+                                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50">
+                                        <svg
+                                            className="h-7 w-7 text-violet-600"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={1.6}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m16 0v-2a4 4 0 0 0-3-3.87M14 3.13a4 4 0 0 1 0 7.75M14 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <h3 className="text-sm font-semibold text-gray-900">
+                                        No pending join requests
+                                    </h3>
+
+                                    <p className="mt-1.5 max-w-sm text-sm leading-5 text-gray-500">
+                                        You're all caught up! When someone requests to join one of your
+                                        projects, their request will appear here.
                                     </p>
                                 </li>
                             )}
-
                             {joinRequests.map((req) => (
                                 <li
                                     key={req.id}
@@ -345,56 +362,86 @@ function Dashboard() {
                             )}
                         </div>
 
-                        <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
-                            {myProjects.map((project) => (
-                                <div
-                                    key={project.id}
-                                    className="flex min-w-0 flex-col gap-3 rounded-lg border border-gray-200 p-4"
-                                >
-                                    <div className="flex flex-wrap items-start justify-between gap-2">
-                                        <h3 className="text-sm font-semibold text-gray-900">
-                                            {project.title}
-                                        </h3>
-                                        <span
-                                            className={`max-w-full break-words rounded px-2 py-1 text-[10px] font-semibold ${statusStyles[project.status] || "bg-gray-100 text-gray-700"
-                                                }`}
-                                        >
-                                            {project.status}
-                                        </span>
+                        {myProjects.length > 0 ? (
+                            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
+                                {myProjects.map((project) => (
+                                    <div
+                                        key={project.id}
+                                        className="flex min-w-0 flex-col gap-3 rounded-lg border border-gray-200 p-4"
+                                    >
+                                        <div className="flex flex-wrap items-start justify-between gap-2">
+                                            <h3 className="text-sm font-semibold text-gray-900">
+                                                {project.title}
+                                            </h3>
+                                            <span
+                                                className={`max-w-full break-words rounded px-2 py-1 text-[10px] font-semibold ${statusStyles[project.status] ||
+                                                    "bg-gray-100 text-gray-700"
+                                                    }`}
+                                            >
+                                                {project.status}
+                                            </span>
+                                        </div>
+
+                                        <p className="line-clamp-2 text-sm text-gray-500">
+                                            {project.description}
+                                        </p>
+
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {project.required_skills ? (
+                                                project.required_skills
+                                                    .split(",")
+                                                    .map((skill) => skill.trim())
+                                                    .filter(Boolean)
+                                                    .map((skill, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-600"
+                                                        >
+                                                            {skill}
+                                                        </span>
+                                                    ))
+                                            ) : (
+                                                <p className="text-sm text-gray-400">
+                                                    No skills listed
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <p className="text-sm text-gray-500">
+                                            {project.members !== undefined &&
+                                                `${project.members} members · `}
+                                            {project.visibility}
+                                        </p>
                                     </div>
-
-                                    <p className="line-clamp-2 text-sm text-gray-500">
-                                        {project.description}
-                                    </p>
-
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {project.required_skills ? (
-                                            project.required_skills
-                                                .split(",")
-                                                .map((skill) => skill.trim())
-                                                .filter(Boolean)
-                                                .map((skill, index) => (
-                                                    <span
-                                                        key={index}
-                                                        className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-600"
-                                                    >
-                                                        {skill}
-                                                    </span>
-                                                ))
-                                        ) : (
-                                            <p className="text-sm text-gray-400">
-                                                No skills listed
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <p className="text-sm text-gray-500">
-                                        {project.members !== undefined && `${project.members} members · `}
-                                        {project.visibility}
-                                    </p>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
+                                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-violet-50">
+                                    <svg
+                                        className="h-6 w-6 text-violet-600"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth={1.7}
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M3.75 6.75h6l2 2h8.5v9.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-9.5a2 2 0 0 1 2-2Z"
+                                        />
+                                    </svg>
                                 </div>
-                            ))}
-                        </div>
+
+                                <h3 className="text-sm font-semibold text-gray-900">
+                                    No projects yet
+                                </h3>
+                                <p className="mt-1 max-w-sm text-sm text-gray-500">
+                                    Projects you create will appear here. Start a project and bring
+                                    collaborators together!
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -413,12 +460,30 @@ function Dashboard() {
 
                         <ul className="divide-y divide-gray-100">
                             {connectionRequests.length === 0 && (
-                                <li className="px-4 py-8 text-center sm:px-5">
-                                    <p className="text-sm font-medium text-gray-900">
+                                <li className="flex flex-col items-center px-4 py-10 text-center sm:px-5">
+                                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50">
+                                        <svg
+                                            className="h-7 w-7 text-violet-600"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={1.6}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M18 8a3 3 0 1 0-6 0 3 3 0 0 0 6 0ZM6 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12 10v-1a4 4 0 0 0-4-4h-2m-8 5v-1a4 4 0 0 1 4-4h2"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <h3 className="text-sm font-semibold text-gray-900">
                                         No connection requests
-                                    </p>
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        New requests will show up here.
+                                    </h3>
+
+                                    <p className="mt-1.5 max-w-sm text-sm leading-5 text-gray-500">
+                                        You're all caught up! When someone sends you a connection
+                                        request, it will appear here.
                                     </p>
                                 </li>
                             )}
@@ -489,9 +554,30 @@ function Dashboard() {
 
                         <ul className="divide-y divide-gray-100">
                             {notifications.length === 0 && (
-                                <li className="px-4 py-8 text-center sm:px-5">
-                                    <p className="text-sm font-medium text-gray-900">
-                                        No recent activity
+                                <li className="flex flex-col items-center px-4 py-10 text-center sm:px-5">
+                                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50">
+                                        <svg
+                                            className="h-7 w-7 text-violet-600"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={1.6}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5m6 0v1a3 3 0 0 1-6 0v-1m6 0H9"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <h3 className="text-sm font-semibold text-gray-900">
+                                        You're all caught up!
+                                    </h3>
+
+                                    <p className="mt-1.5 max-w-sm text-sm leading-5 text-gray-500">
+                                        No recent activity to show. New notifications will appear here
+                                        when there's something to share.
                                     </p>
                                 </li>
                             )}
