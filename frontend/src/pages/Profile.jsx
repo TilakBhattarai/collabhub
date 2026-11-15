@@ -62,7 +62,7 @@ function Profile() {
                         <Avatar
                             src={profile?.profile_picture}
                             name={profile?.user.username}
-                            size="h-20 w-20"
+                            size="h-30 w-30"
                         />
 
                         <div>

@@ -65,7 +65,7 @@ const ProfileView = () => {
                             <Avatar
                                 src={connectionProfile.profile_picture}
                                 name={connectionProfile.user.username}
-                                size="h-12 w-12"
+                                size="h-50 w-50"
                             />
                             <div className="mt-0 lg:mt-5">
                                 <h1 className="text-xl font-semibold text-gray-900">

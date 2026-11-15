@@ -13,6 +13,7 @@ import HandleApiError from "../utils/HandleApiError";
 import api from "../api/axios";
 import Loading from "../components/Loading";
 import { useAuth } from "../context/AuthContext";
+import Avatar from "../components/Avatar";
 
 const ProjectMembers = () => {
     const navigate = useNavigate();
@@ -98,8 +99,7 @@ const ProjectMembers = () => {
         }
     }
 
-
-
+    console.log(members)
 
     if (loading) {
         return <Loading />
@@ -153,7 +153,7 @@ const ProjectMembers = () => {
                                 {/* Profile */}
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4 ">
-                                        {member.profile_picture ? (
+                                        {/* {member.profile_picture ? (
                                             <img
                                                 src={member.profile_picture}
                                                 alt={member.username}
@@ -163,8 +163,15 @@ const ProjectMembers = () => {
                                             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-100 text-violet-700">
                                                 <UserRound size={24} />
                                             </div>
-                                        )}
+                                        )} */}
 
+                                        <Avatar
+                                            src={member.user?.profile?.profile_picture}
+                                            name={member.user?.username}
+                                            size="h-14 w-14"
+                                            textSize="text-lg"
+                                            className="ring-2 ring-violet-100 shadow-sm"
+                                        />
                                         <div className="min-w-0">
                                             <h2 className="truncate font-semibold text-gray-900">
                                                 {member.user.username}

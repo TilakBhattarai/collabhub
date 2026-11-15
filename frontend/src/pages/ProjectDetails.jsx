@@ -7,6 +7,7 @@ import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import HandleApiError from "../utils/HandleApiError";
 import Loading from "../components/Loading";
+import Avatar from "../components/Avatar";
 
 export default function ProjectDetails() {
     const [project, setProject] = useState(null);
@@ -152,15 +153,13 @@ export default function ProjectDetails() {
 
                         <div className="flex items-center gap-3 mt-5 pt-5 border-t border-gray-200">
                             <div className="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center text-sm font-medium text-violet-700 overflow-hidden">
-                                {project.owner?.profile?.profile_picture ? (
-                                    <img
-                                        src={project.owner.profile.profile_picture}
-                                        alt={project.owner.username}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    project.owner?.username?.charAt(0)?.toUpperCase() || "?"
-                                )}
+
+                                <Avatar
+                                    src={project.owner.profile.profile_picture}
+                                    name={project.owner.username}
+                                    size="h-12 w-12"
+                                />
+
                             </div>
                             <div className="flex-1">
                                 <p className="text-sm font-medium text-gray-900">{project.owner.username}</p>

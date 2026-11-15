@@ -166,7 +166,7 @@ const Projects = () => {
                                                 <Avatar
                                                     src={project.owner.profile.profile_picture}
                                                     name={project.owner.username}
-                                                    size="h-10 w-10"
+                                                    size="h-12 w-12"
                                                 />
                                             </div>
                                         </div>
