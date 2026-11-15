@@ -265,7 +265,7 @@ export default function Connections() {
                                             <button
                                                 onClick={() =>
                                                     navigate(
-                                                        `/ profile / ${request.sender.id}`
+                                                        `/profile/${request.sender.id}/`
                                                     )
                                                 }
                                                 type="button"
