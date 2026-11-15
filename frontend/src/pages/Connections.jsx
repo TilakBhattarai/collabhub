@@ -47,7 +47,6 @@ export default function Connections() {
             );
 
             setMyConnections(response.data);
-            console.log(response.data)
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load connections. Please try again.");
         } finally {

@@ -34,7 +34,6 @@ const EditProfile = () => {
 
                 const data = response.data;
                 setProfile(data);
-                console.log(data)
 
                 setRole(data.role || "");
                 setBio(data.bio || "");

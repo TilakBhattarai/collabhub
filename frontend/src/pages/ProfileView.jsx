@@ -27,7 +27,6 @@ const ProfileView = () => {
             );
 
             setConnectionProfile(response.data);
-            console.log(response.data)
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load profile. Please try again.")
         } finally {

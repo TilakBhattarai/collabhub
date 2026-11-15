@@ -23,8 +23,6 @@ const ProjectMembers = () => {
     const [connectingId, setConnectingId] = useState("");
     const { userId } = useAuth();
 
-    console.log(members);
-
 
     const fetchMembers = async () => {
         setLoading(true);
@@ -32,7 +30,6 @@ const ProjectMembers = () => {
             const response = await api.get(
                 `projects/${projectId}/members/`,
             )
-            console.log(response.data);
             setMembers(response.data);
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load members.");

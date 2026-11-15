@@ -22,7 +22,6 @@ export default function JoinRequests() {
                 "projects/request/owner_requests/"
             )
             setRequests(response.data);
-            console.log(response.data);
 
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load requests. Please try again.")

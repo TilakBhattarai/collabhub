@@ -44,7 +44,7 @@ class ProjectViewSet(ModelViewSet):
         serializer.save()
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, role="admin")
+        serializer.save(owner=self.request.user)
 
     @action(detail=False, methods=["get"])
     def my_projects(self, request):

@@ -46,8 +46,6 @@ export default function TeamTab({
                 String(task.assigned_to.id) === String(userId)
         ).length;
 
-    console.log(team)
-
     return (
         <div className="mt-6 space-y-6">
 

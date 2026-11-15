@@ -18,8 +18,6 @@ export default function CreateTaskModal({ onClose, members, project, fetchTasks,
     const [creating, setCreating] = useState(false);
     const { showToast } = useToast();
 
-    console.log(task);
-
     const priorities = [
         { value: "LOW", label: "Low" },
         { value: "MEDIUM", label: "Medium" },

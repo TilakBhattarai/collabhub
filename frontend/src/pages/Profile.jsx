@@ -44,9 +44,6 @@ function Profile() {
         fetchProfile();
     }, []);
 
-    const firstChar = profile?.user.username.charAt(0).toUpperCase()
-    console.log(profile)
-
     if (loading) {
         return <Loading />;
     }

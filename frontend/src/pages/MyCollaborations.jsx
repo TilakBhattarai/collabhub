@@ -39,8 +39,6 @@ export default function MyCollaborations() {
         0
     );
 
-    console.log(projects)
-
     const fetchJoinedProjects = async () => {
 
         try {

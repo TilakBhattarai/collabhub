@@ -37,7 +37,6 @@ const Discover = () => {
             );
 
             setUser(response.data);
-            console.log(response.data)
         } catch (error) {
             HandleApiError(error, showToast, "Failed to load data. Please refresh or try again.")
         } finally {

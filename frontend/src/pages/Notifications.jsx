@@ -15,28 +15,6 @@ const Notifications = () => {
     const navigate = useNavigate();
     const { loading, fetchNotifications, notifications, setNotifications } = useNotification();
 
-    // const fetchNotifications = async () => {
-    //     setLoading(true);
-
-    //     try {
-    //         const response = await api.get(
-    //             "notifications/",
-    //         )
-    //         setNotifications(response.data);
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         HandleApiError(error, showToast, "Failed to load notifications. Please refresh or try again.")
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     fetchNotifications()
-    // }, [])
-
-    // fetchNotifications();
-
 
     useEffect(() => {
         fetchNotifications();
