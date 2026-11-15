@@ -87,15 +87,6 @@ function Login() {
           />
         </div>
 
-        <div className="flex justify-end mt-2">
-          <Link
-            to="/forgot-password"
-            className="text-sm text-violet-700 hover:text-violet-800"
-          >
-            Forgot password?
-          </Link>
-        </div>
-
         <button
           type="submit"
           className="w-full mt-6 rounded-md bg-violet-600 py-2.5 text-sm font-medium text-white hover:bg-violet-700 transition cursor-pointer"

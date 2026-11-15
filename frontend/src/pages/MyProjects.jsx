@@ -326,7 +326,7 @@ export default function MyProjects() {
 
                                         {/* Secondary Actions */}
                                         <div className="mt-4 flex items-center justify-between gap-2 border-t border-gray-100 pt-4">
-                                            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
+                                            <div className="flex min-w-0 flex-wrap items-center gap-x-7 gap-y-2">
                                                 <button
                                                     onClick={() =>
                                                         navigate(`/projects/${project.id}`)
@@ -359,20 +359,21 @@ export default function MyProjects() {
                                                     <Pencil className="h-3.5 w-3.5" />
                                                     Edit
                                                 </button>
+                                                <button
+                                                    disabled={deleting}
+                                                    onClick={() => deleteProject(project.id)}
+                                                    type="button"
+                                                    aria-label="Delete project"
+                                                    className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 text-xs font-medium text-red-600 transition hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                    {deleting && deletingId === project.id
+                                                        ? "Deleting..."
+                                                        : "Delete"}
+                                                </button>
                                             </div>
 
-                                            <button
-                                                disabled={deleting}
-                                                onClick={() => deleteProject(project.id)}
-                                                type="button"
-                                                aria-label="Delete project"
-                                                className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 text-xs font-medium text-red-600 transition hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                            >
-                                                <Trash2 className="h-3.5 w-3.5" />
-                                                {deleting && deletingId === project.id
-                                                    ? "Deleting..."
-                                                    : "Delete"}
-                                            </button>
+
                                         </div>
                                     </article>
                                 );

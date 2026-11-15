@@ -172,6 +172,7 @@ const ProjectMembers = () => {
                                             textSize="text-lg"
                                             className="ring-2 ring-violet-100 shadow-sm"
                                         />
+                                        
                                         <div className="min-w-0">
                                             <h2 className="truncate font-semibold text-gray-900">
                                                 {member.user.username}

@@ -10,6 +10,8 @@ import Loading from "../components/Loading";
 export default function JoinRequests() {
     const [loading, setLoading] = useState(false);
     const [requests, setRequests] = useState([]);
+    const [accepting, setAccepting] = useState(false);
+    const [rejecting, setRejecting] = useState(false);
     const navigate = useNavigate();
 
     const { showToast } = useToast();
@@ -36,6 +38,7 @@ export default function JoinRequests() {
 
 
     const handleAccept = async (requestId) => {
+        setAccepting(true);
         try {
             await api.post(`projects/request/${requestId}/accept/`);
             setRequests((prev) =>
@@ -50,10 +53,13 @@ export default function JoinRequests() {
                 403: "You are not authorized to accept this request",
                 400: error.response?.data?.error || "This request cannot be accepted",
             });
+        } finally {
+            setAccepting(false);
         };
     }
 
     const handleReject = async (requestId) => {
+        setRejecting(true);
         try {
             await api.post(`projects/request/${requestId}/reject/`);
             setRequests((prev) =>
@@ -67,7 +73,9 @@ export default function JoinRequests() {
                 403: "You are not authorized to reject this request",
                 400: error.response?.data?.error || "This request cannot be accepted"
             })
-        };
+        } finally {
+            setRejecting(false);
+        }
     }
 
     if (loading) {
@@ -181,18 +189,20 @@ export default function JoinRequests() {
                                         View
                                     </button>
                                     <button
+                                        disabled={rejecting}
                                         onClick={() => handleReject(req.id)}
                                         type="button"
                                         className="flex-1 rounded-lg cursor-pointer border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 sm:flex-none"
                                     >
-                                        Reject
+                                        {rejecting ? "rejecting..." : "Reject"}
                                     </button>
                                     <button
+                                        disabled={accepting}
                                         onClick={() => handleAccept(req.id)}
                                         type="button"
                                         className="flex-1 rounded-lg cursor-pointer bg-violet-600 px-3 py-2 text-sm font-medium text-white hover:bg-violet-700 sm:flex-none"
                                     >
-                                        Accept
+                                        {accepting ? "accepting..." : "Accept"}
                                     </button>
                                 </div>
 

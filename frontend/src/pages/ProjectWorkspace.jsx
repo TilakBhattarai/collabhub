@@ -3,7 +3,6 @@ import {
     ClipboardList,
     Clock,
     Globe,
-    UserPlus,
     Users, ArrowLeft,
     LockIcon,
 
@@ -18,6 +17,7 @@ import { formatTime } from "../utils/formatTime";
 import TasksBoard from "../components/TasksBoard";
 import { useSearchParams } from "react-router-dom";
 import TeamTab from "../components/TeamTab";
+import Avatar from "../components/Avatar";
 
 function ProjectWorkspace() {
     const navigate = useNavigate();
@@ -388,10 +388,17 @@ function ProjectWorkspace() {
 
                             <ul className="divide-y divide-gray-100">
                                 {members.map((member) => (
-                                    <li key={member.id} className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5">
-                                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700">
-                                            {member.user.username.charAt(0).toUpperCase()}
-                                        </div>
+                                    <li
+                                        key={member.id}
+                                        className="flex min-w-0 items-center gap-3 px-4 py-3.5 sm:px-5"
+                                    >
+                                        <Avatar
+                                            src={member.user?.profile?.profile_picture}
+                                            name={member.user?.username}
+                                            size="h-10 w-10"
+                                            textSize="text-xs"
+                                        />
+
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-900">
                                                 {member.user.username}
@@ -402,54 +409,6 @@ function ProjectWorkspace() {
                                         </div>
                                     </li>
                                 ))}
-
-                            </ul>
-                        </div>
-
-                        {/* Recent activity */}
-                        <div className="min-w-0 rounded-lg border border-gray-200 bg-white">
-                            <div className="border-b border-gray-100 px-4 py-4 sm:px-5">
-                                <h2 className="text-base font-medium text-gray-900 sm:text-lg">
-                                    Recent Activity
-                                </h2>
-                            </div>
-
-                            <ul className="divide-y divide-gray-100">
-                                <li className="flex min-w-0 gap-3 px-4 py-3.5 sm:px-5">
-                                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-violet-600" />
-                                    <div className="min-w-0 flex-1">
-                                        <p className="break-words text-sm text-gray-900">
-                                            Kiran Shrestha joined the project
-                                        </p>
-                                        <p className="mt-0.5 text-xs text-gray-400">
-                                            3 hours ago
-                                        </p>
-                                    </div>
-                                </li>
-
-                                <li className="flex min-w-0 gap-3 px-4 py-3.5 sm:px-5">
-                                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gray-300" />
-                                    <div className="min-w-0 flex-1">
-                                        <p className="break-words text-sm text-gray-500">
-                                            Rohan Thapa completed authentication
-                                        </p>
-                                        <p className="mt-0.5 text-xs text-gray-400">
-                                            Yesterday
-                                        </p>
-                                    </div>
-                                </li>
-
-                                <li className="flex min-w-0 gap-3 px-4 py-3.5 sm:px-5">
-                                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gray-300" />
-                                    <div className="min-w-0 flex-1">
-                                        <p className="break-words text-sm text-gray-500">
-                                            Aarav Sharma assigned a task to Sita
-                                        </p>
-                                        <p className="mt-0.5 text-xs text-gray-400">
-                                            2 days ago
-                                        </p>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
